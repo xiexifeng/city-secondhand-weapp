@@ -1,0 +1,128 @@
+<!--pages/home/home.wxml-->
+<view class="home-container">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrapper">
+      <text class="search-icon">🔍</text>
+      <input 
+        class="search-placeholder" 
+        type="text" 
+        placeholder="搜索物品..." 
+        bindinput="onSearchInput"
+        value="{{searchKeyword}}"
+      />
+    </view>
+    <view class="filter-btn">
+      <text>⚙️</text>
+    </view>
+  </view>
+
+  <!-- 交易方式筛选 -->
+  <view class="filter-tags">
+    <scroll-view class="tags-scroll" scroll-x>
+      <view 
+        wx:for="{{tradeTypes}}" 
+        wx:key="value"
+        class="tag-item {{selectedTradeType === item.value ? 'tag-active' : ''}}"
+        bindtap="onTradeTypeChange"
+        data-value="{{item.value}}"
+      >
+        {{item.label}}
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 排序选项 -->
+  <view class="filter-tags">
+    <scroll-view class="tags-scroll" scroll-x>
+      <view 
+        wx:for="{{sortOptions}}" 
+        wx:key="value"
+        class="tag-item {{selectedSort === item.value ? 'tag-active' : ''}}"
+        bindtap="onSortChange"
+        data-value="{{item.value}}"
+      >
+        {{item.label}}
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 物品列表 -->
+  <view class="items-container">
+    <!-- 加载中 -->
+    <view wx:if="{{loading && items.length === 0}}" class="loading-state">
+      <view class="loading-spinner"></view>
+      <text>加载中...</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:elif="{{!loading && items.length === 0}}" class="empty-state">
+      <text class="empty-icon">📭</text>
+      <text class="empty-text">暂无物品</text>
+    </view>
+
+    <!-- 物品网格 -->
+    <view class="items-grid" wx:else>
+      <view 
+        wx:for="{{items}}" 
+        wx:key="id"
+        class="item-card"
+        bindtap="onItemTap"
+        data-id="{{item.id}}"
+      >
+        <!-- 图片 -->
+        <view class="item-image-wrapper">
+          <image 
+            class="item-image" 
+            src="{{item.image}}"
+            mode="aspectFill"
+            lazy-load="true"
+          />
+          <!-- 急出标签 -->
+          <view wx:if="{{item.urgent}}" class="item-badge">急出</view>
+          <!-- 收藏按钮 -->
+          <view class="item-favorite">❤️</view>
+        </view>
+
+        <!-- 信息 -->
+        <view class="item-info">
+          <!-- 标题 -->
+          <text class="item-title">{{item.title}}</text>
+          
+          <!-- 价格和距离 -->
+          <view class="item-meta">
+            <view wx:if="{{item.price > 0}}" class="item-price">¥{{item.price}}</view>
+            <view wx:else class="item-price-zero">以物换物</view>
+            <text class="item-distance">{{item.distance}}km</text>
+          </view>
+
+          <!-- 标签和交易方式 -->
+          <view class="item-footer">
+            <view class="item-tags">
+              <view wx:for="{{item.tags}}" wx:key="*this" class="item-tag">
+                {{item}}
+              </view>
+            </view>
+            <view class="item-type">
+              {{item.method === 'sell' ? '人民币' : '以物换物'}}
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载更多 -->
+    <view wx:if="{{!loading && items.length > 0}}" class="load-more">
+      <view wx:if="{{hasMore}}" class="loading-more">
+        <view class="spinner"></view>
+        <text>加载中...</text>
+      </view>
+      <view wx:else class="no-more">已加载全部</view>
+    </view>
+  </view>
+
+  <!-- 审核 icon（可隐藏） -->
+  <view class="audit-icon" wx:if="{{showAuditIcon}}">
+    <text>✓</text>
+  </view>
+</view>

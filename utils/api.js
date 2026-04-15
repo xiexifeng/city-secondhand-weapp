@@ -1,0 +1,242 @@
+// utils/api.js
+const app = getApp()
+
+/**
+ * 发送 API 请求
+ * @param {string} url - 请求 URL
+ * @param {object} options - 请求选项
+ */
+function request(url, options = {}) {
+  const {
+    method = 'GET',
+    data = null,
+    header = {},
+    timeout = 10000
+  } = options
+
+  return new Promise((resolve, reject) => {
+    const requestUrl = url.startsWith('http') ? url : app.globalData.baseUrl + url
+    const token = wx.getStorageSync('token')
+
+    const requestHeader = {
+      'Content-Type': 'application/json',
+      ...header
+    }
+
+    if (token) {
+      requestHeader['Authorization'] = `Bearer ${token}`
+    }
+
+    wx.request({
+      url: requestUrl,
+      method,
+      data,
+      header: requestHeader,
+      timeout,
+      success: (res) => {
+        if (res.statusCode === 200 || res.statusCode === 201) {
+          resolve(res.data)
+        } else if (res.statusCode === 401) {
+          // 未授权
+          wx.removeStorageSync('token')
+          wx.removeStorageSync('userInfo')
+          wx.navigateTo({ url: '/pages/login/login' })
+          reject({ message: '请重新登录' })
+        } else {
+          reject(res.data || { message: '请求失败' })
+        }
+      },
+      fail: (err) => {
+        reject({ message: '网络请求失败', error: err })
+      }
+    })
+  })
+}
+
+// 物品相关 API
+const itemAPI = {
+  // 获取物品列表
+  getItems(params) {
+    return request('/api/items', {
+      method: 'GET',
+      data: params
+    })
+  },
+
+  // 获取物品详情
+  getItemDetail(itemId) {
+    return request(`/api/items/${itemId}`, {
+      method: 'GET'
+    })
+  },
+
+  // 发布物品
+  publishItem(data) {
+    return request('/api/items', {
+      method: 'POST',
+      data
+    })
+  },
+
+  // 更新物品
+  updateItem(itemId, data) {
+    return request(`/api/items/${itemId}`, {
+      method: 'PUT',
+      data
+    })
+  },
+
+  // 删除物品
+  deleteItem(itemId) {
+    return request(`/api/items/${itemId}`, {
+      method: 'DELETE'
+    })
+  },
+
+  // 搜索物品
+  searchItems(keyword, params) {
+    return request('/api/items/search', {
+      method: 'GET',
+      data: { keyword, ...params }
+    })
+  }
+}
+
+// 用户相关 API
+const userAPI = {
+  // 登录
+  login(data) {
+    return request('/api/auth/login', {
+      method: 'POST',
+      data
+    })
+  },
+
+  // 微信登录
+  wechatLogin(data) {
+    return request('/api/auth/wechat-login', {
+      method: 'POST',
+      data
+    })
+  },
+
+  // 获取用户信息
+  getUserInfo() {
+    return request('/api/users/me', {
+      method: 'GET'
+    })
+  },
+
+  // 更新用户信息
+  updateUserInfo(data) {
+    return request('/api/users/me', {
+      method: 'PUT',
+      data
+    })
+  },
+
+  // 获取用户发布的物品
+  getUserItems(userId) {
+    return request(`/api/users/${userId}/items`, {
+      method: 'GET'
+    })
+  }
+}
+
+// 消息相关 API
+const messageAPI = {
+  // 获取消息列表
+  getMessages(params) {
+    return request('/api/messages', {
+      method: 'GET',
+      data: params
+    })
+  },
+
+  // 发送消息
+  sendMessage(data) {
+    return request('/api/messages', {
+      method: 'POST',
+      data
+    })
+  },
+
+  // 获取消息详情
+  getMessageDetail(messageId) {
+    return request(`/api/messages/${messageId}`, {
+      method: 'GET'
+    })
+  }
+}
+
+// 求换墙相关 API
+const wishAPI = {
+  // 获取求换墙列表
+  getWishes(params) {
+    return request('/api/wishes', {
+      method: 'GET',
+      data: params
+    })
+  },
+
+  // 发布求换
+  publishWish(data) {
+    return request('/api/wishes', {
+      method: 'POST',
+      data
+    })
+  },
+
+  // 获取求换详情
+  getWishDetail(wishId) {
+    return request(`/api/wishes/${wishId}`, {
+      method: 'GET'
+    })
+  },
+
+  // 删除求换
+  deleteWish(wishId) {
+    return request(`/api/wishes/${wishId}`, {
+      method: 'DELETE'
+    })
+  }
+}
+
+// 文件上传相关
+const fileAPI = {
+  // 上传图片
+  uploadImage(filePath) {
+    return new Promise((resolve, reject) => {
+      const token = wx.getStorageSync('token')
+      
+      wx.uploadFile({
+        url: app.globalData.baseUrl + '/api/upload/image',
+        filePath,
+        name: 'file',
+        header: {
+          'Authorization': `Bearer ${token}`
+        },
+        success: (res) => {
+          const data = JSON.parse(res.data)
+          if (res.statusCode === 200) {
+            resolve(data)
+          } else {
+            reject(data)
+          }
+        },
+        fail: (err) => {
+          reject({ message: '上传失败', error: err })
+        }
+      })
+    })
+  }
+}
+
+module.exports = {
+  request,
+  itemAPI,
+  userAPI,
+  messageAPI,
+  wishAPI,
+  fileAPI
+}

@@ -1,0 +1,47 @@
+<!--components/tab-bar/tab-bar.wxml-->
+<view class="tab-bar-container">
+  <view 
+    class="tab-item {{activeTab === 'home' ? 'tab-active' : ''}}"
+    bindtap="handleTabClick"
+    data-tab="home"
+  >
+    <image src="/images/{{activeTab === 'home' ? 'home-active' : 'home'}}.png" class="tab-icon" />
+    <text class="tab-label">首页</text>
+  </view>
+  
+  <view 
+    class="tab-item {{activeTab === 'wish' ? 'tab-active' : ''}}"
+    bindtap="handleTabClick"
+    data-tab="wish"
+  >
+    <image src="/images/{{activeTab === 'wish' ? 'wish-active' : 'wish'}}.png" class="tab-icon" />
+    <text class="tab-label">求换</text>
+  </view>
+  
+  <view 
+    class="tab-item {{activeTab === 'publish' ? 'tab-active' : ''}}"
+    bindtap="handleTabClick"
+    data-tab="publish"
+  >
+    <image src="/images/{{activeTab === 'publish' ? 'publish-active' : 'publish'}}.png" class="tab-icon" />
+    <text class="tab-label">发布</text>
+  </view>
+  
+  <view 
+    class="tab-item {{activeTab === 'message' ? 'tab-active' : ''}}"
+    bindtap="handleTabClick"
+    data-tab="message"
+  >
+    <image src="/images/{{activeTab === 'message' ? 'message-active' : 'message'}}.png" class="tab-icon" />
+    <text class="tab-label">消息</text>
+  </view>
+  
+  <view 
+    class="tab-item {{activeTab === 'profile' ? 'tab-active' : ''}}"
+    bindtap="handleTabClick"
+    data-tab="profile"
+  >
+    <image src="/images/{{activeTab === 'profile' ? 'profile-active' : 'profile'}}.png" class="tab-icon" />
+    <text class="tab-label">我的</text>
+  </view>
+</view>

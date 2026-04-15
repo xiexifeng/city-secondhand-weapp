@@ -1,0 +1,61 @@
+{
+  "description": "同城二手物品交易平台",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "setting": {
+    "basePath": "",
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "preloadLocalPackages": false,
+    "minified": true,
+    "newFeature": true,
+    "coverView": true,
+    "nodeModules": false,
+    "autoAudits": false,
+    "showShadowRootInWxmlPanel": true,
+    "scopeDataCheck": false,
+    "ignoreUploadUnusedFiles": true,
+    "checkInvalidEsmSyntax": true,
+    "checkSiteMap": true,
+    "uploadWithSourceMap": true,
+    "compileHotReLoad": false,
+    "useMultiFrameRuntime": true,
+    "useApiHook": true,
+    "useApiHostProcess": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "presets": [],
+      "plugins": [],
+      "outputPath": ""
+    },
+    "enableEngineNative": false,
+    "enableNormalizeFileName": false,
+    "statusBarHeight": 0,
+    "condition": false,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "swc": false,
+    "disableSWC": true
+  },
+  "appid": "wx186d1fbe4dddfe02",
+  "projectname": "city-secondhand-weapp",
+  "libVersion": "3.5.3",
+  "condition": {},
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
+  },
+  "compileType": "miniprogram",
+  "simulatorPluginLibVersion": {}
+}
