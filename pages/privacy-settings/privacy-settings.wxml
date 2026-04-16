@@ -1,0 +1,92 @@
+<!--pages/privacy-settings/privacy-settings.wxml-->
+<view class="privacy-settings-container">
+  <!-- Header -->
+  <view class="header">
+    <view class="header-left" bindtap="goBack">
+      <text class="back-arrow">‹</text>
+      <text class="header-title">隐私设置</text>
+    </view>
+  </view>
+
+  <!-- Settings List -->
+  <view class="settings-list">
+    <!-- Profile Visibility -->
+    <view class="setting-item">
+      <view class="setting-content">
+        <text class="setting-title">个人资料公开</text>
+        <text class="setting-description">允许其他用户查看你的个人资料</text>
+      </view>
+      <view class="toggle-switch {{settings.profilePublic ? 'active' : ''}}" bindtap="toggleSetting" data-key="profilePublic">
+        <view class="toggle-slider"></view>
+      </view>
+    </view>
+
+    <!-- Show Location -->
+    <view class="setting-item">
+      <view class="setting-content">
+        <text class="setting-title">显示地区信息</text>
+        <text class="setting-description">在个人资料中显示你的地区</text>
+      </view>
+      <view class="toggle-switch {{settings.showLocation ? 'active' : ''}}" bindtap="toggleSetting" data-key="showLocation">
+        <view class="toggle-slider"></view>
+      </view>
+    </view>
+
+    <!-- Show Contact -->
+    <view class="setting-item">
+      <view class="setting-content">
+        <text class="setting-title">显示联系方式</text>
+        <text class="setting-description">允许其他用户看到你的微信和电话</text>
+      </view>
+      <view class="toggle-switch {{settings.showContact ? 'active' : ''}}" bindtap="toggleSetting" data-key="showContact">
+        <view class="toggle-slider"></view>
+      </view>
+    </view>
+
+    <!-- Show Transaction History -->
+    <view class="setting-item">
+      <view class="setting-content">
+        <text class="setting-title">显示交易历史</text>
+        <text class="setting-description">在个人资料中展示你的交易成功数</text>
+      </view>
+      <view class="toggle-switch {{settings.showTransactionHistory ? 'active' : ''}}" bindtap="toggleSetting" data-key="showTransactionHistory">
+        <view class="toggle-slider"></view>
+      </view>
+    </view>
+
+    <!-- Allow Messages -->
+    <view class="setting-item">
+      <view class="setting-content">
+        <text class="setting-title">允许陌生人消息</text>
+        <text class="setting-description">接收来自非好友的消息</text>
+      </view>
+      <view class="toggle-switch {{settings.allowMessages ? 'active' : ''}}" bindtap="toggleSetting" data-key="allowMessages">
+        <view class="toggle-slider"></view>
+      </view>
+    </view>
+
+    <!-- Allow Recommendations -->
+    <view class="setting-item">
+      <view class="setting-content">
+        <text class="setting-title">接收推荐</text>
+        <text class="setting-description">允许平台根据你的兴趣推荐物品</text>
+      </view>
+      <view class="toggle-switch {{settings.allowRecommendations ? 'active' : ''}}" bindtap="toggleSetting" data-key="allowRecommendations">
+        <view class="toggle-slider"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Tips -->
+  <view class="tips-section">
+    <text class="tips-title">💡 隐私提示</text>
+    <text class="tips-item">• 关闭"个人资料公开"后，只有你的好友能看到你的资料</text>
+    <text class="tips-item">• 隐私设置的更改会立即生效</text>
+    <text class="tips-item">• 你可以随时修改这些设置</text>
+  </view>
+
+  <!-- Save Button -->
+  <view class="btn-group">
+    <view class="btn btn-primary" bindtap="saveSettings">保存设置</view>
+  </view>
+</view>

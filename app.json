@@ -11,7 +11,13 @@
     "pages/published-items/published-items",
     "pages/wish-management/wish-management",
     "pages/settings/settings",
-    "pages/edit-profile/edit-profile"
+    "pages/edit-profile/edit-profile",
+    "pages/real-name-auth/real-name-auth",
+    "pages/privacy-settings/privacy-settings",
+    "pages/security-settings/security-settings",
+    "pages/about-us/about-us",
+    "pages/terms-of-service/terms-of-service",
+    "pages/privacy-policy/privacy-policy"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -70,5 +76,6 @@
     "scope.userLocation": {
       "desc": "你的位置信息将用于小程序位置接口的效果展示"
     }
-  }
+  },
+  "sitemapLocation": "sitemap.json"
 }

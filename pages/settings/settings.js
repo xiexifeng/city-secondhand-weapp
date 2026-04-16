@@ -56,9 +56,8 @@ Page({
    * Navigate to realname
    */
   navigateToRealname: function() {
-    wx.showToast({
-      title: '实名认证功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/real-name-auth/real-name-auth'
     });
   },
 
@@ -66,9 +65,8 @@ Page({
    * Navigate to privacy
    */
   navigateToPrivacy: function() {
-    wx.showToast({
-      title: '隐私设置功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/privacy-settings/privacy-settings'
     });
   },
 
@@ -76,9 +74,8 @@ Page({
    * Navigate to security
    */
   navigateToSecurity: function() {
-    wx.showToast({
-      title: '密码和安全功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/security-settings/security-settings'
     });
   },
 
@@ -86,9 +83,8 @@ Page({
    * Navigate to about
    */
   navigateToAbout: function() {
-    wx.showToast({
-      title: '关于我们功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/about-us/about-us'
     });
   },
 
@@ -96,9 +92,8 @@ Page({
    * Navigate to terms
    */
   navigateToTerms: function() {
-    wx.showToast({
-      title: '使用条款功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/terms-of-service/terms-of-service'
     });
   },
 
@@ -106,9 +101,8 @@ Page({
    * Navigate to privacy policy
    */
   navigateToPrivacyPolicy: function() {
-    wx.showToast({
-      title: '隐私政策功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/privacy-policy/privacy-policy'
     });
   },
 

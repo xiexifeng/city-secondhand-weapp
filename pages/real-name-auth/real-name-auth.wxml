@@ -1,0 +1,149 @@
+<!--pages/real-name-auth/real-name-auth.wxml-->
+<view class="real-name-auth-container">
+  <!-- Header -->
+  <view class="header">
+    <view class="header-left" bindtap="goBack">
+      <text class="back-arrow">‹</text>
+      <text class="header-title">实名认证</text>
+    </view>
+  </view>
+
+  <!-- Progress Steps -->
+  <view class="steps-container">
+    <view class="step" wx:for="{{steps}}" wx:key="id">
+      <view class="step-circle {{currentStep >= item.id ? 'active' : ''}}">
+        <text wx:if="{{currentStep > item.id}}" class="step-check">✓</text>
+        <text wx:else>{{item.id}}</text>
+      </view>
+      <text class="step-label">{{item.label}}</text>
+    </view>
+  </view>
+
+  <!-- Step 1: Information -->
+  <view wx:if="{{currentStep === 1}}" class="step-content">
+    <view class="step-title">填写个人信息</view>
+    <view class="form-group">
+      <text class="form-label">真实姓名 <text class="required">*</text></text>
+      <input class="form-input" placeholder="请输入真实姓名" value="{{form.name}}" bindinput="handleInputChange" data-field="name"></input>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">身份证号 <text class="required">*</text></text>
+      <input class="form-input" placeholder="请输入18位身份证号" value="{{form.idNumber}}" bindinput="handleInputChange" data-field="idNumber"></input>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">出生日期 <text class="required">*</text></text>
+      <picker class="form-input picker" mode="date" value="{{form.birthDate}}" bindchange="handleDateChange">
+        <view>{{form.birthDate || '请选择出生日期'}}</view>
+      </picker>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">手机号 <text class="required">*</text></text>
+      <input class="form-input" placeholder="请输入手机号" value="{{form.phone}}" bindinput="handleInputChange" data-field="phone"></input>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">邮箱</text>
+      <input class="form-input" placeholder="请输入邮箱地址" value="{{form.email}}" bindinput="handleInputChange" data-field="email"></input>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">所在地区 <text class="required">*</text></text>
+      <picker class="form-input picker" mode="region" value="{{form.region}}" bindchange="handleRegionChange">
+        <view>{{form.region.join('-') || '请选择所在地区'}}</view>
+      </picker>
+    </view>
+
+    <view class="btn-group">
+      <view class="btn btn-primary" bindtap="goToNextStep">下一步</view>
+    </view>
+  </view>
+
+  <!-- Step 2: ID Upload -->
+  <view wx:if="{{currentStep === 2}}" class="step-content">
+    <view class="step-title">上传身份证</view>
+    <text class="step-description">请上传身份证正面和反面照片</text>
+
+    <view class="upload-section">
+      <text class="upload-label">身份证正面</text>
+      <view class="upload-box" bindtap="uploadIdFront">
+        <image wx:if="{{form.idFront}}" src="{{form.idFront}}" mode="aspectFill"></image>
+        <view wx:else class="upload-placeholder">
+          <text class="upload-icon">📷</text>
+          <text class="upload-text">点击上传</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="upload-section">
+      <text class="upload-label">身份证反面</text>
+      <view class="upload-box" bindtap="uploadIdBack">
+        <image wx:if="{{form.idBack}}" src="{{form.idBack}}" mode="aspectFill"></image>
+        <view wx:else class="upload-placeholder">
+          <text class="upload-icon">📷</text>
+          <text class="upload-text">点击上传</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="tips">
+      <text class="tips-title">📋 上传提示</text>
+      <text class="tips-item">• 请确保身份证清晰可见</text>
+      <text class="tips-item">• 不要遮挡任何信息</text>
+      <text class="tips-item">• 支持JPG、PNG格式</text>
+    </view>
+
+    <view class="btn-group">
+      <view class="btn btn-secondary" bindtap="goToPreviousStep">上一步</view>
+      <view class="btn btn-primary" bindtap="goToNextStep">下一步</view>
+    </view>
+  </view>
+
+  <!-- Step 3: Face Verification -->
+  <view wx:if="{{currentStep === 3}}" class="step-content">
+    <view class="step-title">人脸验证</view>
+    <text class="step-description">请进行人脸识别验证</text>
+
+    <view class="face-verification-box">
+      <text class="face-icon">😊</text>
+      <text class="face-title">人脸识别验证</text>
+      <text class="face-description">为了确保账户安全，请完成人脸识别验证</text>
+    </view>
+
+    <view class="tips">
+      <text class="tips-title">📷 验证要求</text>
+      <text class="tips-item">• 在光线充足的环境中</text>
+      <text class="tips-item">• 正面面对摄像头</text>
+      <text class="tips-item">• 不要佩戴墨镜或帽子</text>
+    </view>
+
+    <view class="btn-group">
+      <view class="btn btn-secondary" bindtap="goToPreviousStep">上一步</view>
+      <view class="btn btn-primary" bindtap="startFaceVerification">开始验证</view>
+    </view>
+  </view>
+
+  <!-- Step 4: Success -->
+  <view wx:if="{{currentStep === 4}}" class="step-content success-content">
+    <view class="success-icon">✓</view>
+    <text class="success-title">认证成功</text>
+    <text class="success-description">你的实名认证已完成，可以享受更多功能</text>
+
+    <view class="success-info">
+      <view class="info-item">
+        <text class="info-label">认证姓名</text>
+        <text class="info-value">{{form.name}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">认证时间</text>
+        <text class="info-value">{{authTime}}</text>
+      </view>
+    </view>
+
+    <view class="btn-group">
+      <view class="btn btn-primary" bindtap="goToProfile">返回个人中心</view>
+    </view>
+  </view>
+</view>
