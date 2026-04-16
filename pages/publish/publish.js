@@ -1,108 +1,256 @@
-// pages/publish/publish.js
 Page({
   data: {
+    publishType: null,  // 'sell' | 'exchange' | 'wish'
     images: [],
-    title: '',
-    description: '',
-    tradeType: 'sell',
-    price: '',
-    location: '',
-    condition: 'good'
+    formData: {
+      title: '',
+      description: '',
+      price: '',
+      category: '数码3C',
+      wechat: '',
+      phone: '',
+      location: '北京市朝阳区',
+      wantItems: '',
+      budget: '',
+      condition: '9成新',
+      contactVisibility: 'both',
+      showDescription: true
+    },
+    locationDetails: {
+      province: '北京市',
+      city: '北京市',
+      district: '朝阳区'
+    },
+    agreed: false,
+    categoryIndex: 0,
+    conditionIndex: 2,
+    categories: [
+      '数码3C',
+      '服饰鞋包',
+      '家居生活',
+      '母婴用品',
+      '书籍文具',
+      '美妆个护',
+      '运动户外',
+      '其他'
+    ],
+    conditions: [
+      '全新',
+      '9.5成新',
+      '9成新',
+      '8.5成新',
+      '8成新',
+      '7成新',
+      '6成新',
+      '5成新',
+      '以下'
+    ]
   },
 
-  onLoad() {
+  onLoad: function() {
     // 页面加载
   },
 
-  // 上传图片
-  handleUploadImage() {
+  /**
+   * 选择发布方式
+   */
+  selectPublishType: function(e) {
+    const type = e.currentTarget.dataset.type;
+    this.setData({ publishType: type });
+  },
+
+  /**
+   * 返回发布方式选择
+   */
+  backToTypeSelect: function() {
+    this.setData({ publishType: null });
+  },
+
+  /**
+   * 返回首页
+   */
+  handleBack: function() {
+    wx.navigateBack();
+  },
+
+  /**
+   * 上传图片
+   */
+  handleUploadImage: function() {
+    const { images } = this.data;
+    if (images.length >= 9) {
+      wx.showToast({
+        title: '最多上传9张图片',
+        icon: 'none'
+      });
+      return;
+    }
+
     wx.chooseImage({
-      count: 9,
+      count: 9 - images.length,
       sizeType: ['original', 'compressed'],
       sourceType: ['album', 'camera'],
       success: (res) => {
-        const tempFilePaths = res.tempFilePaths;
         this.setData({
-          images: [...this.data.images, ...tempFilePaths].slice(0, 9)
+          images: [...images, ...res.tempFilePaths]
         });
-      },
-      fail: (err) => {
-        console.error('选择图片失败:', err);
       }
     });
   },
 
-  // 删除图片
-  handleDeleteImage(e) {
+  /**
+   * 删除图片
+   */
+  removeImage: function(e) {
     const index = e.currentTarget.dataset.index;
-    const images = this.data.images.filter((_, i) => i !== index);
+    const { images } = this.data;
+    images.splice(index, 1);
     this.setData({ images });
   },
 
-  // 输入标题
-  handleTitleInput(e) {
-    this.setData({ title: e.detail.value });
+  /**
+   * 更新表单数据
+   */
+  updateFormData: function(e) {
+    const field = e.currentTarget.dataset.field;
+    const value = e.detail.value;
+    const { formData } = this.data;
+    formData[field] = value;
+    this.setData({ formData });
   },
 
-  // 输入描述
-  handleDescriptionInput(e) {
-    this.setData({ description: e.detail.value });
-  },
-
-  // 输入价格
-  handlePriceInput(e) {
-    this.setData({ price: e.detail.value });
-  },
-
-  // 选择交易方式
-  handleTradeTypeChange(e) {
-    const tradeType = e.currentTarget.dataset.type;
-    this.setData({ tradeType });
-  },
-
-  // 选择成色
-  handleConditionChange(e) {
-    const condition = e.currentTarget.dataset.condition;
-    this.setData({ condition });
-  },
-
-  // 选择位置
-  handleSelectLocation() {
-    wx.navigateTo({
-      url: '/pages/location-picker/location-picker'
+  /**
+   * 分类选择
+   */
+  onCategoryChange: function(e) {
+    const { categories, formData } = this.data;
+    const index = e.detail.value;
+    formData.category = categories[index];
+    this.setData({
+      categoryIndex: index,
+      formData
     });
   },
 
-  // 发布
-  handlePublish() {
-    if (!this.data.title) {
-      wx.showToast({
-        title: '请输入物品名称',
-        icon: 'none'
-      });
-      return;
-    }
+  /**
+   * 物品成色选择
+   */
+  onConditionChange: function(e) {
+    const { conditions, formData } = this.data;
+    const index = e.detail.value;
+    formData.condition = conditions[index];
+    this.setData({
+      conditionIndex: index,
+      formData
+    });
+  },
 
-    if (this.data.tradeType === 'sell' && !this.data.price) {
-      wx.showToast({
-        title: '请输入价格',
-        icon: 'none'
-      });
-      return;
-    }
-
+  /**
+   * 打开位置选择器
+   */
+  openLocationPicker: function() {
     wx.showToast({
-      title: '发布成功',
-      icon: 'success'
+      title: '位置选择功能开发中',
+      icon: 'none'
     });
-
-    setTimeout(() => {
-      wx.navigateBack();
-    }, 1500);
+    // TODO: 实现位置选择器
   },
 
-  // 取消
-  handleCancel() {
-    wx.navigateBack();
+  /**
+   * 更新联系方式可见性
+   */
+  updateContactVisibility: function(e) {
+    const value = e.currentTarget.dataset.value;
+    const { formData } = this.data;
+    formData.contactVisibility = value;
+    this.setData({ formData });
+  },
+
+  /**
+   * 切换显示描述
+   */
+  toggleShowDescription: function() {
+    const { formData } = this.data;
+    formData.showDescription = !formData.showDescription;
+    this.setData({ formData });
+  },
+
+  /**
+   * 切换同意免责声明
+   */
+  toggleAgreed: function() {
+    this.setData({ agreed: !this.data.agreed });
+  },
+
+  /**
+   * 发布物品
+   */
+  handlePublish: function() {
+    const { agreed, formData, publishType, images } = this.data;
+
+    // 检查是否同意免责声明
+    if (!agreed) {
+      wx.showToast({
+        title: '请同意免责声明',
+        icon: 'none'
+      });
+      return;
+    }
+
+    // 检查必填项
+    if (!formData.title) {
+      wx.showToast({
+        title: '请填写标题',
+        icon: 'none'
+      });
+      return;
+    }
+
+    if (!formData.wechat) {
+      wx.showToast({
+        title: '请填写微信号',
+        icon: 'none'
+      });
+      return;
+    }
+
+    if (!formData.phone) {
+      wx.showToast({
+        title: '请填写电话号码',
+        icon: 'none'
+      });
+      return;
+    }
+
+    // 检查发布类型特定的必填项
+    if (publishType === 'sell' && !formData.price) {
+      wx.showToast({
+        title: '请填写价格',
+        icon: 'none'
+      });
+      return;
+    }
+
+    if (publishType !== 'wish' && images.length === 0) {
+      wx.showToast({
+        title: '请上传至少一张图片',
+        icon: 'none'
+      });
+      return;
+    }
+
+    // 发布成功
+    wx.showToast({
+      title: '发布成功！',
+      icon: 'success',
+      duration: 1500
+    });
+
+    // 延迟后跳转到个人资料页
+    setTimeout(() => {
+      wx.switchTab({
+        url: '/pages/profile/profile'
+      });
+    }, 1500);
   }
 });

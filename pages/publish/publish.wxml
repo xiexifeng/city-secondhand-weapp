@@ -1,43 +1,329 @@
 <!--pages/publish/publish.wxml-->
 <view class="publish-container">
-  <view class="publish-header">
-    <text class="publish-title">发布物品</text>
-  </view>
-  
-  <view class="publish-form">
-    <!-- 图片上传 -->
-    <view class="form-section">
-      <text class="section-title">物品图片</text>
-      <view class="image-uploader" bindtap="handleUploadImage">
-        <view class="upload-placeholder">
-          <text class="upload-icon">+</text>
-          <text class="upload-text">上传图片</text>
+  <!-- 发布方式选择页面 -->
+  <view wx:if="{{!publishType}}" class="publish-type-page">
+    <!-- 顶部导航栏 -->
+    <view class="publish-header">
+      <view class="header-left">
+        <view class="back-btn" bindtap="handleBack">
+          <text>←</text>
         </view>
       </view>
+      <view class="header-title">发布物品</view>
+      <view class="header-right"></view>
     </view>
 
-    <!-- 基本信息 -->
-    <view class="form-section">
-      <text class="section-title">基本信息</text>
-      <view class="form-group">
-        <text class="form-label">物品名称</text>
-        <input type="text" placeholder="请输入物品名称" class="form-input" />
+    <!-- 发布方式选择 -->
+    <view class="publish-content">
+      <text class="publish-subtitle">选择发布方式</text>
+      
+      <!-- 人民币出售 -->
+      <view class="publish-option" bindtap="selectPublishType" data-type="sell">
+        <view class="option-icon sell">💰</view>
+        <view class="option-info">
+          <text class="option-title">人民币出售</text>
+          <text class="option-desc">出售物品，标注价格，等待买家联系</text>
+        </view>
+        <text class="option-arrow">›</text>
       </view>
-    </view>
 
-    <!-- 交易方式 -->
-    <view class="form-section">
-      <text class="section-title">交易方式</text>
-      <view class="trade-type-group">
-        <view class="trade-type-item active">人民币</view>
-        <view class="trade-type-item">以物换物</view>
+      <!-- 以物换物 -->
+      <view class="publish-option" bindtap="selectPublishType" data-type="exchange">
+        <view class="option-icon exchange">🔄</view>
+        <view class="option-info">
+          <text class="option-title">以物换物</text>
+          <text class="option-desc">发布你的物品，说明想要的东西，寻找交换机会</text>
+        </view>
+        <text class="option-arrow">›</text>
       </view>
-    </view>
 
-    <!-- 提交按钮 -->
-    <view class="form-actions">
-      <button class="btn-submit">发布</button>
-      <button class="btn-cancel">取消</button>
+      <!-- 求换墙 -->
+      <view class="publish-option" bindtap="selectPublishType" data-type="wish">
+        <view class="option-icon wish">❤️</view>
+        <view class="option-info">
+          <text class="option-title">求换墙</text>
+          <text class="option-desc">发布你想要的物品，卖家看到后会主动联系你</text>
+        </view>
+        <text class="option-arrow">›</text>
+      </view>
     </view>
   </view>
+
+  <!-- 发布表单页面 -->
+  <view wx:else class="publish-form-page">
+    <!-- 顶部导航栏 -->
+    <view class="publish-header">
+      <view class="header-left">
+        <view class="back-btn" bindtap="backToTypeSelect">
+          <text>←</text>
+        </view>
+      </view>
+      <view class="header-title">
+        <text wx:if="{{publishType === 'sell'}}">出售物品</text>
+        <text wx:if="{{publishType === 'exchange'}}">以物换物</text>
+        <text wx:if="{{publishType === 'wish'}}">发布心愿</text>
+      </view>
+      <view class="header-right"></view>
+    </view>
+
+    <!-- 表单内容 -->
+    <scroll-view class="form-scroll" scroll-y>
+      <view class="form-container">
+        <!-- 图片上传 (不显示在求换墙) -->
+        <view wx:if="{{publishType !== 'wish'}}" class="form-section">
+          <view class="section-header">
+            <text class="section-title">上传图片</text>
+            <text class="required">*</text>
+          </view>
+          
+          <view class="image-grid">
+            <!-- 已上传的图片 -->
+            <view wx:for="{{images}}" wx:key="index" class="image-item">
+              <image src="{{item}}" class="image-preview" mode="aspectFill" />
+              <view class="image-remove" bindtap="removeImage" data-index="{{index}}">
+                <text>×</text>
+              </view>
+            </view>
+
+            <!-- 上传按钮 -->
+            <view wx:if="{{images.length < 9}}" class="image-upload" bindtap="handleUploadImage">
+              <text class="upload-icon">+</text>
+              <text class="upload-count">{{images.length}}/9</text>
+            </view>
+          </view>
+
+          <text class="section-hint">最多上传9张图片，建议上传清晰的物品照片</text>
+        </view>
+
+        <!-- 标题 -->
+        <view class="form-section">
+          <view class="section-header">
+            <text class="section-title">标题</text>
+            <text class="required">*</text>
+          </view>
+          <input 
+            type="text" 
+            class="form-input"
+            placeholder="{{publishType === 'wish' ? '例如：求购 iPhone 15 Pro' : '例如：iPhone 14 Pro Max'}}"
+            value="{{formData.title}}"
+            bindinput="updateFormData"
+            data-field="title"
+          />
+        </view>
+
+        <!-- 分类 -->
+        <view class="form-section">
+          <view class="section-header">
+            <text class="section-title">分类</text>
+          </view>
+          <picker bindchange="onCategoryChange" value="{{categoryIndex}}" range="{{categories}}">
+            <view class="picker-item">
+              <text>{{formData.category}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+
+        <!-- 物品成色 (不显示在求换墙) -->
+        <view wx:if="{{publishType !== 'wish'}}" class="form-section">
+          <view class="section-header">
+            <text class="section-title">物品成色</text>
+          </view>
+          <picker bindchange="onConditionChange" value="{{conditionIndex}}" range="{{conditions}}">
+            <view class="picker-item">
+              <text>{{formData.condition}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+          <text class="section-hint">帮助买家了解物品的使用状况</text>
+        </view>
+
+        <!-- 描述 -->
+        <view class="form-section">
+          <view class="section-header">
+            <text class="section-title">描述</text>
+          </view>
+          <textarea 
+            class="form-textarea"
+            placeholder="详细描述物品信息、成色、配件等..."
+            value="{{formData.description}}"
+            bindinput="updateFormData"
+            data-field="description"
+          />
+        </view>
+
+        <!-- 价格 (仅出售) -->
+        <view wx:if="{{publishType === 'sell'}}" class="form-section">
+          <view class="section-header">
+            <text class="section-title">价格</text>
+            <text class="required">*</text>
+          </view>
+          <input 
+            type="number" 
+            class="form-input"
+            placeholder="请输入价格"
+            value="{{formData.price}}"
+            bindinput="updateFormData"
+            data-field="price"
+          />
+        </view>
+
+        <!-- 想要物品 (仅以物换物) -->
+        <view wx:if="{{publishType === 'exchange'}}" class="form-section">
+          <view class="section-header">
+            <text class="section-title">我想要的物品</text>
+          </view>
+          <input 
+            type="text" 
+            class="form-input"
+            placeholder="例如：MacBook Pro 或其他3C产品"
+            value="{{formData.wantItems}}"
+            bindinput="updateFormData"
+            data-field="wantItems"
+          />
+        </view>
+
+        <!-- 预期价格或交换条件 (仅求换墙) -->
+        <view wx:if="{{publishType === 'wish'}}" class="form-section">
+          <view class="section-header">
+            <text class="section-title">预期价格或交换条件</text>
+          </view>
+          <input 
+            type="text" 
+            class="form-input"
+            placeholder="例如：2000元以内 或 用旧iPhone换"
+            value="{{formData.budget}}"
+            bindinput="updateFormData"
+            data-field="budget"
+          />
+        </view>
+
+        <!-- 位置选择 -->
+        <view class="form-section">
+          <view class="section-header">
+            <text class="section-title">📍 位置</text>
+          </view>
+          <view class="location-picker" bindtap="openLocationPicker">
+            <view class="location-main">
+              <text class="location-text">{{formData.location}}</text>
+              <text class="location-sub">{{locationDetails.province}} / {{locationDetails.city}} / {{locationDetails.district}}</text>
+            </view>
+            <text class="location-arrow">›</text>
+          </view>
+        </view>
+
+        <!-- 已选择位置显示 -->
+        <view class="location-display">
+          <text class="location-display-label">已选择位置</text>
+          <view class="location-grid">
+            <view class="location-item">
+              <text class="location-item-label">省份</text>
+              <text class="location-item-value">{{locationDetails.province}}</text>
+            </view>
+            <view class="location-item">
+              <text class="location-item-label">城市</text>
+              <text class="location-item-value">{{locationDetails.city}}</text>
+            </view>
+            <view class="location-item">
+              <text class="location-item-label">区县</text>
+              <text class="location-item-value">{{locationDetails.district}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 联系方式设置 -->
+        <view class="form-section">
+          <view class="section-header">
+            <text class="section-title">联系方式设置</text>
+          </view>
+          
+          <view class="radio-group">
+            <label class="radio-item" bindtap="updateContactVisibility" data-value="both">
+              <view class="radio {{formData.contactVisibility === 'both' ? 'radio-checked' : ''}}"></view>
+              <text>显示微信和电话</text>
+            </label>
+            <label class="radio-item" bindtap="updateContactVisibility" data-value="wechat">
+              <view class="radio {{formData.contactVisibility === 'wechat' ? 'radio-checked' : ''}}"></view>
+              <text>仅显示微信</text>
+            </label>
+            <label class="radio-item" bindtap="updateContactVisibility" data-value="phone">
+              <view class="radio {{formData.contactVisibility === 'phone' ? 'radio-checked' : ''}}"></view>
+              <text>仅显示电话</text>
+            </label>
+          </view>
+
+          <text class="section-hint">选择买家可以看到的联系方式，保护您的隐私</text>
+        </view>
+
+        <!-- 微信 -->
+        <view class="form-section">
+          <view class="section-header">
+            <text class="section-title">微信</text>
+            <text class="required">*</text>
+          </view>
+          <input 
+            type="text" 
+            class="form-input"
+            placeholder="请输入微信号"
+            value="{{formData.wechat}}"
+            bindinput="updateFormData"
+            data-field="wechat"
+          />
+        </view>
+
+        <!-- 电话 -->
+        <view class="form-section">
+          <view class="section-header">
+            <text class="section-title">电话</text>
+            <text class="required">*</text>
+          </view>
+          <input 
+            type="tel" 
+            class="form-input"
+            placeholder="请输入手机号"
+            value="{{formData.phone}}"
+            bindinput="updateFormData"
+            data-field="phone"
+          />
+        </view>
+
+        <!-- 显示描述选项 -->
+        <view class="checkbox-item" bindtap="toggleShowDescription">
+          <view class="checkbox {{formData.showDescription ? 'checkbox-checked' : ''}}"></view>
+          <text>在列表中显示详细描述（不勾选则仅显示标题）</text>
+        </view>
+
+        <!-- 免责声明 -->
+        <view class="disclaimer">
+          <view class="disclaimer-header">
+            <text class="disclaimer-icon">⚠️</text>
+            <text class="disclaimer-title">免责声明</text>
+          </view>
+          <view class="disclaimer-content">
+            <text class="disclaimer-item">• 发布的物品信息必须真实有效</text>
+            <text class="disclaimer-item">• 禁止发布违法违规、虚假、骗诈内容</text>
+            <text class="disclaimer-item">• 禁止发布违禁品、侵权商品</text>
+            <text class="disclaimer-item">• 平台不介入交易纠纷，请自行协商</text>
+          </view>
+        </view>
+
+        <!-- 同意免责声明 -->
+        <view class="checkbox-item" bindtap="toggleAgreed">
+          <view class="checkbox {{agreed ? 'checkbox-checked' : ''}}"></view>
+          <text>我已阅读并同意免责声明</text>
+        </view>
+
+        <!-- 发布按钮 -->
+        <view class="form-actions">
+          <button class="btn-publish {{!agreed ? 'btn-disabled' : ''}}" bindtap="handlePublish" disabled="{{!agreed}}">
+            发布
+          </button>
+        </view>
+
+        <!-- 底部间距 -->
+        <view class="form-bottom-spacing"></view>
+      </view>
+    </scroll-view>
+  </view>
+
 </view>
