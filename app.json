@@ -7,7 +7,11 @@
     "pages/search/search",
     "pages/wish-wall/wish-wall",
     "pages/profile/profile",
-    "pages/messages/messages"
+    "pages/messages/messages",
+    "pages/published-items/published-items",
+    "pages/wish-management/wish-management",
+    "pages/settings/settings",
+    "pages/edit-profile/edit-profile"
   ],
   "window": {
     "backgroundTextStyle": "light",

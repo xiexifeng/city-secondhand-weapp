@@ -1,0 +1,179 @@
+<!--pages/published-items/published-items.wxml-->
+<view class="published-items-container">
+  <!-- Header -->
+  <view class="header">
+    <view class="header-left" bindtap="goBack">
+      <text class="back-arrow">‹</text>
+      <text class="header-title">我的发布</text>
+    </view>
+  </view>
+
+  <!-- Stats Cards -->
+  <view class="stats-section">
+    <view class="stat-card">
+      <text class="stat-value">{{items.length}}</text>
+      <text class="stat-label">总发布</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value">{{getStatusCount('在售')}}</text>
+      <text class="stat-label">在售</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value">{{getStatusCount('成交中')}}</text>
+      <text class="stat-label">成交中</text>
+    </view>
+    <view class="stat-card">
+      <text class="stat-value">{{getStatusCount('已成交')}}</text>
+      <text class="stat-label">已成交</text>
+    </view>
+  </view>
+
+  <!-- Items List -->
+  <view class="items-list">
+    <view wx:if="{{items.length === 0}}" class="empty-state">
+      <text class="empty-icon">📝</text>
+      <text class="empty-title">还没有发布任何物品</text>
+      <view class="empty-btn" bindtap="navigateToPublish">去发布物品</view>
+    </view>
+
+    <view wx:for="{{items}}" wx:key="id" class="item-card">
+      <!-- View Mode -->
+      <view wx:if="{{editingId !== item.id}}" class="item-view">
+        <view class="item-header">
+          <image class="item-image" src="{{item.image}}" mode="aspectFill"></image>
+          <view class="item-info">
+            <view class="item-title-row">
+              <text class="item-title">{{item.title}}</text>
+              <view class="item-menu" bindtap="toggleMenu" data-id="{{item.id}}">
+                <text class="menu-icon">⋯</text>
+              </view>
+            </view>
+            <text class="item-date">{{item.publishDate}}</text>
+
+            <view class="item-badges">
+              <text class="item-price">¥{{item.price}}</text>
+              <view class="status-badge {{getStatusClass(item.status)}}">{{item.status}}</view>
+              <view wx:if="{{item.reviewStatus}}" class="review-status {{getReviewStatusClass(item.reviewStatus)}}">
+                {{getReviewStatusLabel(item.reviewStatus)}}
+              </view>
+            </view>
+
+            <view wx:if="{{item.reviewStatus === '审核不通过' && item.rejectionReason}}" class="rejection-reason">
+              <text class="reason-label">拒绝原因：{{item.rejectionReason}}</text>
+            </view>
+
+            <view class="item-stats">
+              <text class="stat-item">👁 {{item.views}}</text>
+              <text class="stat-item">✓ {{item.likes}}</text>
+            </view>
+          </view>
+
+          <!-- Menu Popup -->
+          <view wx:if="{{activeMenu === item.id}}" class="menu-popup-wrapper">
+            <view class="menu-popup" catchtap="noop">
+              <view class="menu-item" bindtap="handleEdit" data-id="{{item.id}}">
+                <text class="menu-icon">✏️</text>
+                <text class="menu-text">编辑</text>
+              </view>
+              <view class="menu-item" bindtap="openStatusModal" data-id="{{item.id}}">
+                <text class="menu-icon">🔄</text>
+                <text class="menu-text">改变状态</text>
+              </view>
+              <view class="menu-item delete" bindtap="handleDelete" data-id="{{item.id}}">
+                <text class="menu-icon">🗑️</text>
+                <text class="menu-text">删除</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- Edit Mode -->
+      <view wx:if="{{editingId === item.id}}" class="item-edit">
+        <view class="form-group">
+          <text class="form-label">物品标题</text>
+          <input class="form-input" value="{{editForm.title}}" bindinput="handleEditChange" data-field="title"></input>
+        </view>
+
+        <view class="form-row">
+          <view class="form-group">
+            <text class="form-label">价格 (¥)</text>
+            <input class="form-input" type="number" value="{{editForm.price}}" bindinput="handleEditChange" data-field="price"></input>
+          </view>
+          <view class="form-group">
+            <text class="form-label">交易方式</text>
+            <picker class="form-input picker" bindchange="handleTransactionTypeChange" value="{{transactionTypeIndex}}" range="{{transactionTypes}}">
+              <view>{{editForm.transactionType}}</view>
+            </picker>
+          </view>
+        </view>
+
+        <view class="form-group">
+          <text class="form-label">分类</text>
+          <picker class="form-input picker" bindchange="handleCategoryChange" value="{{categoryIndex}}" range="{{categories}}">
+            <view>{{editForm.category}}</view>
+          </picker>
+        </view>
+
+        <view class="form-group">
+          <text class="form-label">描述</text>
+          <textarea class="form-textarea" value="{{editForm.description}}" bindinput="handleEditChange" data-field="description"></textarea>
+        </view>
+
+        <view class="form-group">
+          <text class="form-label">位置详情</text>
+          <view class="location-display">
+            <view class="location-item">
+              <text class="location-label">省份</text>
+              <text class="location-value">{{editLocationDetails.province}}</text>
+            </view>
+            <view class="location-item">
+              <text class="location-label">城市</text>
+              <text class="location-value">{{editLocationDetails.city}}</text>
+            </view>
+            <view class="location-item">
+              <text class="location-label">区县</text>
+              <text class="location-value">{{editLocationDetails.district}}</text>
+            </view>
+          </view>
+          <view class="location-btn" bindtap="handleRelocation">📍 重新定位</view>
+        </view>
+
+        <view class="form-group">
+          <text class="form-label">图片</text>
+          <view class="image-preview">
+            <image class="preview-img" src="{{editForm.image}}" mode="aspectFill"></image>
+            <view class="upload-btn" bindtap="handleChangeImage">📷 更换图片</view>
+          </view>
+        </view>
+
+        <view class="edit-actions">
+          <view class="btn btn-save" bindtap="handleSaveEdit">保存</view>
+          <view class="btn btn-cancel" bindtap="cancelEdit">取消</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Menu Overlay -->
+  <view wx:if="{{activeMenu !== null}}" class="menu-overlay" bindtap="closeMenu"></view>
+
+  <!-- Status Change Modal -->
+  <view wx:if="{{showStatusModal && selectedItem}}" class="status-modal-overlay" bindtap="closeStatusModal">
+    <view class="status-modal" catchtap="noop">
+      <view class="modal-header">
+        <text class="modal-title">改变"{{selectedItem.title}}"的状态</text>
+      </view>
+      <view class="modal-content">
+        <view class="status-options">
+          <view wx:for="{{statusOptions}}" wx:key="*this" class="status-option {{getStatusOptionClass(item)}}" bindtap="handleStatusChange" data-status="{{item}}">
+            <text class="option-label">{{getStatusLabel(item)}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="modal-footer">
+        <view class="btn btn-close" bindtap="closeStatusModal">关闭</view>
+      </view>
+    </view>
+  </view>
+</view>

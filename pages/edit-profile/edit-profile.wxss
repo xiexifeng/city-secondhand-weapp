@@ -1,0 +1,271 @@
+/* pages/edit-profile/edit-profile.wxss */
+
+page {
+  background-color: #f3f4f6;
+}
+
+.edit-profile-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  padding-bottom: 100rpx;
+}
+
+/* Header */
+.header {
+  background-color: white;
+  border-bottom: 1rpx solid #e5e7eb;
+  padding: 12rpx 16rpx;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  cursor: pointer;
+}
+
+.back-arrow {
+  font-size: 32rpx;
+  color: #0ea5e9;
+  font-weight: bold;
+}
+
+.header-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Avatar Card */
+.avatar-card {
+  background-color: white;
+  border-bottom: 1rpx solid #e5e7eb;
+  padding: 24rpx 16rpx;
+  text-align: center;
+}
+
+.avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.avatar {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.avatar-text {
+  font-size: 50rpx;
+  font-weight: bold;
+  color: white;
+}
+
+.avatar-action {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 8rpx 16rpx;
+  background-color: #dbeafe;
+  border-radius: 8rpx;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.avatar-action:active {
+  background-color: #bfdbfe;
+}
+
+.action-icon {
+  font-size: 18rpx;
+}
+
+.action-text {
+  font-size: 18rpx;
+  color: #0c4a6e;
+  font-weight: 600;
+}
+
+/* Form Section */
+.form-section {
+  padding: 16rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+/* Form Group */
+.form-group {
+  background-color: white;
+  border: 1rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  padding: 12rpx 16rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.form-label {
+  display: block;
+  font-size: 20rpx;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.form-input {
+  padding: 8rpx 0;
+  border: none;
+  font-size: 20rpx;
+  color: #1f2937;
+  outline: none;
+  min-height: 40rpx;
+}
+
+.form-input::placeholder {
+  color: #d1d5db;
+}
+
+.form-textarea {
+  padding: 8rpx 0;
+  border: none;
+  font-size: 20rpx;
+  color: #1f2937;
+  outline: none;
+  min-height: 100rpx;
+  resize: vertical;
+}
+
+.form-textarea::placeholder {
+  color: #d1d5db;
+}
+
+.char-count {
+  display: block;
+  font-size: 18rpx;
+  color: #9ca3af;
+  text-align: right;
+}
+
+/* Location Input */
+.location-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8rpx 0;
+  cursor: pointer;
+}
+
+.location-text {
+  display: block;
+  font-size: 20rpx;
+  color: #1f2937;
+}
+
+.location-arrow {
+  font-size: 20rpx;
+  color: #9ca3af;
+}
+
+/* Contact Item */
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  padding: 8rpx 0;
+  border-top: 1rpx solid #f3f4f6;
+}
+
+.contact-label {
+  display: block;
+  font-size: 18rpx;
+  color: #9ca3af;
+  width: 60rpx;
+  flex-shrink: 0;
+}
+
+.contact-input {
+  flex: 1;
+  border: none;
+  font-size: 20rpx;
+  color: #1f2937;
+  outline: none;
+  min-height: 36rpx;
+}
+
+.contact-input::placeholder {
+  color: #d1d5db;
+}
+
+/* Tips Card */
+.tips-card {
+  background-color: #dbeafe;
+  border: 1rpx solid #bfdbfe;
+  border-radius: 12rpx;
+  padding: 12rpx 16rpx;
+  display: flex;
+  gap: 8rpx;
+  align-items: flex-start;
+}
+
+.tips-icon {
+  font-size: 20rpx;
+  flex-shrink: 0;
+}
+
+.tips-text {
+  display: block;
+  font-size: 18rpx;
+  color: #0c4a6e;
+  line-height: 1.5;
+}
+
+/* Button Group */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  margin-top: 12rpx;
+}
+
+.btn {
+  padding: 12rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.2s;
+  min-height: 44rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-save {
+  background-color: #10b981;
+  color: white;
+}
+
+.btn-save:active {
+  background-color: #059669;
+}
+
+.btn-cancel {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.btn-cancel:active {
+  background-color: #d1d5db;
+}

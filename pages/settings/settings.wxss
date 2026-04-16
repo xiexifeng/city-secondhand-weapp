@@ -1,0 +1,158 @@
+/* pages/settings/settings.wxss */
+
+page {
+  background-color: #f3f4f6;
+}
+
+.settings-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  padding-bottom: 100rpx;
+}
+
+/* Header */
+.header {
+  background-color: white;
+  border-bottom: 1rpx solid #e5e7eb;
+  padding: 12rpx 16rpx;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  cursor: pointer;
+}
+
+.back-arrow {
+  font-size: 32rpx;
+  color: #0ea5e9;
+  font-weight: bold;
+}
+
+.header-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* Settings Content */
+.settings-content {
+  padding: 16rpx;
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+/* Settings Section */
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+}
+
+.section-title {
+  display: block;
+  font-size: 20rpx;
+  font-weight: 600;
+  color: #9ca3af;
+  padding: 0 4rpx;
+  margin-bottom: 4rpx;
+}
+
+/* Settings List */
+.settings-list {
+  background-color: white;
+  border: 1rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Settings Item */
+.settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx;
+  border-bottom: 1rpx solid #f3f4f6;
+  transition: all 0.2s;
+}
+
+.settings-item:last-child {
+  border-bottom: none;
+}
+
+.settings-item:active {
+  background-color: #f9fafb;
+}
+
+.settings-item.logout {
+  justify-content: center;
+}
+
+/* Item Left */
+.item-left {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  flex: 1;
+}
+
+.item-icon {
+  font-size: 24rpx;
+  width: 40rpx;
+  height: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6;
+  border-radius: 8rpx;
+}
+
+.item-icon.logout {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+/* Item Text */
+.item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2rpx;
+}
+
+.item-title {
+  display: block;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.item-title.logout {
+  color: #dc2626;
+  font-size: 24rpx;
+  text-align: center;
+}
+
+.item-desc {
+  display: block;
+  font-size: 20rpx;
+  color: #9ca3af;
+}
+
+/* Item Arrow */
+.item-arrow {
+  font-size: 24rpx;
+  color: #9ca3af;
+}
+
+.settings-item.logout .item-arrow {
+  display: none;
+}

@@ -1,9 +1,191 @@
-<!--pages/$page/$page.wxml-->
-<view class="container">
-  <view class="page-header">
-    <text class="page-title">页面标题</text>
+<!--pages/profile/profile.wxml-->
+<view class="profile-container">
+  <!-- User Header -->
+  <view class="user-header">
+    <view class="header-top">
+      <view class="theme-switcher">
+        <text class="theme-icon" bindtap="toggleTheme">🌙</text>
+      </view>
+    </view>
+
+    <!-- User Info -->
+    <view class="user-info">
+      <view class="user-avatar">
+        <text class="avatar-text">U</text>
+        <view class="level-badge {{userStats.level}}">
+          {{getLevelIcon(userStats.level)}}
+        </view>
+      </view>
+
+      <view class="user-details">
+        <view class="user-name-row">
+          <text class="user-name">{{user.nickname}}</text>
+          <view class="level-label {{userStats.level}}">
+            {{getLevelLabel(userStats.level)}}
+          </view>
+        </view>
+        <text class="user-status">已实名认证 • 活跃用户</text>
+        <view class="user-stats">
+          <text class="stat-item">👥 粉丝 {{user.followers}}</text>
+          <text class="stat-separator">•</text>
+          <text class="stat-item">⭐ 关注 {{user.following}}</text>
+        </view>
+      </view>
+    </view>
   </view>
-  <view class="page-content">
-    <text>页面内容</text>
+
+  <!-- Publish Data -->
+  <view class="publish-data-section">
+    <!-- Items Data Card -->
+    <view class="data-card" bindtap="navigateToPublished">
+      <view class="card-header">
+        <view class="card-title">
+          <text class="card-icon">📦</text>
+          <text class="card-label">我的发布</text>
+        </view>
+        <text class="card-count">{{publishData.items.count}}</text>
+      </view>
+
+      <view class="data-grid">
+        <view class="data-item">
+          <view class="data-value">{{publishData.items.views}}</view>
+          <text class="data-label">浏览</text>
+        </view>
+        <view class="data-item">
+          <view class="data-value">{{publishData.items.interested}}</view>
+          <text class="data-label">感兴趣</text>
+        </view>
+        <view class="data-item">
+          <view class="data-value">{{publishData.items.collected}}</view>
+          <text class="data-label">收藏</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Wishes Data Card -->
+    <view class="data-card" bindtap="navigateToWishes">
+      <view class="card-header">
+        <view class="card-title">
+          <text class="card-icon">❤️</text>
+          <text class="card-label">我的求换</text>
+        </view>
+        <text class="card-count emerald">{{publishData.wishes.count}}</text>
+      </view>
+
+      <view class="data-grid">
+        <view class="data-item">
+          <view class="data-value">{{publishData.wishes.matches}}</view>
+          <text class="data-label">匹配</text>
+        </view>
+        <view class="data-item">
+          <view class="data-value">{{publishData.wishes.newRecommendations}}</view>
+          <text class="data-label">新推荐</text>
+        </view>
+        <view class="data-item">
+          <view class="data-value">{{publishData.wishes.followers}}</view>
+          <text class="data-label">关注者</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Weekly Tasks -->
+  <view class="tasks-section">
+    <view class="section-header">
+      <view class="section-title">
+        <text class="section-icon">⚡</text>
+        <text class="section-label">本周任务</text>
+      </view>
+      <text class="view-all" bindtap="navigateToTasks">查看全部 →</text>
+    </view>
+
+    <view class="tasks-list">
+      <view wx:for="{{weeklyTasks}}" wx:key="id" class="task-item {{item.completed ? 'completed' : ''}}">
+        <view class="task-header">
+          <view class="task-info">
+            <text class="task-title">{{item.title}}</text>
+            <text class="task-description">{{item.description}}</text>
+          </view>
+          <text class="task-reward">+{{item.reward}}积分</text>
+        </view>
+
+        <view wx:if="{{!item.completed}}" class="task-progress">
+          <view class="progress-bar">
+            <view class="progress-fill" style="width: {{(item.current / item.target) * 100}}%"></view>
+          </view>
+          <view class="progress-text">
+            <text class="progress-count">{{item.current}}/{{item.target}}</text>
+          </view>
+        </view>
+
+        <view wx:if="{{item.completed}}" class="task-completed">
+          <text>✓ 已完成</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Points & Favorites -->
+  <view class="stats-grid">
+    <view class="stat-card points-card">
+      <view class="stat-card-header">
+        <text class="stat-card-icon">⚡</text>
+        <text class="stat-card-label">积分</text>
+      </view>
+      <view class="stat-card-value">
+        <text class="stat-number">{{userStats.points}}</text>
+        <text class="stat-unit">积分</text>
+      </view>
+      <text class="stat-card-desc">本月获得 +45 积分</text>
+    </view>
+
+    <view class="stat-card favorites-card">
+      <view class="stat-card-header">
+        <text class="stat-card-icon">❤️</text>
+        <text class="stat-card-label">收藏</text>
+      </view>
+      <view class="stat-card-value">
+        <text class="stat-number">{{userStats.favorites}}</text>
+        <text class="stat-unit">个</text>
+      </view>
+      <text class="stat-card-desc">最近收藏 3 个</text>
+    </view>
+  </view>
+
+  <!-- Discover -->
+  <view class="discover-section">
+    <view class="discover-header">
+      <text class="discover-icon">🔥</text>
+      <text class="discover-label">发现好物</text>
+    </view>
+
+    <view class="discover-list">
+      <view wx:for="{{discoverItems}}" wx:key="index" class="discover-item" bindtap="navigateDiscover" data-action="{{item.action}}">
+        <text class="discover-icon-item">{{item.icon}}</text>
+        <text class="discover-label-item">{{item.label}}</text>
+        <text class="discover-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Settings Section -->
+  <view class="settings-section">
+    <text class="settings-section-title">账户</text>
+    <view class="settings-list">
+      <view class="settings-item" bindtap="navigateToSettings">
+        <view class="settings-item-left">
+          <text class="settings-icon">⚙️</text>
+          <text class="settings-text">账户设置</text>
+        </view>
+        <text class="settings-arrow">›</text>
+      </view>
+      <view class="settings-item" bindtap="handleLogout">
+        <view class="settings-item-left">
+          <text class="settings-icon logout">🚪</text>
+          <text class="settings-text logout">退出登录</text>
+        </view>
+        <text class="settings-arrow">›</text>
+      </view>
+    </view>
   </view>
 </view>

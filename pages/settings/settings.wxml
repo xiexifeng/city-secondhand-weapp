@@ -1,0 +1,115 @@
+<!--pages/settings/settings.wxml-->
+<view class="settings-container">
+  <!-- Header -->
+  <view class="header">
+    <view class="header-left" bindtap="goBack">
+      <text class="back-arrow">‹</text>
+      <text class="header-title">账户设置</text>
+    </view>
+  </view>
+
+  <!-- Settings List -->
+  <view class="settings-content">
+    <!-- Account Section -->
+    <view class="settings-section">
+      <text class="section-title">账户</text>
+      <view class="settings-list">
+        <view class="settings-item" bindtap="navigateToEditProfile">
+          <view class="item-left">
+            <text class="item-icon">✏️</text>
+            <view class="item-text">
+              <text class="item-title">个人信息</text>
+              <text class="item-desc">编辑昵称、头像、个人简介</text>
+            </view>
+          </view>
+          <text class="item-arrow">›</text>
+        </view>
+
+        <view class="settings-item" bindtap="navigateToRealname">
+          <view class="item-left">
+            <text class="item-icon">🛡️</text>
+            <view class="item-text">
+              <text class="item-title">实名认证</text>
+              <text class="item-desc">完成实名认证提升信任度</text>
+            </view>
+          </view>
+          <text class="item-arrow">›</text>
+        </view>
+
+        <view class="settings-item" bindtap="navigateToPrivacy">
+          <view class="item-left">
+            <text class="item-icon">🔒</text>
+            <view class="item-text">
+              <text class="item-title">隐私设置</text>
+              <text class="item-desc">控制个人信息的可见性</text>
+            </view>
+          </view>
+          <text class="item-arrow">›</text>
+        </view>
+
+        <view class="settings-item" bindtap="navigateToSecurity">
+          <view class="item-left">
+            <text class="item-icon">🔐</text>
+            <view class="item-text">
+              <text class="item-title">密码和安全</text>
+              <text class="item-desc">修改密码、绑定手机、两步验证</text>
+            </view>
+          </view>
+          <text class="item-arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- App Section -->
+    <view class="settings-section">
+      <text class="section-title">应用</text>
+      <view class="settings-list">
+        <view class="settings-item" bindtap="navigateToAbout">
+          <view class="item-left">
+            <text class="item-icon">ℹ️</text>
+            <view class="item-text">
+              <text class="item-title">关于我们</text>
+              <text class="item-desc">了解平台信息和版本</text>
+            </view>
+          </view>
+          <text class="item-arrow">›</text>
+        </view>
+
+        <view class="settings-item" bindtap="navigateToTerms">
+          <view class="item-left">
+            <text class="item-icon">📋</text>
+            <view class="item-text">
+              <text class="item-title">使用条款</text>
+              <text class="item-desc">查看服务条款和规则</text>
+            </view>
+          </view>
+          <text class="item-arrow">›</text>
+        </view>
+
+        <view class="settings-item" bindtap="navigateToPrivacyPolicy">
+          <view class="item-left">
+            <text class="item-icon">📜</text>
+            <view class="item-text">
+              <text class="item-title">隐私政策</text>
+              <text class="item-desc">查看隐私政策和数据处理</text>
+            </view>
+          </view>
+          <text class="item-arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Logout Section -->
+    <view class="settings-section">
+      <view class="settings-list">
+        <view class="settings-item logout" bindtap="handleLogout">
+          <view class="item-left">
+            <text class="item-icon logout">🚪</text>
+            <text class="item-title logout">退出登录</text>
+          </view>
+          <text class="item-arrow">›</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
