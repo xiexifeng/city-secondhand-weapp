@@ -17,7 +17,9 @@
     "pages/security-settings/security-settings",
     "pages/about-us/about-us",
     "pages/terms-of-service/terms-of-service",
-    "pages/privacy-policy/privacy-policy"
+    "pages/privacy-policy/privacy-policy",
+    "pages/content-moderation/content-moderation",
+    "pages/moderation-detail/moderation-detail"
   ],
   "window": {
     "backgroundTextStyle": "light",

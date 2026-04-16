@@ -5,6 +5,7 @@ Page({
     selectedTradeType: 'all',
     selectedSort: 'newest',
     showAuditIcon: false,
+    auditCount: 0,
     
     // 物品列表
     items: [],
@@ -301,6 +302,10 @@ Page({
     this.checkAuditStatus();
   },
 
+  onHide() {
+    // Page hidden
+  },
+
   // 加载物品列表
   loadItems() {
     if (this.data.loading) return;
@@ -365,7 +370,17 @@ Page({
 
   // 检查审核状态
   checkAuditStatus() {
-    const auditCount = wx.getStorageSync('auditCount') || 0;
-    this.setData({ showAuditIcon: auditCount > 0 });
+    const auditCount = wx.getStorageSync('auditCount') || 5;
+    this.setData({ 
+      showAuditIcon: auditCount > 0,
+      auditCount: auditCount
+    });
+  },
+
+  // 导航到审核页面
+  navigateToModeration() {
+    wx.navigateTo({
+      url: '/pages/content-moderation/content-moderation'
+    });
   }
 });

@@ -338,7 +338,7 @@ page {
 }
 
 /* ========== 审核Icon ========== */
-.audit-icon {
+.audit-icon-wrapper {
   position: fixed;
   bottom: 100rpx;
   right: 20rpx;
@@ -354,4 +354,26 @@ page {
   font-weight: bold;
   box-shadow: 0 4rpx 12rpx rgba(249, 115, 22, 0.3);
   z-index: 5;
+}
+
+.audit-icon-text {
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.audit-icon-badge {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  min-width: 24rpx;
+  height: 24rpx;
+  background-color: #dc2626;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12rpx;
+  font-weight: bold;
+  border: 2rpx solid white;
 }

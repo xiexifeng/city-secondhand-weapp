@@ -47,6 +47,12 @@
     </scroll-view>
   </view>
 
+  <!-- 审核入口 -->
+  <view class="audit-icon-wrapper" wx:if="{{showAuditIcon}}" bindtap="navigateToModeration">
+    <view class="audit-icon-badge">{{auditCount}}</view>
+    <text class="audit-icon-text">✓</text>
+  </view>
+
   <!-- 物品列表 -->
   <view class="items-container">
     <!-- 加载中 -->

@@ -1,0 +1,162 @@
+<!--pages/moderation-detail/moderation-detail.wxml-->
+<view class="detail-container">
+  <!-- Header -->
+  <view class="header">
+    <view class="header-left" bindtap="goBack">
+      <text class="back-arrow">‹</text>
+      <view class="header-text">
+        <text class="header-title">审核详情</text>
+        <text class="header-subtitle">{{detail.type === 'item' ? '物品审核' : '心愿审核'}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Content -->
+  <scroll-view scroll-y class="content-scroll">
+    <!-- Status Alert -->
+    <view wx:if="{{detail.reason}}" class="alert-box">
+      <text class="alert-icon">⚠</text>
+      <view class="alert-content">
+        <text class="alert-title">机器审核标记</text>
+        <text class="alert-reason">{{detail.reason}}</text>
+        <view class="alert-issues">
+          <view wx:for="{{detail.issues}}" wx:key="index" class="issue-item">
+            • {{item}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- Images -->
+    <view class="images-section">
+      <text class="section-title">图片</text>
+      <scroll-view scroll-x class="images-scroll">
+        <view wx:for="{{detail.images}}" wx:key="index" class="image-item">
+          <image src="{{item}}" mode="aspectFill" />
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- Content Info -->
+    <view class="info-section">
+      <text class="section-title">内容信息</text>
+      
+      <view class="info-item">
+        <text class="info-label">标题</text>
+        <text class="info-value">{{detail.title}}</text>
+      </view>
+
+      <view class="info-item">
+        <text class="info-label">类型</text>
+        <text class="info-value">{{detail.type === 'item' ? '物品' : '心愿'}}</text>
+      </view>
+
+      <view class="info-item">
+        <text class="info-label">分类</text>
+        <text class="info-value">{{detail.category}}</text>
+      </view>
+
+      <view class="info-item">
+        <text class="info-label">描述</text>
+        <text class="info-value">{{detail.description}}</text>
+      </view>
+
+      <view wx:if="{{detail.price}}" class="info-item">
+        <text class="info-label">价格</text>
+        <text class="info-value">{{detail.price}}</text>
+      </view>
+
+      <view wx:if="{{detail.exchangeMethod}}" class="info-item">
+        <text class="info-label">交换方式</text>
+        <text class="info-value">{{detail.exchangeMethod}}</text>
+      </view>
+
+      <view class="info-item">
+        <text class="info-label">标签</text>
+        <view class="tags-list">
+          <view wx:for="{{detail.tags}}" wx:key="index" class="tag">{{item}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- Publisher Info -->
+    <view class="publisher-section">
+      <text class="section-title">发布者信息</text>
+      
+      <view class="publisher-card">
+        <view class="publisher-avatar">{{detail.publisher.avatar}}</view>
+        <view class="publisher-details">
+          <text class="publisher-name">{{detail.publisher.name}}</text>
+          <text class="publisher-level">{{detail.publisher.level}}</text>
+          <text class="publisher-credit">信用分: {{detail.publisher.credit}}</text>
+        </view>
+      </view>
+
+      <view class="info-item">
+        <text class="info-label">提交时间</text>
+        <text class="info-value">{{detail.submittedAt}}</text>
+      </view>
+    </view>
+
+    <!-- Machine Score -->
+    <view class="score-section">
+      <text class="section-title">机器审核评分</text>
+      
+      <view class="score-bar">
+        <view class="score-fill" style="width: {{detail.machineScore}}%"></view>
+      </view>
+      <text class="score-text">{{detail.machineScore}}/100</text>
+    </view>
+
+    <!-- Review Actions -->
+    <view wx:if="{{detail.status === 'pending'}}" class="review-section">
+      <text class="section-title">审核处理</text>
+
+      <!-- Reject Reason Input -->
+      <view class="form-group">
+        <label class="form-label">拒绝原因 <text class="required">*</text></label>
+        <textarea 
+          class="form-textarea"
+          placeholder="请输入拒绝原因"
+          value="{{rejectReason}}"
+          bindinput="onRejectReasonChange"
+          maxlength="200"
+        />
+        <text class="char-count">{{rejectReason.length}}/200</text>
+      </view>
+
+      <!-- Action Buttons -->
+      <view class="action-buttons">
+        <button 
+          class="btn btn-approve"
+          bindtap="handleApprove"
+          loading="{{isProcessing}}"
+          disabled="{{isProcessing}}"
+        >
+          ✓ 通过审核
+        </button>
+        <button 
+          class="btn btn-reject"
+          bindtap="handleReject"
+          loading="{{isProcessing}}"
+          disabled="{{isProcessing}}"
+        >
+          ✗ 拒绝
+        </button>
+      </view>
+    </view>
+
+    <!-- Status Display -->
+    <view wx:else class="status-display">
+      <view class="status-icon {{detail.status}}">
+        <text wx:if="{{detail.status === 'approved'}}">✓</text>
+        <text wx:else>✗</text>
+      </view>
+      <text class="status-text">{{detail.status === 'approved' ? '审核通过' : '已拒绝'}}</text>
+      <text class="status-points">获得 +{{detail.status === 'approved' ? 5 : 3}} 积分</text>
+    </view>
+
+    <!-- Footer Spacing -->
+    <view class="footer-spacing"></view>
+  </scroll-view>
+</view>
