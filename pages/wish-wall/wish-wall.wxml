@@ -1,9 +1,108 @@
-<!--pages/$page/$page.wxml-->
-<view class="container">
-  <view class="page-header">
-    <text class="page-title">页面标题</text>
+<!--pages/wish-wall/wish-wall.wxml-->
+<view class="wish-wall-container">
+  <!-- Header -->
+  <view class="header">
+    <view class="header-content">
+      <view class="header-title-section">
+        <text class="heart-icon">❤️</text>
+        <text class="header-title">求换墙</text>
+      </view>
+      <view class="header-action" bindtap="navigateToPublish">
+        <text class="publish-icon">+</text>
+        <text class="publish-text">发布心愿</text>
+      </view>
+    </view>
+
+    <!-- Sort Options -->
+    <view class="sort-container">
+      <view 
+        class="sort-btn {{sortBy === 'latest' ? 'active' : ''}}"
+        bindtap="setSortBy"
+        data-sort="latest"
+      >
+        最新
+      </view>
+      <view 
+        class="sort-btn {{sortBy === 'distance' ? 'active' : ''}}"
+        bindtap="setSortBy"
+        data-sort="distance"
+      >
+        距离近
+      </view>
+    </view>
   </view>
-  <view class="page-content">
-    <text>页面内容</text>
+
+  <!-- Wishes List -->
+  <scroll-view scroll-y class="wishes-scroll">
+    <!-- Empty State -->
+    <view wx:if="{{sortedWishes.length === 0}}" class="empty-state">
+      <text class="empty-icon">📭</text>
+      <text class="empty-title">暂无心愿</text>
+      <text class="empty-text">发布你的第一个心愿吧</text>
+    </view>
+
+    <!-- Wishes List -->
+    <view wx:else class="wishes-list">
+      <view 
+        wx:for="{{sortedWishes}}" 
+        wx:key="id"
+        class="wish-card"
+        bindtap="navigateToWishDetail"
+        data-id="{{item.id}}"
+      >
+        <!-- Header -->
+        <view class="card-header">
+          <view class="title-section">
+            <text class="wish-title">{{item.title}}</text>
+            <view class="tags-row">
+              <view class="category-tag">{{item.category}}</view>
+              <view wx:if="{{item.verified}}" class="verified-tag">已实名</view>
+            </view>
+          </view>
+        </view>
+
+        <!-- Description -->
+        <text class="wish-description">{{item.description}}</text>
+
+        <!-- Budget and Meta -->
+        <view class="budget-meta-section">
+          <view class="budget-info">
+            <view wx:if="{{item.budget}}" class="budget-text">预期：{{item.budget}}</view>
+            <view class="meta-info">
+              <text class="meta-item">📍 {{item.distance}}km</text>
+              <text class="meta-item">🕐 {{item.time}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- User and Action -->
+        <view class="user-action-section">
+          <view class="user-info">
+            <view class="user-avatar">{{item.userName[0]}}</view>
+            <view class="user-details">
+              <text class="user-name">{{item.userName}}</text>
+              <text class="user-status">{{item.active ? '活跃用户' : ''}}</text>
+            </view>
+          </view>
+          <view class="contact-btn">
+            <text class="contact-icon">💬</text>
+            <text class="contact-text">联系</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- Footer Spacing -->
+    <view class="footer-spacing"></view>
+  </scroll-view>
+
+  <!-- Tips -->
+  <view class="tips-container">
+    <view class="tips-content">
+      <text class="tips-title">💡 求换墙使用建议</text>
+      <text class="tips-item">• 清楚描述你想要的物品和预期价格</text>
+      <text class="tips-item">• 填写联系方式，便于卖家主动联系你</text>
+      <text class="tips-item">• 30天未更新的心愿会自动下架</text>
+    </view>
   </view>
 </view>

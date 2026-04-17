@@ -6,6 +6,7 @@
     "pages/login/login",
     "pages/search/search",
     "pages/wish-wall/wish-wall",
+    "pages/wish-detail/wish-detail",
     "pages/profile/profile",
     "pages/messages/messages",
     "pages/published-items/published-items",

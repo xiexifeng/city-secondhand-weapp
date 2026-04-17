@@ -86,13 +86,6 @@ Page({
   },
 
   /**
-   * Go back
-   */
-  goBack: function() {
-    wx.navigateBack();
-  },
-
-  /**
    * Set filter status
    */
   setFilterStatus: function(e) {

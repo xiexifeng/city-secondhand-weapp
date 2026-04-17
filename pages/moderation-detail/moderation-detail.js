@@ -4,15 +4,16 @@ Page({
       id: 1,
       type: 'item',
       title: 'iPhone 14 Pro Max',
-      description: '全新未开封，原厂包装，支持分期付款，可刀价。联系方式：13800138000',
+      description: '全新未开封，原厂包装，支持分期付款，可刀价',
       images: [
         'https://images.unsplash.com/photo-1592286927505-1def25115558?w=500&h=500&fit=crop&q=80',
-        'https://images.unsplash.com/photo-1592286927505-1def25115558?w=500&h=500&fit=crop&q=80'
+        'https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=500&h=500&fit=crop&q=80',
+        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&h=500&fit=crop&q=80'
       ],
       category: '数码3C',
-      tags: ['新品', '原装', '可议价'],
-      price: '¥5800',
-      exchangeMethod: '人民币',
+      tags: ['全新', '包邮', '可分期'],
+      price: '8999',
+      exchangeMethod: null,
       publisher: {
         name: '张三',
         avatar: 'Z',
@@ -21,10 +22,12 @@ Page({
       },
       submittedAt: '2小时前',
       reason: '包含联系方式',
-      machineScore: 65,
-      issues: ['包含电话号码', '描述过于简洁'],
+      machineScore: 75,
+      issues: ['检测到电话号码', '包含微信号'],
       status: 'pending'
     },
+    currentImageIndex: 0,
+    reviewStatus: null,
     rejectReason: '',
     isProcessing: false
   },
@@ -40,8 +43,36 @@ Page({
    * Load detail data
    */
   loadDetail: function(itemId) {
-    // In real app, fetch from API
+    // In real app, fetch from API using itemId
     // For now, use mock data
+  },
+
+  /**
+   * Handle previous image
+   */
+  handlePrevImage: function() {
+    const currentIndex = this.data.currentImageIndex;
+    const imagesLength = this.data.detail.images.length;
+    const newIndex = currentIndex === 0 ? imagesLength - 1 : currentIndex - 1;
+    this.setData({ currentImageIndex: newIndex });
+  },
+
+  /**
+   * Handle next image
+   */
+  handleNextImage: function() {
+    const currentIndex = this.data.currentImageIndex;
+    const imagesLength = this.data.detail.images.length;
+    const newIndex = (currentIndex + 1) % imagesLength;
+    this.setData({ currentImageIndex: newIndex });
+  },
+
+  /**
+   * Handle select image from thumbnail
+   */
+  handleSelectImage: function(e) {
+    const index = e.currentTarget.dataset.index;
+    this.setData({ currentImageIndex: index });
   },
 
   /**
@@ -49,6 +80,17 @@ Page({
    */
   goBack: function() {
     wx.navigateBack();
+  },
+
+  /**
+   * Set review status
+   */
+  setReviewStatus: function(e) {
+    const status = e.currentTarget.dataset.status;
+    this.setData({ 
+      reviewStatus: status,
+      rejectReason: ''
+    });
   },
 
   /**
@@ -61,53 +103,40 @@ Page({
   },
 
   /**
-   * Handle approve
+   * Handle submit review
    */
-  handleApprove: function() {
-    this.setData({ isProcessing: true });
-    
-    setTimeout(() => {
-      this.setData({
-        'detail.status': 'approved',
-        isProcessing: false
-      });
-      
-      wx.showToast({
-        title: '审核通过',
-        icon: 'success',
-        duration: 2000
-      });
+  handleSubmitReview: function() {
+    const { reviewStatus, rejectReason } = this.data;
 
-      setTimeout(() => {
-        wx.navigateBack();
-      }, 1500);
-    }, 1000);
-  },
-
-  /**
-   * Handle reject
-   */
-  handleReject: function() {
-    if (!this.data.rejectReason.trim()) {
+    if (!reviewStatus) {
       wx.showToast({
-        title: '请填写拒绝原因',
+        title: '请选择审核结论',
+        icon: 'none'
+      });
+      return;
+    }
+
+    if (reviewStatus === 'reject' && !rejectReason.trim()) {
+      wx.showToast({
+        title: '请输入拒绝原因',
         icon: 'none'
       });
       return;
     }
 
     this.setData({ isProcessing: true });
-    
+
+    // Simulate API call
     setTimeout(() => {
       this.setData({
-        'detail.status': 'rejected',
-        isProcessing: false
+        isProcessing: false,
+        'detail.status': reviewStatus === 'approve' ? 'approved' : 'rejected',
+        'detail.reviewedAt': new Date().toLocaleString()
       });
-      
+
       wx.showToast({
-        title: '已拒绝',
-        icon: 'success',
-        duration: 2000
+        title: reviewStatus === 'approve' ? '已通过' : '已拒绝',
+        icon: 'success'
       });
 
       setTimeout(() => {

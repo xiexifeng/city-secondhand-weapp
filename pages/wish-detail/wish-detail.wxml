@@ -1,0 +1,111 @@
+<!--pages/wish-detail/wish-detail.wxml-->
+<view class="wish-detail-container">
+  <!-- Header -->
+  <view class="header">
+    <view class="header-left" bindtap="goBack">
+      <text class="back-arrow">‹</text>
+      <text class="header-title">心愿详情</text>
+    </view>
+  </view>
+
+  <!-- Content -->
+  <scroll-view scroll-y class="content-scroll">
+    <view class="content">
+      <!-- Wish Title -->
+      <view class="wish-header">
+        <text class="wish-title">{{wish.title}}</text>
+        <view class="tags">
+          <view class="category-tag">{{wish.category}}</view>
+          <view wx:if="{{wish.verified}}" class="verified-tag">已实名</view>
+        </view>
+      </view>
+
+      <!-- Description -->
+      <view class="section">
+        <text class="section-title">心愿描述</text>
+        <text class="description-text">{{wish.description}}</text>
+      </view>
+
+      <!-- Budget Info -->
+      <view class="section">
+        <text class="section-title">预期价格/交换条件</text>
+        <text class="budget-text">{{wish.budget}}</text>
+      </view>
+
+      <!-- Meta Info -->
+      <view class="section">
+        <text class="section-title">基本信息</text>
+        <view class="meta-row">
+          <text class="meta-label">分类：</text>
+          <text class="meta-value">{{wish.category}}</text>
+        </view>
+        <view class="meta-row">
+          <text class="meta-label">距离：</text>
+          <text class="meta-value">{{wish.distance}}km</text>
+        </view>
+        <view class="meta-row">
+          <text class="meta-label">发布时间：</text>
+          <text class="meta-value">{{wish.time}}</text>
+        </view>
+      </view>
+
+      <!-- Publisher Info -->
+      <view class="section">
+        <text class="section-title">发布者信息</text>
+        <view class="publisher-card">
+          <view class="publisher-avatar">{{wish.userName[0]}}</view>
+          <view class="publisher-info">
+            <text class="publisher-name">{{wish.userName}}</text>
+            <text class="publisher-status">{{wish.active ? '活跃用户' : '普通用户'}}</text>
+          </view>
+          <view class="report-btn" bindtap="showReportModal">
+            <text class="report-icon">⚠️</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- Safety Tips -->
+      <view class="section">
+        <view class="safety-tips">
+          <text class="tips-title">🛡️ 安全提示</text>
+          <text class="tips-text">• 不要在聊天中透露个人隐私信息</text>
+          <text class="tips-text">• 建议在安全的地点进行交易</text>
+          <text class="tips-text">• 如遇诈骗，请立即举报</text>
+        </view>
+      </view>
+
+      <!-- Footer Spacing -->
+      <view class="footer-spacing"></view>
+    </view>
+  </scroll-view>
+
+  <!-- Action Bar -->
+  <view class="action-bar">
+    <view class="action-btn contact-btn" bindtap="contactSeller">
+      <text class="action-icon">💬</text>
+      <text class="action-text">联系发布者</text>
+    </view>
+  </view>
+
+  <!-- Report Modal -->
+  <view wx:if="{{showReport}}" class="modal-overlay" bindtap="hideReportModal">
+    <view class="modal-content" catchTap="preventClose">
+      <text class="modal-title">举报此心愿</text>
+      <view class="report-options">
+        <view class="report-option" bindtap="submitReport" data-reason="虚假信息">
+          <text>虚假信息</text>
+        </view>
+        <view class="report-option" bindtap="submitReport" data-reason="骚扰信息">
+          <text>骚扰信息</text>
+        </view>
+        <view class="report-option" bindtap="submitReport" data-reason="违法违规">
+          <text>违法违规</text>
+        </view>
+        <view class="report-option" bindtap="submitReport" data-reason="其他">
+          <text>其他</text>
+        </view>
+      </view>
+      <view class="modal-close" bindtap="hideReportModal">取消</view>
+    </view>
+  </view>
+</view>

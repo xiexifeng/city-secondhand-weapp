@@ -1,4 +1,4 @@
-// pages/wish-wall/wish-wall.js
+// pages/wish-detail/wish-detail.js
 
 const mockWishes = [
   {
@@ -125,65 +125,81 @@ const mockWishes = [
 
 Page({
   data: {
-    sortBy: 'latest',
-    wishes: [],
-    sortedWishes: []
+    wish: null,
+    showReport: false
   },
 
-  onLoad: function() {
-    // Initialize wishes
-    this.setData({
-      wishes: mockWishes
-    });
+  onLoad: function(options) {
+    const wishId = parseInt(options.id);
+    const wish = mockWishes.find(w => w.id === wishId);
     
-    // Compute sorted wishes
-    this.computeSortedWishes();
-  },
-
-  /**
-   * Set sort by
-   */
-  setSortBy: function(e) {
-    const sortBy = e.currentTarget.dataset.sort;
-    this.setData({ sortBy: sortBy });
-    this.computeSortedWishes();
-  },
-
-  /**
-   * Compute sorted wishes
-   */
-  computeSortedWishes: function() {
-    const wishes = this.data.wishes;
-    const sortBy = this.data.sortBy;
-
-    let sorted = [...wishes];
-
-    if (sortBy === 'distance') {
-      sorted.sort((a, b) => a.distance - b.distance);
+    if (wish) {
+      this.setData({ wish: wish });
+    } else {
+      wx.showToast({
+        title: '心愿不存在',
+        icon: 'error',
+        duration: 2000
+      });
+      setTimeout(() => {
+        wx.navigateBack();
+      }, 2000);
     }
-    // 'latest' is the default order
-
-    this.setData({
-      sortedWishes: sorted
-    });
   },
 
   /**
-   * Navigate to publish page
+   * Go back
    */
-  navigateToPublish: function() {
-    wx.navigateTo({
-      url: '/pages/publish/publish?type=wish'
-    });
+  goBack: function() {
+    wx.navigateBack();
   },
 
   /**
-   * Navigate to wish detail
+   * Show report modal
    */
-  navigateToWishDetail: function(e) {
-    const wishId = e.currentTarget.dataset.id;
-    wx.navigateTo({
-      url: `/pages/wish-detail/wish-detail?id=${wishId}`
+  showReportModal: function() {
+    this.setData({ showReport: true });
+  },
+
+  /**
+   * Hide report modal
+   */
+  hideReportModal: function() {
+    this.setData({ showReport: false });
+  },
+
+  /**
+   * Prevent modal close when clicking on modal content
+   */
+  preventClose: function() {
+    // Do nothing - prevent event bubbling
+  },
+
+  /**
+   * Submit report
+   */
+  submitReport: function(e) {
+    const reason = e.currentTarget.dataset.reason;
+    wx.showToast({
+      title: '举报成功',
+      icon: 'success',
+      duration: 2000
     });
+    this.setData({ showReport: false });
+  },
+
+  /**
+   * Contact seller
+   */
+  contactSeller: function() {
+    wx.showToast({
+      title: '联系发布者',
+      icon: 'none',
+      duration: 2000
+    });
+    // In a real app, this would navigate to a chat page
+    // wx.navigateTo({
+    //   url: `/pages/chat/chat?userId=${this.data.wish.userId}`
+    // });
   }
 });

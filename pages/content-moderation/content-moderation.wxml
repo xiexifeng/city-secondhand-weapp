@@ -1,16 +1,5 @@
 <!--pages/content-moderation/content-moderation.wxml-->
 <view class="moderation-container">
-  <!-- Header -->
-  <view class="header">
-    <view class="header-left" bindtap="goBack">
-      <text class="back-arrow">‹</text>
-      <view class="header-text">
-        <text class="header-title">内容审核</text>
-        <text class="header-subtitle">参与审核，获得积分奖励</text>
-      </view>
-    </view>
-  </view>
-
   <!-- Stats Cards -->
   <view class="stats-container">
     <view class="stat-card pending">
@@ -49,13 +38,13 @@
     </view>
   </view>
 
-  <!-- Content -->
+  <!-- Content Scroll -->
   <scroll-view scroll-y class="content-scroll">
     <!-- Empty State -->
     <view wx:if="{{filteredItems.length === 0}}" class="empty-state">
-      <text class="empty-icon">✓</text>
-      <text class="empty-title">太棒了！</text>
-      <text class="empty-text">所有内容都已审核完毕</text>
+      <text class="empty-icon">📋</text>
+      <text class="empty-title">暂无审核内容</text>
+      <text class="empty-text">稍后再来看看吧</text>
     </view>
 
     <!-- Items List -->
@@ -67,41 +56,28 @@
         bindtap="navigateToDetail"
         data-id="{{item.id}}"
       >
-        <!-- Image -->
-        <image 
-          class="item-image"
-          src="{{item.image}}"
-          mode="aspectFill"
-          lazy-load="true"
-        />
-
-        <!-- Content -->
+        <image class="item-image" src="{{item.image}}" mode="aspectFill" />
+        
         <view class="item-content">
-          <!-- Type Badge -->
           <view class="item-badges">
             <view class="badge type-badge">{{item.type === 'item' ? '物品' : '心愿'}}</view>
             <view wx:if="{{item.reason}}" class="badge reason-badge">{{item.reason}}</view>
           </view>
-
-          <!-- Title -->
+          
           <text class="item-title">{{item.title}}</text>
-
-          <!-- Description -->
           <text class="item-desc">{{item.description}}</text>
-
-          <!-- Publisher -->
+          
           <view class="item-publisher">
             <view class="publisher-avatar">{{item.publisher.avatar}}</view>
             <view class="publisher-info">
               <text class="publisher-name">{{item.publisher.name}}</text>
               <text class="publisher-time">{{item.submittedAt}}</text>
             </view>
-            <view class="item-status {{item.status}}">
-              <view wx:if="{{item.status === 'pending'}}" class="status-dot pending"></view>
-              <view wx:elif="{{item.status === 'approved'}}" class="status-dot approved"></view>
-              <view wx:else class="status-dot rejected"></view>
-            </view>
           </view>
+        </view>
+
+        <view class="item-status">
+          <view class="status-dot {{item.status}}"></view>
         </view>
       </view>
     </view>
