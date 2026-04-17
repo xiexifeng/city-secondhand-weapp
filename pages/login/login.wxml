@@ -1,9 +1,139 @@
-<!--pages/$page/$page.wxml-->
-<view class="container">
-  <view class="page-header">
-    <text class="page-title">页面标题</text>
+<!--pages/login/login.wxml-->
+<view class="login-container">
+  <!-- Background -->
+  <view class="background"></view>
+
+  <!-- Content -->
+  <view class="login-content">
+    <!-- Logo Section -->
+    <view class="logo-section">
+      <view class="logo-wrapper">
+        <view class="logo-circle">
+          <view class="logo-inner">
+            <text class="logo-text">换</text>
+          </view>
+          <view class="logo-ring"></view>
+        </view>
+      </view>
+      <text class="app-name">换换么</text>
+      <text class="app-slogan">城市二手交易平台</text>
+    </view>
+
+    <!-- Login Methods -->
+    <view class="login-methods">
+      <!-- Method 1: WeChat Phone Number -->
+      <view 
+        wx:if="{{loginMethod === 'select'}}"
+        class="login-option wechat-option"
+        bindtap="handleWechatPhoneLogin"
+      >
+        <view class="option-icon">📱</view>
+        <view class="option-text">
+          <text class="option-title">手机号快捷登录</text>
+          <text class="option-desc">一键登录，无需输入</text>
+        </view>
+        <view class="option-arrow">›</view>
+      </view>
+
+      <!-- Method 2: SMS Verification -->
+      <view 
+        wx:if="{{loginMethod === 'select'}}"
+        class="login-option sms-option"
+        bindtap="switchToSmsLogin"
+      >
+        <view class="option-icon">✉️</view>
+        <view class="option-text">
+          <text class="option-title">短信验证码登录</text>
+          <text class="option-desc">输入手机号和验证码</text>
+        </view>
+        <view class="option-arrow">›</view>
+      </view>
+
+      <!-- SMS Login Form -->
+      <view wx:if="{{loginMethod === 'sms'}}" class="sms-form">
+        <view class="form-header">
+          <view class="back-btn" bindtap="backToSelect">
+            <text class="back-arrow">‹</text>
+          </view>
+          <text class="form-title">短信验证码登录</text>
+          <view class="form-header-spacer"></view>
+        </view>
+
+        <!-- Phone Input -->
+        <view class="form-group">
+          <view class="form-input-wrapper">
+            <text class="form-input-icon">📱</text>
+            <input 
+              class="form-input"
+              type="number"
+              placeholder="请输入手机号"
+              value="{{phoneNumber}}"
+              bindinput="onPhoneChange"
+              maxlength="11"
+            />
+          </view>
+        </view>
+
+        <!-- Verification Code Input -->
+        <view class="form-group">
+          <view class="code-input-wrapper">
+            <view class="code-input-left">
+              <text class="form-input-icon">🔐</text>
+              <input 
+                class="form-input code-input"
+                type="number"
+                placeholder="请输入验证码"
+                value="{{verificationCode}}"
+                bindinput="onCodeChange"
+                maxlength="6"
+              />
+            </view>
+            <view 
+              class="send-code-btn {{codeSent ? 'disabled' : ''}}"
+              bindtap="sendVerificationCode"
+            >
+              <text wx:if="{{!codeSent}}">获取</text>
+              <text wx:else>{{codeCountdown}}s</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- Login Button -->
+        <view class="form-group">
+          <view 
+            class="login-btn {{isLoggingIn ? 'loading' : ''}}"
+            bindtap="handleSmsLogin"
+          >
+            <text>{{isLoggingIn ? '登录中...' : '登录'}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- Agreement Section -->
+    <view class="agreement-section">
+      <text class="agreement-text">登录即表示同意</text>
+      <view class="agreement-links">
+        <text class="agreement-link" bindtap="openAgreement" data-type="service">服务协议</text>
+        <text class="agreement-separator">和</text>
+        <text class="agreement-link" bindtap="openAgreement" data-type="privacy">隐私政策</text>
+      </view>
+    </view>
   </view>
-  <view class="page-content">
-    <text>页面内容</text>
+
+  <!-- Service Agreement Modal -->
+  <view wx:if="{{showAgreementModal}}" class="modal-overlay" bindtap="closeAgreementModal">
+    <view class="modal-content" catchTap>
+      <view class="modal-header">
+        <text class="modal-title">{{agreementTitle}}</text>
+        <view class="modal-close" bindtap="closeAgreementModal">✕</view>
+      </view>
+      <scroll-view scroll-y class="modal-body">
+        <text class="agreement-content">{{agreementContent}}</text>
+      </scroll-view>
+      <view class="modal-footer">
+        <view class="modal-btn" bindtap="closeAgreementModal">我已阅读并同意</view>
+      </view>
+    </view>
   </view>
 </view>

@@ -1,5 +1,14 @@
 <!--pages/home/home.wxml-->
 <view class="home-container">
+  <!-- 未登录提示 -->
+  <view wx:if="{{!isLoggedIn}}" class="login-banner">
+    <view class="login-banner-content">
+      <text class="login-banner-title">欢迎来到换换么</text>
+      <text class="login-banner-desc">登录后可以发布物品、参与交易</text>
+    </view>
+    <view class="login-banner-btn" bindtap="navigateToLogin">登录</view>
+  </view>
+
   <!-- 搜索栏 -->
   <view class="search-bar">
     <view class="search-input-wrapper">

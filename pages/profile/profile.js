@@ -181,6 +181,15 @@ Page({
   },
 
   /**
+   * Navigate to login
+   */
+  navigateToLogin: function() {
+    wx.navigateTo({
+      url: '/pages/login/login'
+    });
+  },
+
+  /**
    * Handle logout
    */
   handleLogout: function() {
@@ -193,10 +202,11 @@ Page({
         if (res.confirm) {
           wx.clearStorage();
           wx.redirectTo({
-            url: '/pages/home/home'
+            url: '/pages/login/login'
           });
         }
       }
     });
   }
+
 });

@@ -1,5 +1,8 @@
 Page({
   data: {
+    // 登录状态
+    isLoggedIn: true,
+    
     // 搜索和筛选
     searchKeyword: '',
     selectedTradeType: 'all',
@@ -294,12 +297,31 @@ Page({
   },
 
   onLoad() {
+    this.checkLoginStatus();
     this.loadItems();
     this.checkAuditStatus();
   },
 
   onShow() {
+    this.checkLoginStatus();
     this.checkAuditStatus();
+  },
+
+  /**
+   * Check login status
+   */
+  checkLoginStatus: function() {
+    const token = wx.getStorageSync('authToken');
+    this.setData({ isLoggedIn: !!token });
+  },
+
+  /**
+   * Navigate to login
+   */
+  navigateToLogin: function() {
+    wx.navigateTo({
+      url: '/pages/login/login'
+    });
   },
 
   onHide() {
@@ -368,7 +390,9 @@ Page({
     });
   },
 
-  // 检查审核状态
+  /**
+   * Check audit status
+   */
   checkAuditStatus() {
     const auditCount = wx.getStorageSync('auditCount') || 5;
     this.setData({ 
