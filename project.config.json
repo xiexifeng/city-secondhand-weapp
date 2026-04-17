@@ -6,7 +6,7 @@
   },
   "setting": {
     "basePath": "",
-    "es6": true,
+    "es6": false,
     "enhance": true,
     "postcss": true,
     "preloadLocalPackages": false,
