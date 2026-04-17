@@ -61,14 +61,14 @@ page {
 }
 
 .app-name {
-  font-size: 24rpx;
+  font-size: 32rpx;
   font-weight: 700;
-  color: #1f2937;
+  color: var(--text-color);
 }
 
 .version {
-  font-size: 12rpx;
-  color: #6b7280;
+  font-size: 22rpx;
+  color: var(--text-color-secondary);
 }
 
 /* Section */
@@ -81,16 +81,16 @@ page {
 
 .section-title {
   display: block;
-  font-size: 16rpx;
+  font-size: 30rpx;
   font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 12rpx;
+  color: var(--text-color);
+  margin-bottom: 16rpx;
 }
 
 .section-content {
   display: block;
-  font-size: 14rpx;
-  color: #6b7280;
+  font-size: 24rpx;
+  color: var(--text-color-secondary);
   line-height: 1.6;
 }
 
@@ -98,41 +98,41 @@ page {
 .features-list {
   display: flex;
   flex-direction: column;
-  gap: 12rpx;
+  gap: 16rpx;
 }
 
 .feature-item {
   display: flex;
   align-items: center;
-  gap: 12rpx;
-  padding: 12rpx;
+  gap: 16rpx;
+  padding: 16rpx;
   background-color: #f9fafb;
   border-radius: 8rpx;
 }
 
 .feature-icon {
-  font-size: 24rpx;
+  font-size: 32rpx;
   flex-shrink: 0;
 }
 
 .feature-text {
-  font-size: 14rpx;
-  color: #1f2937;
+  font-size: 24rpx;
+  color: var(--text-color);
 }
 
 /* Contact List */
 .contact-list {
   display: flex;
   flex-direction: column;
-  gap: 12rpx;
+  gap: 16rpx;
 }
 
 .contact-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12rpx 0;
-  border-bottom: 1rpx solid #e5e7eb;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid var(--border-color);
 }
 
 .contact-item:last-child {
@@ -140,14 +140,14 @@ page {
 }
 
 .contact-label {
-  font-size: 14rpx;
-  color: #6b7280;
+  font-size: 24rpx;
+  color: var(--text-color-secondary);
 }
 
 .contact-value {
-  font-size: 14rpx;
+  font-size: 24rpx;
   font-weight: 600;
-  color: #1f2937;
+  color: var(--text-color);
 }
 
 /* Link Item */
@@ -156,7 +156,7 @@ page {
   justify-content: space-between;
   align-items: center;
   padding: 16rpx 0;
-  border-bottom: 1rpx solid #e5e7eb;
+  border-bottom: 1rpx solid var(--border-color);
 }
 
 .link-item:last-child {
@@ -164,8 +164,8 @@ page {
 }
 
 .link-text {
-  font-size: 16rpx;
-  color: #1f2937;
+  font-size: 28rpx;
+  color: var(--text-color);
   font-weight: 500;
 }
 
@@ -178,6 +178,6 @@ page {
 .copyright {
   text-align: center;
   padding: 24rpx 16rpx;
-  font-size: 12rpx;
+  font-size: 22rpx;
   color: #9ca3af;
 }

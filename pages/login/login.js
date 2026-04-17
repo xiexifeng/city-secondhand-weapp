@@ -308,5 +308,23 @@ Page({
    */
   closeAgreementModal: function() {
     this.setData({ showAgreementModal: false });
+  },
+
+  /**
+   * Navigate to terms of service page
+   */
+  navigateToTerms: function() {
+    wx.navigateTo({
+      url: '/pages/terms-of-service/terms-of-service'
+    });
+  },
+
+  /**
+   * Navigate to privacy policy page
+   */
+  navigateToPrivacy: function() {
+    wx.navigateTo({
+      url: '/pages/privacy-policy/privacy-policy'
+    });
   }
 });

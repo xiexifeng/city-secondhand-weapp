@@ -315,14 +315,14 @@ page {
 }
 
 .tips-title {
-  font-size: 14rpx;
+  font-size: 24rpx;
   font-weight: 600;
   color: #0369a1;
   display: block;
 }
 
 .tips-item {
-  font-size: 12rpx;
+  font-size: 22rpx;
   color: #0369a1;
   display: block;
   line-height: 1.5;

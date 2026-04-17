@@ -34,14 +34,14 @@ page {
 }
 
 .login-banner-title {
-  font-size: 20rpx;
+  font-size: 28rpx;
   font-weight: 700;
   color: white;
   display: block;
 }
 
 .login-banner-desc {
-  font-size: 16rpx;
+  font-size: 24rpx;
   color: rgba(255, 255, 255, 0.9);
   display: block;
 }
@@ -51,7 +51,7 @@ page {
   background-color: white;
   color: #10b981;
   border-radius: 6rpx;
-  font-size: 16rpx;
+  font-size: 24rpx;
   font-weight: 600;
   white-space: nowrap;
   transition: all 0.2s;
@@ -135,7 +135,7 @@ page {
   margin-right: 12rpx;
   border: 1rpx solid #E5E7EB;
   border-radius: 20rpx;
-  font-size: 26rpx;
+  font-size: 28rpx;
   color: #6B7280;
   background-color: white;
   transition: all 0.2s;
@@ -229,7 +229,7 @@ page {
   color: white;
   padding: 4rpx 8rpx;
   border-radius: 4rpx;
-  font-size: 20rpx;
+  font-size: 22rpx;
   font-weight: 600;
 }
 
@@ -245,7 +245,7 @@ page {
   justify-content: center;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
-  font-size: 18rpx;
+  font-size: 20rpx;
 }
 
 /* 卡片信息 */
@@ -254,7 +254,7 @@ page {
 }
 
 .item-title {
-  font-size: 26rpx;
+  font-size: 28rpx;
   font-weight: 600;
   color: #1F2937;
   overflow: hidden;
@@ -270,7 +270,7 @@ page {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
 }
 
 .item-price {
@@ -284,7 +284,7 @@ page {
 }
 
 .item-distance {
-  font-size: 22rpx;
+  font-size: 24rpx;
   color: #9CA3AF;
 }
 
@@ -293,7 +293,7 @@ page {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 20rpx;
+  font-size: 22rpx;
 }
 
 .item-tags {
@@ -307,7 +307,7 @@ page {
   color: #6B7280;
   padding: 2rpx 6rpx;
   border-radius: 3rpx;
-  font-size: 18rpx;
+  font-size: 20rpx;
   white-space: nowrap;
 }
 
@@ -316,7 +316,7 @@ page {
   color: white;
   padding: 4rpx 8rpx;
   border-radius: 4rpx;
-  font-size: 18rpx;
+  font-size: 20rpx;
   font-weight: 600;
   white-space: nowrap;
 }

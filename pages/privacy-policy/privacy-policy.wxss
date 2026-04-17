@@ -51,16 +51,16 @@ page {
 
 .section-title {
   display: block;
-  font-size: 16rpx;
+  font-size: 30rpx;
   font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 12rpx;
+  color: var(--text-color);
+  margin-bottom: 16rpx;
 }
 
 .section-content {
   display: block;
-  font-size: 14rpx;
-  color: #6b7280;
+  font-size: 24rpx;
+  color: var(--text-color-secondary);
   line-height: 1.8;
 }
 
