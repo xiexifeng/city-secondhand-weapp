@@ -8,7 +8,8 @@ Page({
     isLoggingIn: false,
     showAgreementModal: false,
     agreementTitle: '',
-    agreementContent: ''
+    agreementContent: '',
+    agreementChecked: false
   },
 
   onLoad: function() {
@@ -24,21 +25,47 @@ Page({
   /**
    * Handle WeChat phone number login
    */
-  handleWechatPhoneLogin: function() {
-    wx.login({
-      success: (res) => {
-        if (res.code) {
-          // Get phone number from WeChat
-          this.getPhoneNumber(res.code);
+  handleWechatPhoneLogin: function(e) {
+    if (e.detail.errMsg === 'getPhoneNumber:ok') {
+      wx.login({
+        success: (res) => {
+          if (res.code) {
+            this.getPhoneNumber(res.code, e.detail);
+          }
         }
-      }
-    });
+      });
+    } else {
+      wx.showToast({
+        title: '获取手机号失败',
+        icon: 'none'
+      });
+    }
   },
-
+  onGetPhoneNumber(e) {
+    // Check agreement
+    if (!this.checkAgreement()) {
+      return;
+    }
+    
+    if (e.detail.errMsg === 'getPhoneNumber:ok') {
+      wx.login({
+        success: (res) => {
+          if (res.code) {
+            this.getPhoneNumber(res.code, e.detail);
+          }
+        }
+      });
+    } else {
+      wx.showToast({
+        title: '获取手机号失败',
+        icon: 'none'
+      });
+    }
+  },
   /**
    * Get phone number from WeChat
    */
-  getPhoneNumber: function(code) {
+  getPhoneNumber: function(code, phoneDetail) {
     // In real app, call backend API to get encrypted phone number
     // For demo, show success message
     wx.showLoading({
@@ -104,6 +131,11 @@ Page({
    * Send verification code
    */
   sendVerificationCode: function() {
+    // Check agreement
+    if (!this.checkAgreement()) {
+      return;
+    }
+
     const { phoneNumber, codeSent } = this.data;
 
     if (codeSent) {
@@ -326,5 +358,28 @@ Page({
     wx.navigateTo({
       url: '/pages/privacy-policy/privacy-policy'
     });
+  },
+
+  /**
+   * Toggle agreement checkbox
+   */
+  toggleAgreement: function() {
+    this.setData({
+      agreementChecked: !this.data.agreementChecked
+    });
+  },
+
+  /**
+   * Check if agreement is checked
+   */
+  checkAgreement: function() {
+    if (!this.data.agreementChecked) {
+      wx.showToast({
+        title: '请先阅读并同意服务协议和隐私政策',
+        icon: 'none'
+      });
+      return false;
+    }
+    return true;
   }
 });

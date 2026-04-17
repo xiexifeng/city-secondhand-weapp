@@ -127,11 +127,11 @@ page {
 
 /* Login Methods */
 .login-methods {
-  flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   gap: 12rpx;
+  margin-bottom: 30rpx;
 }
 
 /* Login Option */
@@ -145,6 +145,64 @@ page {
   padding: 20rpx;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   animation: slideUp 0.5s ease-out;
+}
+
+/* Button Reset */
+button.login-option {
+  /* 完全重置按钮样式 */
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideUp 0.5s ease-out;
+  /* 继承login-option的样式 */
+  background-color: white;
+  border: 1rpx solid #e5e7eb;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  /* 强制设置与view元素相同的高度 */
+  height: 120rpx;
+  box-sizing: border-box;
+  /* 重置行高和字体 */
+  line-height: normal;
+  font-size: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  color: inherit;
+  /* 移除默认的button行为 */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+button.login-option::after {
+  /* 移除默认的button伪元素 */
+  border: none;
+  content: none;
+}
+
+button.login-option:active {
+  background-color: #f9fafb;
+  transform: translateY(-2rpx);
+  box-shadow: 0 8rpx 16rpx rgba(0, 0, 0, 0.08);
+}
+
+/* 确保wechat-option样式正确应用 */
+button.login-option.wechat-option {
+  border: 2rpx solid #10b981;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(5, 150, 105, 0.05) 100%);
+}
+
+/* 为view元素也设置固定高度，确保两者一致 */
+view.login-option {
+  height: 120rpx;
+  box-sizing: border-box;
 }
 
 @keyframes slideUp {
@@ -190,6 +248,8 @@ page {
   flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  gap: 8rpx;
 }
 
 .option-title {
@@ -197,7 +257,7 @@ page {
   font-weight: 700;
   color: #1f2937;
   display: block;
-  margin-bottom: 4rpx;
+  margin-bottom: 8rpx;
 }
 
 .option-desc {
@@ -413,13 +473,57 @@ page {
   flex-direction: column;
   align-items: center;
   gap: 8rpx;
-  padding: 20rpx 0;
-  margin-top: auto;
+  padding: 10rpx 0;
+  margin-top: 20rpx;
+}
+
+.agreement-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  width: 100%;
+  padding: 0 20rpx;
+  justify-content: center;
+}
+
+.checkbox {
+  width: 32rpx;
+  height: 32rpx;
+  border: 2rpx solid #d1d5db;
+  border-radius: 4rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  transition: all 0.2s;
+}
+
+.checkbox.checked {
+  background-color: #10b981;
+  border-color: #10b981;
+}
+
+.checkbox-icon {
+  color: white;
+  font-size: 24rpx;
+  font-weight: bold;
 }
 
 .agreement-text {
-  font-size: 22rpx;
-  color: #9ca3af;
+  flex: 1;
+  font-size: 24rpx;
+  color: #6b7280;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  line-height: 1.4;
+  justify-content: center;
+}
+
+.agreement-text {
+  font-size: 24rpx;
+  color: #6b7280;
   display: block;
   font-weight: 500;
 }

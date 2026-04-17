@@ -22,10 +22,11 @@
     <!-- Login Methods -->
     <view class="login-methods">
       <!-- Method 1: WeChat Phone Number -->
-      <view 
+      <button 
         wx:if="{{loginMethod === 'select'}}"
+        open-type="getPhoneNumber"
+        bind:getphonenumber="onGetPhoneNumber"
         class="login-option wechat-option"
-        bindtap="handleWechatPhoneLogin"
       >
         <view class="option-icon">📱</view>
         <view class="option-text">
@@ -33,7 +34,7 @@
           <text class="option-desc">一键登录，无需输入</text>
         </view>
         <view class="option-arrow">›</view>
-      </view>
+      </button>
 
       <!-- Method 2: SMS Verification -->
       <view 
@@ -112,11 +113,16 @@
 
     <!-- Agreement Section -->
     <view class="agreement-section">
-      <text class="agreement-text">登录即表示同意</text>
-      <view class="agreement-links">
-        <text class="agreement-link" bindtap="navigateToTerms">服务协议</text>
-        <text class="agreement-separator">和</text>
-        <text class="agreement-link" bindtap="navigateToPrivacy">隐私政策</text>
+      <view class="agreement-checkbox">
+        <view class="checkbox {{agreementChecked ? 'checked' : ''}}" bindtap="toggleAgreement">
+          <text wx:if="{{agreementChecked}}" class="checkbox-icon">✓</text>
+        </view>
+        <view class="agreement-text">
+          <text>请先阅读并同意 </text>
+          <text class="agreement-link" bindtap="navigateToTerms">服务协议</text>
+          <text> 和 </text>
+          <text class="agreement-link" bindtap="navigateToPrivacy">隐私政策</text>
+        </view>
       </view>
     </view>
   </view>
