@@ -390,38 +390,38 @@ page {
   position: fixed;
   bottom: 100rpx;
   right: 20rpx;
-  width: 56rpx;
-  height: 56rpx;
+  width: 86rpx;
+  height: 86rpx;
   background-color: #F97316;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 28rpx;
+  font-size: 36rpx;
   font-weight: bold;
-  box-shadow: 0 4rpx 12rpx rgba(249, 115, 22, 0.3);
+  box-shadow: 0 6rpx 16rpx rgba(249, 115, 22, 0.3);
   z-index: 5;
 }
 
 .audit-icon-text {
-  font-size: 28rpx;
+  font-size: 44rpx;
   font-weight: bold;
 }
 
 .audit-icon-badge {
   position: absolute;
-  top: -8rpx;
-  right: -8rpx;
-  min-width: 24rpx;
-  height: 24rpx;
+  top: -12rpx;
+  right: -12rpx;
+  min-width: 38rpx;
+  height: 38rpx;
   background-color: #dc2626;
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12rpx;
+  font-size: 19rpx;
   font-weight: bold;
-  border: 2rpx solid white;
+  border: 3rpx solid white;
 }

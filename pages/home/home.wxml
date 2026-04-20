@@ -132,12 +132,9 @@
         <view class="spinner"></view>
         <text>加载中...</text>
       </view>
-      <view wx:else class="no-more">已加载全部</view>
+      <view wx:else class="no-more">已到底部，分享邀请更多朋友加入吧</view>
     </view>
   </view>
 
-  <!-- 审核 icon（可隐藏） -->
-  <view class="audit-icon" wx:if="{{showAuditIcon}}">
-    <text>✓</text>
-  </view>
+
 </view>
