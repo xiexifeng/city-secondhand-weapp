@@ -125,7 +125,9 @@
             <text>已转让率: {{item.seller.transferRate}}%</text>
           </view>
         </view>
-        <view class="seller-arrow">›</view>
+        <view class="seller-actions">
+          <view class="seller-arrow">›</view>
+        </view>
       </view>
     </view>
 
@@ -216,10 +218,14 @@
         </view>
         <text class="location-value">{{item.location.address}}</text>
       </view>
-      
     </view>
-
-
   </view>
+
+  <!-- 举报表单组件 -->
+  <report-form 
+    visible="{{showReportModal}}" 
+    item="{{item}}" 
+    bind:close="closeReportModal"
+  />
 
 </view>

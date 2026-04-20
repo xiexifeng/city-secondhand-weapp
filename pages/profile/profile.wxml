@@ -111,7 +111,7 @@
 
         <view wx:if="{{!item.completed}}" class="task-progress">
           <view class="progress-bar">
-            <view class="progress-fill" style="width: {{(item.current / item.target) * 100}}%"></view>
+            <view class="progress-fill" style="width: {{(item.current / item.target) * 100 + '%'}}"></view>
           </view>
           <view class="progress-text">
             <text class="progress-count">{{item.current}}/{{item.target}}</text>

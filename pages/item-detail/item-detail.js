@@ -54,7 +54,9 @@ Page({
     currentImageIndex: 0,
     liked: false,
     showSafetyDetails: true,
-    copied: false
+    copied: false,
+    // 举报相关
+    showReportModal: false
   },
 
   onLoad: function(options) {
@@ -221,18 +223,14 @@ Page({
     });
   },
 
-  // Report
+  // 举报相关函数
   handleReport: function() {
-    wx.showActionSheet({
-      itemList: ['虚假信息', '诈骗', '违规内容', '其他'],
-      success: (res) => {
-        wx.showToast({
-          title: '已举报',
-          icon: 'success',
-          duration: 1500
-        });
-      }
-    });
+    this.setData({ showReportModal: true });
+  },
+
+  // 关闭举报模态框
+  closeReportModal: function() {
+    this.setData({ showReportModal: false });
   },
 
   // Share

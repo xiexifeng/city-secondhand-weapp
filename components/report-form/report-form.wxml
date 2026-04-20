@@ -1,0 +1,83 @@
+<view wx:if="{{visible}}" class="report-modal">
+  <view class="report-modal-content">
+    <view class="report-modal-header">
+      <text class="report-modal-title">举报物品</text>
+      <text class="report-modal-subtitle">{{item.title}}</text>
+      <view class="report-modal-close" bindtap="closeReport">×</view>
+    </view>
+    
+    <view class="report-form">
+      <view class="form-item">
+        <text class="form-label">举报原因 *</text>
+        <view class="reason-options">
+          <view 
+            wx:for="{{reportReasons}}" 
+            wx:key="id"
+            class="reason-option {{selectedReason === item.id ? 'selected' : ''}}"
+            bindtap="selectReason"
+            data-id="{{item.id}}"
+          >
+            <text class="reason-title">{{item.title}}</text>
+            <text class="reason-desc">{{item.description}}</text>
+          </view>
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">详细描述 *</text>
+        <textarea 
+          class="form-textarea" 
+          placeholder="请详细说明举报原因，提供尽可能多的信息以帮助我们快速处理..." 
+          value="{{reportDescription}}"
+          bindinput="onReportDescriptionInput"
+          maxlength="500"
+        ></textarea>
+        <text class="textarea-counter">{{reportDescription.length}}/500</text>
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">上传证据（可选）</text>
+        <view class="upload-section">
+          <view class="upload-btn" bindtap="uploadEvidence">
+            <text class="upload-icon">📷</text>
+            <text class="upload-text">上传证据 ({{uploadedEvidence.length}}/5)</text>
+          </view>
+          
+          <!-- 已上传图片预览区 -->
+          <view wx:if="{{uploadedEvidence.length > 0}}" class="uploaded-images">
+            <view 
+              wx:for="{{uploadedEvidence}}" 
+              wx:key="index"
+              class="uploaded-image-item"
+            >
+              <image 
+                class="uploaded-image" 
+                src="{{item}}"
+                mode="aspectFill"
+                bindtap="previewImage"
+                data-index="{{index}}"
+              />
+              <view 
+                class="remove-image-btn" 
+                bindtap="removeImage"
+                data-index="{{index}}"
+              >
+                ×
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <view class="privacy-note">
+        <text class="privacy-icon">💡</text>
+        <text class="privacy-text">隐私保护：您的举报信息将被保密，我们会严格保护您的隐私。平台将在24小时内审核您的举报。</text>
+      </view>
+      
+      <view class="form-actions">
+        <button class="cancel-btn" bindtap="closeReport">取消</button>
+        <button class="submit-btn" bindtap="submitReport" disabled="{{!selectedReason || !reportDescription}}">提交举报</button>
+      </view>
+    </view>
+  </view>
+</view>

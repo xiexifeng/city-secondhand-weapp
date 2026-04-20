@@ -1,1 +1,12 @@
-{}
+{
+  "navigationBarTitleText": "物品详情",
+  "backgroundColor": "#f8f9fa",
+  "backgroundTextStyle": "dark",
+  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarTextStyle": "black",
+  "enablePullDownRefresh": false,
+  "disableScroll": false,
+  "usingComponents": {
+    "report-form": "../../components/report-form/report-form"
+  }
+}

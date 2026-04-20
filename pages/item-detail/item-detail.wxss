@@ -612,4 +612,25 @@ page {
   font-weight: 600;
 }
 
+/* 举报按钮样式 */
+.seller-actions {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.seller-actions .report-btn {
+  padding: 8rpx;
+  border-radius: 8rpx;
+  background-color: #fee2e2;
+  color: #dc2626;
+  font-size: 24rpx;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.seller-actions .report-btn:hover {
+  background-color: #fecaca;
+}
+
 
