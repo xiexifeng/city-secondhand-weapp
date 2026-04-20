@@ -104,15 +104,15 @@ page {
 }
 
 .filter-btn {
-  width: 40rpx;
-  height: 40rpx;
+  width: 80rpx;
+  height: 60rpx;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #F3F4F6;
   border-radius: 8rpx;
   color: #6B7280;
-  font-size: 20rpx;
+  font-size: 28rpx;
 }
 
 /* ========== 筛选标签栏 ========== */

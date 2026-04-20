@@ -406,5 +406,14 @@ Page({
     wx.navigateTo({
       url: '/pages/content-moderation/content-moderation'
     });
+  },
+
+  // 图片加载失败处理
+  onImageError(e) {
+    const index = e.currentTarget.dataset.index;
+    const items = [...this.data.items];
+    // 设置默认图片
+    items[index].image = '/assets/images/error-image.svg';
+    this.setData({ items });
   }
 });
