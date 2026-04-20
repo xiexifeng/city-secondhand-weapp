@@ -71,13 +71,21 @@
       </view>
 
       <view class="info-row">
-        <view class="info-item">
+        <view class="info-item" bindtap="handleNavigate">
           <text class="info-label">📍</text>
           <text class="info-value">{{item.distance}}km</text>
         </view>
         <view class="info-item">
           <text class="info-label">🕐</text>
           <text class="info-value">{{item.time}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">👁️</text>
+          <text class="info-value">{{item.stats.views}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">❤️</text>
+          <text class="info-value">{{item.stats.favorites}}</text>
         </view>
       </view>
     </view>
@@ -187,41 +195,31 @@
     <!-- 交易地点 - 使用原生map组件 -->
     <view class="location-section">
       <text class="section-title">交易地点</text>
-      <map 
-        id="detail-map"
-        class="map-container"
-        latitude="{{item.location.latitude}}"
-        longitude="{{item.location.longitude}}"
-        scale="15"
-        markers="{{markers}}"
-        show-location="true"
-      ></map>
+      <view class="map-container-wrapper">
+        <map 
+          id="detail-map"
+          class="map-container"
+          latitude="{{item.location.latitude}}"
+          longitude="{{item.location.longitude}}"
+          scale="15"
+          markers="{{markers}}"
+          show-location="true"
+        ></map>
+      </view>
       <view class="location-info">
-        <text class="location-label">详细地址</text>
+        <view class="location-header">
+          <text class="location-label">详细地址</text>
+          <view class="distance-badge" bindtap="handleNavigate">
+            <text class="distance-text">距您{{item.distance}}km</text>
+            <text class="distance-icon">📍</text>
+          </view>
+        </view>
         <text class="location-value">{{item.location.address}}</text>
       </view>
+      
     </view>
 
-    <!-- 统计数据 -->
-    <view class="stats-section">
-      <view class="stats-row">
-        <view class="stat-item">
-          <view class="stat-icon">👁️</view>
-          <text class="stat-value">{{item.stats.views}}</text>
-          <text class="stat-label">浏览</text>
-        </view>
-        <view class="stat-item">
-          <view class="stat-icon">❤️</view>
-          <text class="stat-value">{{item.stats.favorites}}</text>
-          <text class="stat-label">收藏</text>
-        </view>
-        <view class="stat-item">
-          <view class="stat-icon">👍</view>
-          <text class="stat-value">{{item.stats.likes}}</text>
-          <text class="stat-label">点赞</text>
-        </view>
-      </view>
-    </view>
+
   </view>
 
 </view>

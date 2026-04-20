@@ -72,8 +72,54 @@ Page({
     item.seller.transferRate = transferRate;
     this.setData({ item });
     
+    // 获取用户位置并计算距离
+    this.calculateDistance();
+    
     // 更新markers坐标
     this.updateMapMarkers();
+  },
+
+  // 计算实时距离
+  calculateDistance: function() {
+    const that = this;
+    wx.getLocation({
+      type: 'wgs84',
+      success: function(res) {
+        const userLat = res.latitude;
+        const userLng = res.longitude;
+        const item = that.data.item;
+        const itemLat = item.location.latitude;
+        const itemLng = item.location.longitude;
+        
+        // 使用Haversine公式计算距离
+        const distance = that.getDistance(userLat, userLng, itemLat, itemLng);
+        item.distance = distance.toFixed(1);
+        that.setData({ item });
+      },
+      fail: function() {
+        // 用户拒绝授权或获取位置失败，使用默认距离
+        console.log('获取位置失败，使用默认距离');
+      }
+    });
+  },
+
+  // Haversine公式计算两点之间的距离（单位：公里）
+  getDistance: function(lat1, lng1, lat2, lng2) {
+    const R = 6371; // 地球半径（公里）
+    const dLat = this.deg2rad(lat2 - lat1);
+    const dLng = this.deg2rad(lng2 - lng1);
+    const a = 
+      Math.sin(dLat/2) * Math.sin(dLat/2) +
+      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
+      Math.sin(dLng/2) * Math.sin(dLng/2); 
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+    const distance = R * c;
+    return distance;
+  },
+
+  // 角度转弧度
+  deg2rad: function(deg) {
+    return deg * (Math.PI/180);
   },
 
   /**
@@ -199,5 +245,19 @@ Page({
   // Back
   handleBack: function() {
     wx.navigateBack();
+  },
+
+  // Map actions
+
+
+  handleNavigate: function() {
+    const { item } = this.data;
+    wx.openLocation({
+      latitude: item.location.latitude,
+      longitude: item.location.longitude,
+      name: '交易地点',
+      address: item.location.address,
+      scale: 15
+    });
   }
 });
