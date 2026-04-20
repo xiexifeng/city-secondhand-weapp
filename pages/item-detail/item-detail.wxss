@@ -355,6 +355,14 @@ page {
   font-weight: 600;
   color: #1f2937;
   margin-bottom: 4rpx;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.seller-name .tag-verified {
+  font-size: 18rpx;
+  padding: 2rpx 8rpx;
 }
 
 .verified-badge {
@@ -366,6 +374,9 @@ page {
 .seller-stats {
   font-size: 20rpx;
   color: #9ca3af;
+  display: flex;
+  flex-direction: column;
+  gap: 2rpx;
 }
 
 .seller-arrow {
@@ -464,6 +475,26 @@ page {
 }
 
 .contact-action {
+  font-size: 24rpx;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.login-prompt {
+  margin-top: 12rpx;
+  padding: 16rpx;
+  background-color: #f3f4f6;
+  border-radius: 8rpx;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.login-prompt:hover {
+  background-color: #e5e7eb;
+}
+
+.login-prompt-text {
   font-size: 24rpx;
   color: #10b981;
   font-weight: 600;

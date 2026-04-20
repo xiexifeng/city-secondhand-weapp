@@ -64,7 +64,6 @@
 
       <view class="tags-row">
         <view wx:if="{{item.method === 'sell'}}" class="tag tag-sell">人民币出售</view>
-        <view wx:if="{{item.verified}}" class="tag tag-verified">已实名</view>
       </view>
 
       <view class="price-section">
@@ -111,11 +110,11 @@
         <view class="seller-info">
           <view class="seller-name">
             {{item.seller.name}}
-            <text wx:if="{{item.seller.verified}}" class="verified-badge">✓</text>
+            <view wx:if="{{item.seller.verified}}" class="tag tag-verified">已实名</view>
           </view>
           <view class="seller-stats">
-            <text>⭐ {{item.seller.rating}}</text>
             <text>发布了 {{item.seller.items}} 件物品</text>
+            <text>已转让率: {{item.seller.transferRate}}%</text>
           </view>
         </view>
         <view class="seller-arrow">›</view>
@@ -130,7 +129,6 @@
       </view>
       <view wx:if="{{showSafetyDetails}}" class="safety-details">
         <view class="safety-item">• 勿相信任何要求预付款的交易，包括定金、押金等</view>
-        <view class="safety-item">• 勿在站外进行转账，谨防诈骗，使用平台内支付更安全</view>
         <view class="safety-item">• 见面交易，当面验货，当面付款，不要远程交易</view>
         <view class="safety-item">• 如遇可疑情况，请立即举报，平台会进行处理</view>
         <view class="safety-item">• 警惕虚假身份认证，核实卖家真实信息</view>
@@ -141,21 +139,48 @@
     <!-- 联系方式 -->
     <view class="contact-section">
       <text class="section-title">联系方式</text>
-      <view class="contact-item" bindtap="handleContactWechat">
-        <view class="contact-icon">💬</view>
-        <view class="contact-info">
-          <text class="contact-label">微信</text>
-          <text class="contact-value">{{item.contact.wechat}}</text>
+      
+      <!-- 登录状态 -->
+      <view wx:if="{{isLoggedIn}}">
+        <view class="contact-item" bindtap="handleContactWechat">
+          <view class="contact-icon">💬</view>
+          <view class="contact-info">
+            <text class="contact-label">微信</text>
+            <text class="contact-value">{{item.contact.wechat}}</text>
+          </view>
+          <view class="contact-action">复制</view>
         </view>
-        <view class="contact-action">复制</view>
+        <view class="contact-item" bindtap="handleContactPhone">
+          <view class="contact-icon">☎️</view>
+          <view class="contact-info">
+            <text class="contact-label">电话</text>
+            <text class="contact-value">{{item.contact.phone}}</text>
+          </view>
+          <view class="contact-action">拨打</view>
+        </view>
       </view>
-      <view class="contact-item" bindtap="handleContactPhone">
-        <view class="contact-icon">☎️</view>
-        <view class="contact-info">
-          <text class="contact-label">电话</text>
-          <text class="contact-value">{{item.contact.phone}}</text>
+      
+      <!-- 未登录状态 -->
+      <view wx:else>
+        <view class="contact-item">
+          <view class="contact-icon">💬</view>
+          <view class="contact-info">
+            <text class="contact-label">微信</text>
+            <text class="contact-value">*******123</text>
+          </view>
+          <view class="contact-action">登录查看</view>
         </view>
-        <view class="contact-action">拨打</view>
+        <view class="contact-item">
+          <view class="contact-icon">☎️</view>
+          <view class="contact-info">
+            <text class="contact-label">电话</text>
+            <text class="contact-value">138****8000</text>
+          </view>
+          <view class="contact-action">登录查看</view>
+        </view>
+        <view class="login-prompt" bindtap="navigateToLogin">
+          <view class="login-prompt-text">🔐 登录后查看完整联系方式</view>
+        </view>
       </view>
     </view>
 

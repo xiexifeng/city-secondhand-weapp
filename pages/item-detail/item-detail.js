@@ -1,5 +1,6 @@
 Page({
   data: {
+    isLoggedIn: false,
     item: {
       id: 1,
       title: 'iPhone 14 Pro Max',
@@ -20,13 +21,14 @@ Page({
         avatar: '王',
         name: '王先生',
         verified: true,
-        rating: 4.8,
-        items: 23  // 发布物品数量
+        items: 23,  // 发布物品数量
+        sold: 18,  // 已转让数量
+        transferRate: 0.5  // 已转让率
       },
       location: {
-        address: '北京市朝阳区CBD',
-        latitude: 39.9042,  // 北京坐标示例
-        longitude: 116.4074
+        address: '深圳市福田区上梅林地铁站A口',
+        latitude: 22.5707,  // 北京坐标示例
+        longitude: 114.0595
       },
       contact: {
         wechat: 'wangxiansheng123',
@@ -51,7 +53,7 @@ Page({
     ],
     currentImageIndex: 0,
     liked: false,
-    showSafetyDetails: false,
+    showSafetyDetails: true,
     copied: false
   },
 
@@ -61,8 +63,34 @@ Page({
       console.log('Loading item:', options.id);
     }
     
+    // 检查登录状态
+    this.checkLoginStatus();
+    
+    // 计算已转让率
+    const item = this.data.item;
+    const transferRate = (item.seller.sold / item.seller.items * 100).toFixed(2);
+    item.seller.transferRate = transferRate;
+    this.setData({ item });
+    
     // 更新markers坐标
     this.updateMapMarkers();
+  },
+
+  /**
+   * Check login status
+   */
+  checkLoginStatus: function() {
+    const token = wx.getStorageSync('authToken');
+    this.setData({ isLoggedIn: !!token });
+  },
+
+  /**
+   * Navigate to login
+   */
+  navigateToLogin: function() {
+    wx.navigateTo({
+      url: '/pages/login/login'
+    });
   },
 
   /**
