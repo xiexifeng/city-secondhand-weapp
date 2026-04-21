@@ -1,0 +1,85 @@
+<!--pages/location/location.wxml-->
+<view class="location-container">
+  <!-- 顶部导航栏 -->
+  <view class="location-header">
+    <view class="header-left" bindtap="handleBack">
+      <text>←</text>
+    </view>
+    <view class="header-title">选择位置</view>
+    <view class="header-right" bindtap="confirmLocation">
+      <text class="confirm-btn">确认</text>
+    </view>
+  </view>
+
+  <!-- 地图 -->
+  <map 
+    class="map" 
+    id="map"
+    longitude="{{longitude}}"
+    latitude="{{latitude}}"
+    scale="16"
+    show-location
+    bindregionchange="onRegionChange"
+  >
+    <!-- 定位标记 -->
+    <view class="location-marker">
+      <view class="marker-icon">📍</view>
+    </view>
+  </map>
+
+  <!-- 位置信息卡片 -->
+  <view class="location-card">
+    <view class="card-header">
+      <text class="card-title">当前位置</text>
+      <text class="card-subtitle">{{currentAddress}}</text>
+    </view>
+    
+    <view class="location-details">
+      <text class="detail-label">选择地区</text>
+      <picker 
+        mode="region" 
+        bindchange="onRegionPickerChange"
+        value="{{ region }}"
+        custom-item="请选择"
+      >
+        <view class="picker-text">
+          {{ locationDetails.province }} / {{ locationDetails.city }} / {{ locationDetails.district }}
+        </view>
+      </picker>
+    </view>
+
+    <!-- 位置描述 -->
+    <view class="location-description">
+      <text class="desc-label">详细地址</text>
+      <input 
+        class="desc-input" 
+        value="{{currentAddress}}" 
+        bindinput="updateAddress"
+        placeholder="请输入详细地址"
+      />
+    </view>
+
+    <!-- 周边地点 -->
+    <view class="nearby-pois" wx:if="{{ nearbyPOIs && nearbyPOIs.length > 0 }}">
+      <text class="detail-label">周边地点</text>
+      <view class="poi-list">
+        <view 
+          class="poi-item" 
+          wx:for="{{ nearbyPOIs }}" 
+          wx:key="id"
+          bindtap="selectPOI"
+          data-poi="{{ item }}"
+        >
+          <text class="poi-name">{{ item.title }}</text>
+          <text class="poi-address">{{ item.address }}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 定位按钮 -->
+  <view class="locate-btn" bindtap="locateToCurrent">
+    <text class="locate-icon">📍</text>
+    <text class="locate-text">定位到当前位置</text>
+  </view>
+</view>

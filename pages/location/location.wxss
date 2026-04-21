@@ -1,0 +1,216 @@
+/* pages/location/location.wxss */
+.location-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 顶部导航栏 */
+.location-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 50px;
+  padding: 0 15px;
+  background-color: #fff;
+  border-bottom: 1rpx solid #eee;
+  position: relative;
+  z-index: 10;
+}
+
+.header-left {
+  width: 50px;
+}
+
+.header-left text {
+  font-size: 24px;
+  color: #333;
+}
+
+.header-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+}
+
+.header-right {
+  width: 50px;
+  text-align: right;
+}
+
+.confirm-btn {
+  font-size: 14px;
+  color: #007aff;
+}
+
+/* 地图 */
+.map {
+  flex: 1;
+  width: 100%;
+  position: relative;
+}
+
+/* 定位标记 */
+.location-marker {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -100%);
+  z-index: 1;
+}
+
+.marker-icon {
+  font-size: 30px;
+  color: #ff4d4f;
+}
+
+/* 位置信息卡片 */
+.location-card {
+  background-color: #fff;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
+}
+
+.card-header {
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.card-subtitle {
+  font-size: 14px;
+  color: #666;
+  display: block;
+}
+
+/* 位置详情 */
+.location-details {
+  margin-bottom: 20px;
+}
+
+.detail-item {
+  width: 33.33%;
+  margin-bottom: 15px;
+}
+
+.detail-label {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 5px;
+  display: block;
+}
+
+/* 省市区选择器 */
+.picker-text {
+  font-size: 14px;
+  color: #333;
+  padding: 10px;
+  border: 1rpx solid #eee;
+  border-radius: 8px;
+  margin-top: 10px;
+  position: relative;
+}
+
+.picker-text::after {
+  content: '▼';
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: #999;
+}
+
+/* 周边地点列表 */
+.nearby-pois {
+  margin-bottom: 20px;
+}
+
+.poi-list {
+  margin-top: 10px;
+  height: 300rpx;
+  overflow-y: auto;
+  border: 1rpx solid #eee;
+  border-radius: 8px;
+}
+
+.poi-item {
+  padding: 10px;
+  border-bottom: 1rpx solid #eee;
+  background-color: #f9f9f9;
+}
+
+.poi-item:last-child {
+  border-bottom: none;
+}
+
+.poi-name {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.poi-address {
+  font-size: 12px;
+  color: #666;
+}
+
+/* 位置描述 */
+.location-description {
+  margin-bottom: 20px;
+}
+
+.desc-label {
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.desc-input {
+  width: 100%;
+  font-size: 14px;
+  color: #333;
+  padding: 10px;
+  border: 1rpx solid #eee;
+  border-radius: 8px;
+}
+
+/* 定位按钮 */
+.locate-btn {
+  position: absolute;
+  bottom: 220px;
+  right: 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 5;
+}
+
+.locate-icon {
+  font-size: 20px;
+  margin-bottom: 2px;
+}
+
+.locate-text {
+  font-size: 10px;
+  color: #666;
+}

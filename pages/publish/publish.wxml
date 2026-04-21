@@ -201,7 +201,7 @@
         <!-- 位置选择 -->
         <view class="form-section">
           <view class="section-header">
-            <text class="section-title">📍 位置</text>
+            <text class="section-title">📍 预期交易地点</text>
           </view>
           <view class="location-picker" bindtap="openLocationPicker">
             <view class="location-main">
@@ -212,24 +212,6 @@
           </view>
         </view>
 
-        <!-- 已选择位置显示 -->
-        <view class="location-display">
-          <text class="location-display-label">已选择位置</text>
-          <view class="location-grid">
-            <view class="location-item">
-              <text class="location-item-label">省份</text>
-              <text class="location-item-value">{{locationDetails.province}}</text>
-            </view>
-            <view class="location-item">
-              <text class="location-item-label">城市</text>
-              <text class="location-item-value">{{locationDetails.city}}</text>
-            </view>
-            <view class="location-item">
-              <text class="location-item-label">区县</text>
-              <text class="location-item-value">{{locationDetails.district}}</text>
-            </view>
-          </view>
-        </view>
 
         <!-- 联系方式设置 -->
         <view class="form-section">

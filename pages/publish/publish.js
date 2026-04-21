@@ -149,11 +149,9 @@ Page({
    * 打开位置选择器
    */
   openLocationPicker: function() {
-    wx.showToast({
-      title: '位置选择功能开发中',
-      icon: 'none'
+    wx.navigateTo({
+      url: '/pages/location/location'
     });
-    // TODO: 实现位置选择器
   },
 
   /**

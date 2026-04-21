@@ -2,6 +2,7 @@
   "pages": [
     "pages/home/home",
     "pages/publish/publish",
+    "pages/location/location",
     "pages/item-detail/item-detail",
     "pages/login/login",
     "pages/search/search",
