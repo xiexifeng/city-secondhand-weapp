@@ -13,8 +13,7 @@ Page({
       wantItems: '',
       budget: '',
       condition: '9成新',
-      contactVisibility: 'both',
-      showDescription: true
+      contactVisibility: 'both'
     },
     locationDetails: {
       province: '北京市',
@@ -115,6 +114,38 @@ Page({
     const field = e.currentTarget.dataset.field;
     const value = e.detail.value;
     const { formData } = this.data;
+    
+    // 检查字数限制
+    const maxLengths = {
+      title: 30,
+      description: 500,
+      price: 10,
+      wantItems: 50,
+      budget: 100,
+      wechat: 20,
+      phone: 11
+    };
+    
+    if (maxLengths[field] && value.length > maxLengths[field]) {
+      wx.showToast({
+        title: `最多输入${maxLengths[field]}个字符`,
+        icon: 'none'
+      });
+      return;
+    }
+    
+    // 验证手机号格式
+    if (field === 'phone') {
+      const phoneRegex = /^1[3-9]\d{9}$/;
+      if (value && !phoneRegex.test(value)) {
+        wx.showToast({
+          title: '请输入合法的手机号',
+          icon: 'none'
+        });
+        return;
+      }
+    }
+    
     formData[field] = value;
     this.setData({ formData });
   },
@@ -164,14 +195,7 @@ Page({
     this.setData({ formData });
   },
 
-  /**
-   * 切换显示描述
-   */
-  toggleShowDescription: function() {
-    const { formData } = this.data;
-    formData.showDescription = !formData.showDescription;
-    this.setData({ formData });
-  },
+  
 
   /**
    * 切换同意免责声明

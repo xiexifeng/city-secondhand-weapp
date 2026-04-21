@@ -101,14 +101,18 @@
             <text class="section-title">标题</text>
             <text class="required">*</text>
           </view>
-          <input 
-            type="text" 
-            class="form-input"
-            placeholder="{{publishType === 'wish' ? '例如：求购 iPhone 15 Pro' : '例如：iPhone 14 Pro Max'}}"
-            value="{{formData.title}}"
-            bindinput="updateFormData"
-            data-field="title"
-          />
+          <view class="input-with-counter">
+            <input 
+              type="text" 
+              class="form-input"
+              placeholder="{{publishType === 'wish' ? '例如：求购 iPhone 15 Pro' : '例如：iPhone 14 Pro Max'}}"
+              value="{{formData.title}}"
+              bindinput="updateFormData"
+              data-field="title"
+              maxlength="30"
+            />
+            <text class="input-counter">{{formData.title.length}}/30</text>
+          </view>
         </view>
 
         <!-- 分类 -->
@@ -143,13 +147,17 @@
           <view class="section-header">
             <text class="section-title">描述</text>
           </view>
-          <textarea 
-            class="form-textarea"
-            placeholder="详细描述物品信息、成色、配件等..."
-            value="{{formData.description}}"
-            bindinput="updateFormData"
-            data-field="description"
-          />
+          <view class="input-with-counter">
+            <textarea 
+              class="form-textarea"
+              placeholder="详细描述物品信息、成色、配件等..."
+              value="{{formData.description}}"
+              bindinput="updateFormData"
+              data-field="description"
+              maxlength="500"
+            />
+            <text class="input-counter">{{formData.description.length}}/500</text>
+          </view>
         </view>
 
         <!-- 价格 (仅出售) -->
@@ -158,14 +166,18 @@
             <text class="section-title">价格</text>
             <text class="required">*</text>
           </view>
-          <input 
-            type="number" 
-            class="form-input"
-            placeholder="请输入价格"
-            value="{{formData.price}}"
-            bindinput="updateFormData"
-            data-field="price"
-          />
+          <view class="input-with-counter">
+            <input 
+              type="number" 
+              class="form-input"
+              placeholder="请输入价格"
+              value="{{formData.price}}"
+              bindinput="updateFormData"
+              data-field="price"
+              maxlength="10"
+            />
+            <text class="input-counter">{{formData.price.length}}/10</text>
+          </view>
         </view>
 
         <!-- 想要物品 (仅以物换物) -->
@@ -173,14 +185,18 @@
           <view class="section-header">
             <text class="section-title">我想要的物品</text>
           </view>
-          <input 
-            type="text" 
-            class="form-input"
-            placeholder="例如：MacBook Pro 或其他3C产品"
-            value="{{formData.wantItems}}"
-            bindinput="updateFormData"
-            data-field="wantItems"
-          />
+          <view class="input-with-counter">
+            <input 
+              type="text" 
+              class="form-input"
+              placeholder="例如：MacBook Pro 或其他3C产品"
+              value="{{formData.wantItems}}"
+              bindinput="updateFormData"
+              data-field="wantItems"
+              maxlength="50"
+            />
+            <text class="input-counter">{{formData.wantItems.length}}/50</text>
+          </view>
         </view>
 
         <!-- 预期价格或交换条件 (仅求换墙) -->
@@ -188,14 +204,18 @@
           <view class="section-header">
             <text class="section-title">预期价格或交换条件</text>
           </view>
-          <input 
-            type="text" 
-            class="form-input"
-            placeholder="例如：2000元以内 或 用旧iPhone换"
-            value="{{formData.budget}}"
-            bindinput="updateFormData"
-            data-field="budget"
-          />
+          <view class="input-with-counter">
+            <input 
+              type="text" 
+              class="form-input"
+              placeholder="例如：2000元以内 或 用旧iPhone换"
+              value="{{formData.budget}}"
+              bindinput="updateFormData"
+              data-field="budget"
+              maxlength="100"
+            />
+            <text class="input-counter">{{formData.budget.length}}/100</text>
+          </view>
         </view>
 
         <!-- 位置选择 -->
@@ -243,14 +263,18 @@
             <text class="section-title">微信</text>
             <text class="required">*</text>
           </view>
-          <input 
-            type="text" 
-            class="form-input"
-            placeholder="请输入微信号"
-            value="{{formData.wechat}}"
-            bindinput="updateFormData"
-            data-field="wechat"
-          />
+          <view class="input-with-counter">
+            <input 
+              type="text" 
+              class="form-input"
+              placeholder="请输入微信号"
+              value="{{formData.wechat}}"
+              bindinput="updateFormData"
+              data-field="wechat"
+              maxlength="20"
+            />
+            <text class="input-counter">{{formData.wechat.length}}/20</text>
+          </view>
         </view>
 
         <!-- 电话 -->
@@ -259,21 +283,20 @@
             <text class="section-title">电话</text>
             <text class="required">*</text>
           </view>
-          <input 
-            type="tel" 
-            class="form-input"
-            placeholder="请输入手机号"
-            value="{{formData.phone}}"
-            bindinput="updateFormData"
-            data-field="phone"
-          />
+          <view class="input-with-counter">
+            <input 
+              type="number" 
+              class="form-input"
+              placeholder="请输入手机号"
+              value="{{formData.phone}}"
+              bindinput="updateFormData"
+              data-field="phone"
+              maxlength="11"
+            />
+            <text class="input-counter">{{formData.phone.length}}/11</text>
+          </view>
         </view>
 
-        <!-- 显示描述选项 -->
-        <view class="checkbox-item" bindtap="toggleShowDescription">
-          <view class="checkbox {{formData.showDescription ? 'checkbox-checked' : ''}}"></view>
-          <text>在列表中显示详细描述（不勾选则仅显示标题）</text>
-        </view>
 
         <!-- 免责声明 -->
         <view class="disclaimer">

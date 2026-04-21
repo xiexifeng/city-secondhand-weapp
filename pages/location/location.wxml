@@ -51,12 +51,16 @@
     <!-- 位置描述 -->
     <view class="location-description">
       <text class="desc-label">详细地址</text>
-      <input 
-        class="desc-input" 
-        value="{{currentAddress}}" 
-        bindinput="updateAddress"
-        placeholder="请输入详细地址"
-      />
+      <view class="input-with-counter">
+        <input 
+          class="desc-input" 
+          value="{{currentAddress}}" 
+          bindinput="updateAddress"
+          placeholder="请输入详细地址"
+          maxlength="50"
+        />
+        <text class="input-counter">{{currentAddress.length}}/50</text>
+      </view>
     </view>
 
     <!-- 周边地点 -->

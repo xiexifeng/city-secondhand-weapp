@@ -281,6 +281,11 @@ page {
 }
 
 /* ========== 表单输入 ========== */
+.input-with-counter {
+  position: relative;
+  width: 100%;
+}
+
 .form-input,
 .form-textarea {
   width: 100%;
@@ -293,8 +298,20 @@ page {
   box-sizing: border-box;
   min-height: 56rpx;
   line-height: 1.8;
-  display: flex;
-  align-items: center;
+}
+
+.input-counter {
+  position: absolute;
+  bottom: 10rpx;
+  right: 16rpx;
+  font-size: 20rpx;
+  color: #9ca3af;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.form-textarea {
+  padding-bottom: 40rpx; /* 为计数器留出空间 */
 }
 
 .form-input::placeholder,
