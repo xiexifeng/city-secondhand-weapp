@@ -23,6 +23,16 @@ Page({
     agreed: false,
     categoryIndex: 0,
     conditionIndex: 2,
+    tags: [
+      { name: '全新未拆封', selected: false },
+      { name: '国行版本', selected: false },
+      { name: '原装配件', selected: false },
+      { name: '保修期内', selected: false },
+      { name: '无划痕', selected: false },
+      { name: '当面交易', selected: false },
+      { name: '可小刀', selected: false },
+      { name: '包邮', selected: false }
+    ],
     categories: [
       '数码3C',
       '服饰鞋包',
@@ -195,7 +205,38 @@ Page({
     this.setData({ formData });
   },
 
-  
+  /**
+   * 切换标签选择
+   */
+  toggleTag: function(e) {
+    const tagName = e.currentTarget.dataset.tag;
+    const { tags } = this.data;
+    const newTags = [...tags];
+    const tagIndex = newTags.findIndex(tag => tag.name === tagName);
+    
+    if (tagIndex !== -1) {
+      // 计算当前选中的标签数量
+      const selectedCount = newTags.filter(tag => tag.selected).length;
+      
+      if (newTags[tagIndex].selected) {
+        // 取消选择
+        newTags[tagIndex].selected = false;
+      } else {
+        // 选择标签，最多3个
+        if (selectedCount < 3) {
+          newTags[tagIndex].selected = true;
+        } else {
+          wx.showToast({
+            title: '最多选择3个标签',
+            icon: 'none'
+          });
+          return;
+        }
+      }
+      
+      this.setData({ tags: newTags });
+    }
+  },
 
   /**
    * 切换同意免责声明

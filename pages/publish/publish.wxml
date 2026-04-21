@@ -5,10 +5,10 @@
     <!-- 顶部导航栏 -->
     <view class="publish-header">
       <view class="header-left">
-        <view class="back-btn" bindtap="handleBack">
-          <text>←</text>
+          <view class="back-btn" bindtap="handleBack">
+            <text class="back-text">←</text>
+          </view>
         </view>
-      </view>
       <view class="header-title">发布物品</view>
       <view class="header-right"></view>
     </view>
@@ -54,10 +54,10 @@
     <!-- 顶部导航栏 -->
     <view class="publish-header">
       <view class="header-left">
-        <view class="back-btn" bindtap="backToTypeSelect">
-          <text>←</text>
+          <view class="back-btn" bindtap="backToTypeSelect">
+            <text class="back-text">←</text>
+          </view>
         </view>
-      </view>
       <view class="header-title">
         <text wx:if="{{publishType === 'sell'}}">出售物品</text>
         <text wx:if="{{publishType === 'exchange'}}">以物换物</text>
@@ -113,33 +113,6 @@
             />
             <text class="input-counter">{{formData.title.length}}/30</text>
           </view>
-        </view>
-
-        <!-- 分类 -->
-        <view class="form-section">
-          <view class="section-header">
-            <text class="section-title">分类</text>
-          </view>
-          <picker bindchange="onCategoryChange" value="{{categoryIndex}}" range="{{categories}}">
-            <view class="picker-item">
-              <text>{{formData.category}}</text>
-              <text class="picker-arrow">›</text>
-            </view>
-          </picker>
-        </view>
-
-        <!-- 物品成色 (不显示在求换墙) -->
-        <view wx:if="{{publishType !== 'wish'}}" class="form-section">
-          <view class="section-header">
-            <text class="section-title">物品成色</text>
-          </view>
-          <picker bindchange="onConditionChange" value="{{conditionIndex}}" range="{{conditions}}">
-            <view class="picker-item">
-              <text>{{formData.condition}}</text>
-              <text class="picker-arrow">›</text>
-            </view>
-          </picker>
-          <text class="section-hint">帮助买家了解物品的使用状况</text>
         </view>
 
         <!-- 描述 -->
@@ -218,6 +191,52 @@
           </view>
         </view>
 
+        <!-- Tags (不显示在求换墙) -->
+        <view wx:if="{{publishType !== 'wish'}}" class="form-section">
+          <view class="section-header">
+            <text class="section-title">标签</text>
+          </view>
+          <view class="tags-container">
+            <view 
+              wx:for="{{tags}}" 
+              wx:key="index"
+              class="tag-item {{item.selected ? 'tag-selected' : ''}}"
+              bindtap="toggleTag"
+              data-tag="{{item.name}}"
+            >
+              {{item.name}}
+            </view>
+          </view>
+          <text class="section-hint">最多选择3个标签，帮助物品更快被发现</text>
+        </view>
+
+        <!-- 分类 -->
+        <view class="form-section">
+          <view class="section-header">
+            <text class="section-title">分类</text>
+          </view>
+          <picker bindchange="onCategoryChange" value="{{categoryIndex}}" range="{{categories}}">
+            <view class="picker-item">
+              <text>{{formData.category}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+        </view>
+
+        <!-- 物品成色 (不显示在求换墙) -->
+        <view wx:if="{{publishType !== 'wish'}}" class="form-section">
+          <view class="section-header">
+            <text class="section-title">物品成色</text>
+          </view>
+          <picker bindchange="onConditionChange" value="{{conditionIndex}}" range="{{conditions}}">
+            <view class="picker-item">
+              <text>{{formData.condition}}</text>
+              <text class="picker-arrow">›</text>
+            </view>
+          </picker>
+          <text class="section-hint">帮助买家了解物品的使用状况</text>
+        </view>
+
         <!-- 位置选择 -->
         <view class="form-section">
           <view class="section-header">
@@ -230,8 +249,8 @@
             </view>
             <text class="location-arrow">›</text>
           </view>
+          <text class="section-hint">设置交易地点可以提高交易成功率</text>
         </view>
-
 
         <!-- 联系方式设置 -->
         <view class="form-section">
@@ -242,15 +261,15 @@
           <view class="radio-group">
             <label class="radio-item" bindtap="updateContactVisibility" data-value="both">
               <view class="radio {{formData.contactVisibility === 'both' ? 'radio-checked' : ''}}"></view>
-              <text>显示微信和电话</text>
+              <text class="radio-text">显示微信和电话</text>
             </label>
             <label class="radio-item" bindtap="updateContactVisibility" data-value="wechat">
               <view class="radio {{formData.contactVisibility === 'wechat' ? 'radio-checked' : ''}}"></view>
-              <text>仅显示微信</text>
+              <text class="radio-text">仅显示微信</text>
             </label>
             <label class="radio-item" bindtap="updateContactVisibility" data-value="phone">
               <view class="radio {{formData.contactVisibility === 'phone' ? 'radio-checked' : ''}}"></view>
-              <text>仅显示电话</text>
+              <text class="radio-text">仅显示电话</text>
             </label>
           </view>
 
@@ -295,6 +314,7 @@
             />
             <text class="input-counter">{{formData.phone.length}}/11</text>
           </view>
+          <text class="section-hint">完整的联系方式可以提高交易成功率</text>
         </view>
 
 
@@ -315,7 +335,7 @@
         <!-- 同意免责声明 -->
         <view class="checkbox-item" bindtap="toggleAgreed">
           <view class="checkbox {{agreed ? 'checkbox-checked' : ''}}"></view>
-          <text>我已阅读并同意免责声明</text>
+          <text class="checkbox-text">我已阅读并同意免责声明</text>
         </view>
 
         <!-- 发布按钮 -->
