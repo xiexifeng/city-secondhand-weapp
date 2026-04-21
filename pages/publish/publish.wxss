@@ -659,7 +659,30 @@ page {
   background-color: #d1d5db;
 }
 
+/* ========== 底部固定区域 ========== */
+.fixed-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-top: 1rpx solid #e5e7eb;
+  padding: 16rpx;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.footer-checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 12rpx;
+  padding: 8rpx 0;
+}
+
 /* ========== 底部间距 ========== */
 .form-bottom-spacing {
-  height: 120rpx;
+  height: 200rpx;
 }

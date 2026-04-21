@@ -55,7 +55,12 @@ Page({
       '以下'
     ],
     // 折叠状态
-    contactSettingsExpanded: false
+    contactSettingsExpanded: false,
+    // 免责声明阅读倒计时
+    readCountdown: 0,
+    canPublish: false,
+    // 滚动到指定位置
+    scrollToView: ''
   },
 
   onLoad: function() {
@@ -244,7 +249,36 @@ Page({
    * 切换同意免责声明
    */
   toggleAgreed: function() {
-    this.setData({ agreed: !this.data.agreed });
+    const newAgreed = !this.data.agreed;
+    
+    if (newAgreed) {
+      // 跳到免责声明部分
+      this.setData({ scrollToView: 'disclaimer-section' });
+      
+      // 开始5秒倒计时
+      this.setData({ readCountdown: 5 });
+      
+      // 倒计时逻辑
+      const timer = setInterval(() => {
+        this.setData({
+          readCountdown: this.data.readCountdown - 1
+        });
+        
+        if (this.data.readCountdown <= 0) {
+          clearInterval(timer);
+          this.setData({ canPublish: true });
+        }
+      }, 1000);
+    } else {
+      // 取消勾选时重置状态
+      this.setData({ 
+        canPublish: false,
+        readCountdown: 0,
+        scrollToView: ''
+      });
+    }
+    
+    this.setData({ agreed: newAgreed });
   },
 
   /**
@@ -260,12 +294,21 @@ Page({
    * 发布物品
    */
   handlePublish: function() {
-    const { agreed, formData, publishType, images } = this.data;
+    const { agreed, formData, publishType, images, canPublish } = this.data;
 
     // 检查是否同意免责声明
     if (!agreed) {
       wx.showToast({
         title: '请同意免责声明',
+        icon: 'none'
+      });
+      return;
+    }
+
+    // 检查是否完成强制阅读
+    if (!canPublish) {
+      wx.showToast({
+        title: '请完成免责声明阅读',
         icon: 'none'
       });
       return;

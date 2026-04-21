@@ -67,7 +67,7 @@
     </view>
 
     <!-- 表单内容 -->
-    <scroll-view class="form-scroll" scroll-y>
+    <scroll-view class="form-scroll" scroll-y scroll-into-view="{{scrollToView}}" scroll-with-animation="true">
       <view class="form-container">
         <!-- 图片上传 (不显示在求换墙) -->
         <view wx:if="{{publishType !== 'wish'}}" class="form-section">
@@ -325,8 +325,22 @@
         </view>
 
 
+        <!-- 底部固定区域 -->
+        <view class="fixed-footer">
+          <!-- 同意免责声明 -->
+          <view class="footer-checkbox" bindtap="toggleAgreed">
+            <view class="checkbox {{agreed ? 'checkbox-checked' : ''}}"></view>
+            <text class="checkbox-text">我已阅读并同意免责声明</text>
+          </view>
+          
+          <!-- 发布按钮 -->
+          <button class="btn-publish {{(!agreed || !canPublish) ? 'btn-disabled' : ''}}" bindtap="handlePublish" disabled="{{!agreed || !canPublish}}">
+            {{readCountdown > 0 ? '阅读中 ' + readCountdown + 's' : '发布'}}
+          </button>
+        </view>
+
         <!-- 免责声明 -->
-        <view class="disclaimer">
+        <view id="disclaimer-section" class="disclaimer">
           <view class="disclaimer-header">
             <text class="disclaimer-icon">⚠️</text>
             <text class="disclaimer-title">免责声明</text>
@@ -337,19 +351,6 @@
             <text class="disclaimer-item">• 禁止发布违禁品、侵权商品</text>
             <text class="disclaimer-item">• 平台不介入交易纠纷，请自行协商</text>
           </view>
-        </view>
-
-        <!-- 同意免责声明 -->
-        <view class="checkbox-item" bindtap="toggleAgreed">
-          <view class="checkbox {{agreed ? 'checkbox-checked' : ''}}"></view>
-          <text class="checkbox-text">我已阅读并同意免责声明</text>
-        </view>
-
-        <!-- 发布按钮 -->
-        <view class="form-actions">
-          <button class="btn-publish {{!agreed ? 'btn-disabled' : ''}}" bindtap="handlePublish" disabled="{{!agreed}}">
-            发布
-          </button>
         </view>
 
         <!-- 底部间距 -->
