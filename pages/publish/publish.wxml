@@ -252,32 +252,35 @@
           <text class="section-hint">设置交易地点可以提高交易成功率</text>
         </view>
 
-        <!-- 联系方式设置 -->
+        <!-- 联系方式设置 (可折叠) -->
         <view class="form-section">
-          <view class="section-header">
+          <view class="section-header" bindtap="toggleContactSettings">
             <text class="section-title">联系方式设置</text>
+            <text class="collapse-arrow {{contactSettingsExpanded ? 'arrow-up' : 'arrow-down'}}">▼</text>
           </view>
           
-          <view class="radio-group">
-            <label class="radio-item" bindtap="updateContactVisibility" data-value="both">
-              <view class="radio {{formData.contactVisibility === 'both' ? 'radio-checked' : ''}}"></view>
-              <text class="radio-text">显示微信和电话</text>
-            </label>
-            <label class="radio-item" bindtap="updateContactVisibility" data-value="wechat">
-              <view class="radio {{formData.contactVisibility === 'wechat' ? 'radio-checked' : ''}}"></view>
-              <text class="radio-text">仅显示微信</text>
-            </label>
-            <label class="radio-item" bindtap="updateContactVisibility" data-value="phone">
-              <view class="radio {{formData.contactVisibility === 'phone' ? 'radio-checked' : ''}}"></view>
-              <text class="radio-text">仅显示电话</text>
-            </label>
-          </view>
+          <view wx:if="{{contactSettingsExpanded}}" class="collapse-content">
+            <view class="radio-group">
+              <label class="radio-item" bindtap="updateContactVisibility" data-value="both">
+                <view class="radio {{formData.contactVisibility === 'both' ? 'radio-checked' : ''}}"></view>
+                <text class="radio-text">显示微信和电话</text>
+              </label>
+              <label class="radio-item" bindtap="updateContactVisibility" data-value="wechat">
+                <view class="radio {{formData.contactVisibility === 'wechat' ? 'radio-checked' : ''}}"></view>
+                <text class="radio-text">仅显示微信</text>
+              </label>
+              <label class="radio-item" bindtap="updateContactVisibility" data-value="phone">
+                <view class="radio {{formData.contactVisibility === 'phone' ? 'radio-checked' : ''}}"></view>
+                <text class="radio-text">仅显示电话</text>
+              </label>
+            </view>
 
-          <text class="section-hint">选择买家可以看到的联系方式，保护您的隐私</text>
+            <text class="section-hint">选择买家可以看到的联系方式，保护您的隐私</text>
+          </view>
         </view>
 
         <!-- 微信 -->
-        <view class="form-section">
+        <view wx:if="{{formData.contactVisibility === 'both' || formData.contactVisibility === 'wechat'}}" class="form-section">
           <view class="section-header">
             <text class="section-title">微信</text>
             <text class="required">*</text>
@@ -297,7 +300,7 @@
         </view>
 
         <!-- 电话 -->
-        <view class="form-section">
+        <view wx:if="{{formData.contactVisibility === 'both' || formData.contactVisibility === 'phone'}}" class="form-section">
           <view class="section-header">
             <text class="section-title">电话</text>
             <text class="required">*</text>
@@ -314,6 +317,10 @@
             />
             <text class="input-counter">{{formData.phone.length}}/11</text>
           </view>
+        </view>
+
+        <!-- 联系方式提示 -->
+        <view class="form-section">
           <text class="section-hint">完整的联系方式可以提高交易成功率</text>
         </view>
 

@@ -53,7 +53,9 @@ Page({
       '6成新',
       '5成新',
       '以下'
-    ]
+    ],
+    // 折叠状态
+    contactSettingsExpanded: false
   },
 
   onLoad: function() {
@@ -246,6 +248,15 @@ Page({
   },
 
   /**
+   * 切换联系方式设置展开状态
+   */
+  toggleContactSettings: function() {
+    this.setData({
+      contactSettingsExpanded: !this.data.contactSettingsExpanded
+    });
+  },
+
+  /**
    * 发布物品
    */
   handlePublish: function() {
@@ -269,20 +280,41 @@ Page({
       return;
     }
 
-    if (!formData.wechat) {
-      wx.showToast({
-        title: '请填写微信号',
-        icon: 'none'
-      });
-      return;
-    }
-
-    if (!formData.phone) {
-      wx.showToast({
-        title: '请填写电话号码',
-        icon: 'none'
-      });
-      return;
+    // 检查联系方式
+    if (formData.contactVisibility === 'both') {
+      // 显示微信和电话，两个都需要填写
+      if (!formData.wechat) {
+        wx.showToast({
+          title: '请填写微信',
+          icon: 'none'
+        });
+        return;
+      }
+      if (!formData.phone) {
+        wx.showToast({
+          title: '请填写电话',
+          icon: 'none'
+        });
+        return;
+      }
+    } else if (formData.contactVisibility === 'wechat') {
+      // 仅显示微信，只需要填写微信
+      if (!formData.wechat) {
+        wx.showToast({
+          title: '请填写微信',
+          icon: 'none'
+        });
+        return;
+      }
+    } else if (formData.contactVisibility === 'phone') {
+      // 仅显示电话，只需要填写电话
+      if (!formData.phone) {
+        wx.showToast({
+          title: '请填写电话',
+          icon: 'none'
+        });
+        return;
+      }
     }
 
     // 检查发布类型特定的必填项
