@@ -103,10 +103,32 @@
       <view class="publisher-card">
         <view class="publisher-avatar">{{detail.publisher.avatar}}</view>
         <view class="publisher-details">
-          <text class="publisher-name">{{detail.publisher.name}}</text>
-          <text class="publisher-level">活跃用户</text>
-          <text class="publisher-credit">信用分: 95</text>
+          <view class="publisher-name">
+            {{detail.publisher.name}}
+            <view wx:if="{{detail.publisher.verified}}" class="tag tag-verified">已实名</view>
+          </view>
+          <view class="publisher-stats">
+            <text>发布了 {{detail.publisher.items}} 件物品</text>
+            <text>已转让率: {{detail.publisher.transferRate}}%</text>
+          </view>
         </view>
+        <view class="publisher-actions">
+          <view class="publisher-arrow">›</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- Location Section -->
+    <view class="location-section">
+      <text class="section-title">交易地点</text>
+      <view class="location-info">
+        <view class="location-header">
+          <text class="location-label">位置信息</text>
+          <view class="location-icon" bindtap="navigateToMap">
+            <text>📍</text>
+          </view>
+        </view>
+        <text class="location-value">{{detail.location}}</text>
       </view>
     </view>
 
@@ -151,7 +173,7 @@
       </view>
 
       <view class="action-buttons">
-        <view class="btn btn-cancel" bindtap="goBack">取消</view>
+        <!-- <view class="btn btn-cancel" bindtap="goBack">取消</view> -->
         <view class="btn btn-submit" bindtap="handleSubmitReview" wx:if="{{reviewStatus}}">提交审核</view>
       </view>
     </view>

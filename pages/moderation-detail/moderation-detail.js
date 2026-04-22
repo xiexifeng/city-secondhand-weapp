@@ -18,13 +18,18 @@ Page({
         name: '张三',
         avatar: 'Z',
         level: '活跃用户',
-        credit: 95
+        credit: 95,
+        verified: true,
+        items: 12,
+        transferRate: 95
       },
       submittedAt: '2小时前',
       reason: '包含联系方式',
       machineScore: 75,
       issues: ['检测到电话号码', '包含微信号'],
-      status: 'pending'
+      status: 'pending',
+      location: '北京市朝阳区望京SOHO',
+      distance: 2.5
     },
     currentImageIndex: 0,
     reviewStatus: null,
@@ -143,5 +148,23 @@ Page({
         wx.navigateBack();
       }, 1500);
     }, 1000);
+  },
+
+  /**
+   * Navigate to map page
+   */
+  navigateToMap: function() {
+    const { location } = this.data.detail;
+    // 模拟经纬度数据，实际应用中应该从接口获取
+    const latitude = 39.9042;
+    const longitude = 116.4074;
+    
+    wx.openLocation({
+      latitude: latitude,
+      longitude: longitude,
+      name: '交易地点',
+      address: location,
+      scale: 15
+    });
   }
 });
