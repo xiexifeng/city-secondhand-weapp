@@ -2,12 +2,15 @@
 <view class="item-detail-container">
   <!-- 顶部导航栏 -->
   <view class="detail-header">
+  <!--
     <view class="header-left">
       <view class="back-btn" bindtap="handleBack">
         <text>←</text>
       </view>
     </view>
     <view class="header-title">物品详情</view>
+    -->
+    <view class="header-left"></view>
     <view class="header-right">
       <view class="header-action" bindtap="handleShare">
         <text>分享</text>
@@ -197,6 +200,16 @@
     <!-- 交易地点 - 使用原生map组件 -->
     <view class="location-section">
       <text class="section-title">交易地点</text>
+      <view class="location-info">
+        <view class="location-header">
+          <text class="location-label">详细地址</text>
+          <view class="distance-badge" bindtap="handleNavigate">
+            <text class="distance-text">距您{{item.distance}}km</text>
+            <text class="distance-icon">📍</text>
+          </view>
+        </view>
+        <text class="location-value">{{item.location.address}}</text>
+      </view>
       <view class="map-container-wrapper">
         <map 
           id="detail-map"
@@ -208,18 +221,10 @@
           show-location="true"
         ></map>
       </view>
-      <view class="location-info">
-        <view class="location-header">
-          <text class="location-label">详细地址</text>
-          <view class="distance-badge" bindtap="handleNavigate">
-            <text class="distance-text">距您{{item.distance}}km</text>
-            <text class="distance-icon">📍</text>
-          </view>
-        </view>
-        <text class="location-value">{{item.location.address}}</text>
-      </view>
     </view>
   </view>
+  <!-- 底部间距 -->
+  <view class="bottom-spacing"></view>
 
   <!-- 举报表单组件 -->
   <report-form 

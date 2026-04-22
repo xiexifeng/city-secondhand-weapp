@@ -1,12 +1,13 @@
-<view wx:if="{{visible}}" class="report-modal">
+<view wx:if="{{visible}}" class="report-modal" catchtouchmove="preventTouchMove">
   <view class="report-modal-content">
     <view class="report-modal-header">
-      <text class="report-modal-title">举报物品</text>
+      <text class="report-modal-title">举报</text>
       <text class="report-modal-subtitle">{{item.title}}</text>
       <view class="report-modal-close" bindtap="closeReport">×</view>
     </view>
     
-    <view class="report-form">
+    <scroll-view scroll-y class="report-form-scroll">
+      <view class="report-form">
       <view class="form-item">
         <text class="form-label">举报原因 *</text>
         <view class="reason-options">
@@ -78,6 +79,7 @@
         <button class="cancel-btn" bindtap="closeReport">取消</button>
         <button class="submit-btn" bindtap="submitReport" disabled="{{!selectedReason || !reportDescription}}">提交举报</button>
       </view>
-    </view>
+      </view>
+    </scroll-view>
   </view>
 </view>

@@ -25,6 +25,16 @@ Component({
   },
   
   methods: {
+    // 阻止触摸移动
+    preventTouchMove: function() {
+      return;
+    },
+
+    // 允许触摸移动
+    allowTouchMove: function() {
+      return;
+    },
+
     // 关闭举报模态框
     closeReport: function() {
       this.setData({

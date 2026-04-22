@@ -10,6 +10,8 @@
   align-items: flex-end;
   justify-content: center;
   z-index: 1000;
+  touch-action: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .report-modal-content {
@@ -18,8 +20,15 @@
   border-top-right-radius: 24rpx;
   width: 100%;
   max-height: 80vh;
-  overflow-y: auto;
   box-shadow: 0 -10rpx 30rpx rgba(0, 0, 0, 0.1);
+  touch-action: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.report-form-scroll {
+  height: calc(80vh - 120rpx);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .report-modal-header {

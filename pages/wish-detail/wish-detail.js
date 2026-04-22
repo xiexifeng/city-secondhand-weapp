@@ -11,7 +11,20 @@ const mockWishes = [
     time: '2小时前',
     userName: '小明',
     verified: true,
-    active: true
+    active: true,
+    contact: {
+      wechat: 'xiaoming123',
+      phone: '13812345678'
+    },
+    location: {
+      address: '北京市朝阳区建国路88号',
+      latitude: 39.908722,
+      longitude: 116.466362
+    },
+    stats: {
+      views: 156,
+      favorites: 23
+    }
   },
   {
     id: 2,
@@ -23,7 +36,20 @@ const mockWishes = [
     time: '30分钟前',
     userName: '李女士',
     verified: true,
-    active: true
+    active: true,
+    contact: {
+      wechat: 'lily456',
+      phone: '13987654321'
+    },
+    location: {
+      address: '北京市海淀区中关村大街1号',
+      latitude: 39.984702,
+      longitude: 116.305526
+    },
+    stats: {
+      views: 89,
+      favorites: 15
+    }
   },
   {
     id: 3,
@@ -35,7 +61,20 @@ const mockWishes = [
     time: '1小时前',
     userName: '摄影师王',
     verified: false,
-    active: true
+    active: true,
+    contact: {
+      wechat: 'wangphoto',
+      phone: '13712345678'
+    },
+    location: {
+      address: '北京市东城区王府井大街99号',
+      latitude: 39.914344,
+      longitude: 116.415697
+    },
+    stats: {
+      views: 234,
+      favorites: 42
+    }
   },
   {
     id: 4,
@@ -47,7 +86,20 @@ const mockWishes = [
     time: '3小时前',
     userName: '游戏玩家',
     verified: true,
-    active: true
+    active: true,
+    contact: {
+      wechat: 'gamer123',
+      phone: '13687654321'
+    },
+    location: {
+      address: '北京市西城区西单北大街120号',
+      latitude: 39.913993,
+      longitude: 116.366808
+    },
+    stats: {
+      views: 178,
+      favorites: 31
+    }
   },
   {
     id: 5,
@@ -59,7 +111,20 @@ const mockWishes = [
     time: '5分钟前',
     userName: '骑行爱好者',
     verified: true,
-    active: true
+    active: true,
+    contact: {
+      wechat: 'cyclist567',
+      phone: '13512345678'
+    },
+    location: {
+      address: '北京市丰台区丰台体育中心',
+      latitude: 39.848676,
+      longitude: 116.286797
+    },
+    stats: {
+      views: 92,
+      favorites: 18
+    }
   },
   {
     id: 6,
@@ -71,7 +136,20 @@ const mockWishes = [
     time: '45分钟前',
     userName: '科技爱好者',
     verified: true,
-    active: true
+    active: true,
+    contact: {
+      wechat: 'techlover',
+      phone: '13487654321'
+    },
+    location: {
+      address: '北京市昌平区回龙观东大街',
+      latitude: 40.078778,
+      longitude: 116.359094
+    },
+    stats: {
+      views: 145,
+      favorites: 27
+    }
   },
   {
     id: 7,
@@ -83,7 +161,20 @@ const mockWishes = [
     time: '1.5小时前',
     userName: '摄影初学者',
     verified: false,
-    active: false
+    active: false,
+    contact: {
+      wechat: 'beginnerphoto',
+      phone: '13312345678'
+    },
+    location: {
+      address: '北京市石景山区鲁谷路35号',
+      latitude: 39.903298,
+      longitude: 116.223611
+    },
+    stats: {
+      views: 189,
+      favorites: 35
+    }
   },
   {
     id: 8,
@@ -95,7 +186,20 @@ const mockWishes = [
     time: '20分钟前',
     userName: '游戏迷',
     verified: true,
-    active: true
+    active: true,
+    contact: {
+      wechat: 'switchfan',
+      phone: '13287654321'
+    },
+    location: {
+      address: '北京市通州区运河东路',
+      latitude: 39.909746,
+      longitude: 116.656738
+    },
+    stats: {
+      views: 123,
+      favorites: 21
+    }
   },
   {
     id: 9,
@@ -107,7 +211,20 @@ const mockWishes = [
     time: '1小时前',
     userName: '上班族',
     verified: true,
-    active: true
+    active: true,
+    contact: {
+      wechat: 'officeworker',
+      phone: '13112345678'
+    },
+    location: {
+      address: '北京市大兴区亦庄经济技术开发区',
+      latitude: 39.806073,
+      longitude: 116.636293
+    },
+    stats: {
+      views: 201,
+      favorites: 38
+    }
   },
   {
     id: 10,
@@ -119,14 +236,31 @@ const mockWishes = [
     time: '2小时前',
     userName: '表迷',
     verified: true,
-    active: false
+    active: false,
+    contact: {
+      wechat: 'watchlover',
+      phone: '13087654321'
+    },
+    location: {
+      address: '北京市顺义区空港街道',
+      latitude: 40.130175,
+      longitude: 116.669885
+    },
+    stats: {
+      views: 256,
+      favorites: 47
+    }
   }
 ];
 
 Page({
   data: {
     wish: null,
-    showReport: false
+    showReportModal: false,
+    showSafetyDetails: false,
+    isLoggedIn: true, // 模拟登录状态
+    markers: [],
+    liked: false
   },
 
   onLoad: function(options) {
@@ -134,7 +268,20 @@ Page({
     const wish = mockWishes.find(w => w.id === wishId);
     
     if (wish) {
-      this.setData({ wish: wish });
+      // 初始化地图标记
+      const markers = [{
+        id: 0,
+        latitude: wish.location.latitude,
+        longitude: wish.location.longitude,
+        title: wish.title,
+        width: 30,
+        height: 30
+      }];
+      
+      this.setData({ 
+        wish: wish,
+        markers: markers
+      });
     } else {
       wx.showToast({
         title: '心愿不存在',
@@ -155,51 +302,107 @@ Page({
   },
 
   /**
-   * Show report modal
+   * Handle report
    */
-  showReportModal: function() {
-    this.setData({ showReport: true });
+  handleReport: function() {
+    this.setData({ showReportModal: true });
   },
 
   /**
-   * Hide report modal
+   * Close report modal
    */
-  hideReportModal: function() {
-    this.setData({ showReport: false });
+  closeReportModal: function() {
+    this.setData({ showReportModal: false });
   },
 
   /**
-   * Prevent modal close when clicking on modal content
+   * Toggle safety details
    */
-  preventClose: function() {
-    // Do nothing - prevent event bubbling
-  },
-
-  /**
-   * Submit report
-   */
-  submitReport: function(e) {
-    const reason = e.currentTarget.dataset.reason;
-    wx.showToast({
-      title: '举报成功',
-      icon: 'success',
-      duration: 2000
+  handleToggleSafetyDetails: function() {
+    this.setData({
+      showSafetyDetails: !this.data.showSafetyDetails
     });
-    this.setData({ showReport: false });
   },
 
   /**
-   * Contact seller
+   * Handle contact wechat
    */
-  contactSeller: function() {
+  handleContactWechat: function() {
+    const wechat = this.data.wish.contact.wechat;
+    wx.setClipboardData({
+      data: wechat,
+      success: function() {
+        wx.showToast({
+          title: '微信已复制',
+          icon: 'success',
+          duration: 2000
+        });
+      }
+    });
+  },
+
+  /**
+   * Handle contact phone
+   */
+  handleContactPhone: function() {
+    const phone = this.data.wish.contact.phone;
+    wx.makePhoneCall({
+      phoneNumber: phone,
+      success: function() {
+        console.log('拨打成功');
+      },
+      fail: function() {
+        console.log('拨打失败');
+      }
+    });
+  },
+
+  /**
+   * Navigate to login
+   */
+  navigateToLogin: function() {
     wx.showToast({
-      title: '联系发布者',
+      title: '跳转到登录页面',
       icon: 'none',
       duration: 2000
     });
-    // In a real app, this would navigate to a chat page
+    // In a real app, this would navigate to login page
     // wx.navigateTo({
-    //   url: `/pages/chat/chat?userId=${this.data.wish.userId}`
+    //   url: '/pages/login/login'
     // });
+  },
+
+  /**
+   * Handle navigate to location
+   */
+  handleNavigate: function() {
+    const { latitude, longitude, address } = this.data.wish.location;
+    wx.openLocation({
+      latitude: latitude,
+      longitude: longitude,
+      name: address,
+      address: address,
+      scale: 18
+    });
+  },
+
+  /**
+   * Handle like
+   */
+  handleLike: function() {
+    const currentLiked = this.data.liked;
+    const newLiked = !currentLiked;
+    
+    // 更新收藏状态
+    this.setData({
+      liked: newLiked
+    });
+    
+    // 模拟收藏/取消收藏的反馈
+    wx.showToast({
+      title: newLiked ? '收藏成功' : '取消收藏',
+      icon: 'success',
+      duration: 2000
+    });
   }
 });

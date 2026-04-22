@@ -1,111 +1,183 @@
 <!--pages/wish-detail/wish-detail.wxml-->
 <view class="wish-detail-container">
-  <!-- Header -->
-  <view class="header">
-    <view class="header-left" bindtap="goBack">
-      <text class="back-arrow">‹</text>
-      <text class="header-title">心愿详情</text>
+  <!-- 顶部导航栏 -->
+  <view class="detail-header">
+  <!--
+    <view class="header-left">
+      <view class="back-btn" bindtap="goBack">
+        <text>←</text>
+      </view>
     </view>
+    <view class="header-title">心愿详情</view> 
+  -->
   </view>
 
-  <!-- Content -->
-  <scroll-view scroll-y class="content-scroll">
-    <view class="content">
-      <!-- Wish Title -->
-      <view class="wish-header">
-        <text class="wish-title">{{wish.title}}</text>
-        <view class="tags">
-          <view class="category-tag">{{wish.category}}</view>
-          <view wx:if="{{wish.verified}}" class="verified-tag">已实名</view>
+  <!-- 内容容器 -->
+  <view class="detail-content">
+    <!-- 标题和标签 -->
+    <view class="title-section">
+      <view class="title-header">
+        <text class="item-title">{{wish.title}}</text>
+        <view class="like-btn {{liked ? 'liked' : ''}}" bindtap="handleLike">
+          <text>{{liked ? '❤️' : '🤍'}}</text>
         </view>
       </view>
 
-      <!-- Description -->
-      <view class="section">
-        <text class="section-title">心愿描述</text>
-        <text class="description-text">{{wish.description}}</text>
+      <view class="tags-row">
+        <view class="tag tag-category">{{wish.category}}</view>
+        <view wx:if="{{wish.verified}}" class="tag tag-verified">已实名</view>
       </view>
 
-      <!-- Budget Info -->
-      <view class="section">
-        <text class="section-title">预期价格/交换条件</text>
-        <text class="budget-text">{{wish.budget}}</text>
-      </view>
-
-      <!-- Meta Info -->
-      <view class="section">
-        <text class="section-title">基本信息</text>
-        <view class="meta-row">
-          <text class="meta-label">分类：</text>
-          <text class="meta-value">{{wish.category}}</text>
+      <view class="info-row">
+        <view class="info-item">
+          <text class="info-label">📍</text>
+          <text class="info-value">{{wish.distance}}km</text>
         </view>
-        <view class="meta-row">
-          <text class="meta-label">距离：</text>
-          <text class="meta-value">{{wish.distance}}km</text>
+        <view class="info-item">
+          <text class="info-label">🕐</text>
+          <text class="info-value">{{wish.time}}</text>
         </view>
-        <view class="meta-row">
-          <text class="meta-label">发布时间：</text>
-          <text class="meta-value">{{wish.time}}</text>
+        <view class="info-item">
+          <text class="info-label">👁️</text>
+          <text class="info-value">{{wish.stats.views}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">❤️</text>
+          <text class="info-value">{{wish.stats.favorites}}</text>
         </view>
       </view>
+    </view>
 
-      <!-- Publisher Info -->
-      <view class="section">
+    <!-- 心愿描述 -->
+    <view class="description-section">
+      <text class="section-title">心愿描述</text>
+      <text class="description-text">{{wish.description}}</text>
+    </view>
+
+    <!-- 预期价格/交换条件 -->
+    <view class="budget-section">
+      <text class="section-title">预期价格/交换条件</text>
+      <text class="budget-text">{{wish.budget}}</text>
+    </view>
+
+    <!-- 发布者信息 -->
+    <view class="seller-section">
+      <view class="section-header">
         <text class="section-title">发布者信息</text>
-        <view class="publisher-card">
-          <view class="publisher-avatar">{{wish.userName[0]}}</view>
-          <view class="publisher-info">
-            <text class="publisher-name">{{wish.userName}}</text>
-            <text class="publisher-status">{{wish.active ? '活跃用户' : '普通用户'}}</text>
+        <view class="report-btn" bindtap="handleReport">
+          <text>🚩 举报</text>
+        </view>
+      </view>
+      <view class="seller-card">
+        <view class="seller-avatar">{{wish.userName[0]}}</view>
+        <view class="seller-info">
+          <view class="seller-name">
+            {{wish.userName}}
+            <view wx:if="{{wish.verified}}" class="tag tag-verified">已实名</view>
           </view>
-          <view class="report-btn" bindtap="showReportModal">
-            <text class="report-icon">⚠️</text>
+          <view class="seller-stats">
+            <text>{{wish.active ? '活跃用户' : '普通用户'}}</text>
           </view>
         </view>
       </view>
-
-      <!-- Safety Tips -->
-      <view class="section">
-        <view class="safety-tips">
-          <text class="tips-title">🛡️ 安全提示</text>
-          <text class="tips-text">• 不要在聊天中透露个人隐私信息</text>
-          <text class="tips-text">• 建议在安全的地点进行交易</text>
-          <text class="tips-text">• 如遇诈骗，请立即举报</text>
-        </view>
-      </view>
-
-      <!-- Footer Spacing -->
-      <view class="footer-spacing"></view>
     </view>
-  </scroll-view>
 
-  <!-- Action Bar -->
-  <view class="action-bar">
-    <view class="action-btn contact-btn" bindtap="contactSeller">
-      <text class="action-icon">💬</text>
-      <text class="action-text">联系发布者</text>
+    <!-- 安全提示 -->
+    <view class="safety-section">
+      <view class="safety-header" bindtap="handleToggleSafetyDetails">
+        <text class="safety-title">🛡️ 防骗提醒</text>
+        <text class="safety-toggle">{{showSafetyDetails ? '▼' : '▶'}}</text>
+      </view>
+      <view wx:if="{{showSafetyDetails}}" class="safety-details">
+        <view class="safety-item">• 不要在聊天中透露个人隐私信息</view>
+        <view class="safety-item">• 建议在安全的地点进行交易</view>
+        <view class="safety-item">• 如遇诈骗，请立即举报</view>
+        <view class="safety-item">• 警惕虚假身份认证，核实发布者真实信息</view>
+        <view class="safety-item">• 不要点击陌生链接，防止信息泄露</view>
+      </view>
+    </view>
+
+    <!-- 联系方式 -->
+    <view class="contact-section">
+      <text class="section-title">联系方式</text>
+      
+      <!-- 登录状态 -->
+      <view wx:if="{{isLoggedIn}}">
+        <view class="contact-item" bindtap="handleContactWechat">
+          <view class="contact-icon">💬</view>
+          <view class="contact-info">
+            <text class="contact-label">微信</text>
+            <text class="contact-value">{{wish.contact.wechat}}</text>
+          </view>
+          <view class="contact-action">复制</view>
+        </view>
+        <view class="contact-item" bindtap="handleContactPhone">
+          <view class="contact-icon">☎️</view>
+          <view class="contact-info">
+            <text class="contact-label">电话</text>
+            <text class="contact-value">{{wish.contact.phone}}</text>
+          </view>
+          <view class="contact-action">拨打</view>
+        </view>
+      </view>
+      
+      <!-- 未登录状态 -->
+      <view wx:else>
+        <view class="contact-item">
+          <view class="contact-icon">💬</view>
+          <view class="contact-info">
+            <text class="contact-label">微信</text>
+            <text class="contact-value">*******123</text>
+          </view>
+          <view class="contact-action">登录查看</view>
+        </view>
+        <view class="contact-item">
+          <view class="contact-icon">☎️</view>
+          <view class="contact-info">
+            <text class="contact-label">电话</text>
+            <text class="contact-value">138****8000</text>
+          </view>
+          <view class="contact-action">登录查看</view>
+        </view>
+        <view class="login-prompt" bindtap="navigateToLogin">
+          <view class="login-prompt-text">🔐 登录后查看完整联系方式</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 交易地点 - 使用原生map组件 -->
+    <view class="location-section">
+      <text class="section-title">交易地点</text>
+      <view class="location-info">
+        <view class="location-header">
+          <text class="location-label">详细地址</text>
+          <view class="distance-badge" bindtap="handleNavigate">
+            <text class="distance-text">距您{{wish.distance}}km</text>
+            <text class="distance-icon">📍</text>
+          </view>
+        </view>
+        <text class="location-value">{{wish.location.address}}</text>
+      </view>
+      <view class="map-container-wrapper">
+        <map 
+          id="detail-map"
+          class="map-container"
+          latitude="{{wish.location.latitude}}"
+          longitude="{{wish.location.longitude}}"
+          scale="15"
+          markers="{{markers}}"
+          show-location="true"
+        ></map>
+      </view>
     </view>
   </view>
+  <!-- 底部间距 -->
+  <view class="bottom-spacing"></view>
 
-  <!-- Report Modal -->
-  <view wx:if="{{showReport}}" class="modal-overlay" bindtap="hideReportModal">
-    <view class="modal-content" catchTap="preventClose">
-      <text class="modal-title">举报此心愿</text>
-      <view class="report-options">
-        <view class="report-option" bindtap="submitReport" data-reason="虚假信息">
-          <text>虚假信息</text>
-        </view>
-        <view class="report-option" bindtap="submitReport" data-reason="骚扰信息">
-          <text>骚扰信息</text>
-        </view>
-        <view class="report-option" bindtap="submitReport" data-reason="违法违规">
-          <text>违法违规</text>
-        </view>
-        <view class="report-option" bindtap="submitReport" data-reason="其他">
-          <text>其他</text>
-        </view>
-      </view>
-      <view class="modal-close" bindtap="hideReportModal">取消</view>
-    </view>
-  </view>
+  <!-- 举报表单组件 -->
+  <report-form 
+    visible="{{showReportModal}}" 
+    item="{{wish}}" 
+    bind:close="closeReportModal"
+  />
 </view>

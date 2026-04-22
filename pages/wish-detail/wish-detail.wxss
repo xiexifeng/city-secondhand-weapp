@@ -1,119 +1,198 @@
 /* pages/wish-detail/wish-detail.wxss */
 
 page {
-  background-color: #f3f4f6;
+  background-color: #f9fafb;
+  overflow-x: hidden;
+  width: 100vw;
+  box-sizing: border-box;
 }
+
+/* 给所有图片和视频兜底 */
+image, video, img {
+  max-width: 100%;
+  display: block;
+}
+
+/* 临时调试样式 - 检查溢出元素 */
+/* * { outline: 1px solid red; } */
 
 .wish-detail-container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  background-color: #f3f4f6;
+  min-height: 100vh;
+  background-color: #f9fafb;
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
 }
 
-/* Header */
-.header {
+/* 顶部导航栏 */
+.detail-header {
   background-color: white;
-  border-bottom: 1rpx solid #e5e7eb;
   padding: 12rpx 16rpx;
-  padding-top: 32rpx;
-  z-index: 10;
-  position: sticky;
-  top: 0;
-}
-
-.header-left {
   display: flex;
   align-items: center;
-  gap: 12rpx;
+  justify-content: space-between;
+  border-bottom: 1rpx solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.back-arrow {
-  font-size: 32rpx;
-  color: #0ea5e9;
-  font-weight: bold;
+.header-left, .header-right {
+  width: 50rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.back-btn {
+  width: 40rpx;
+  height: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6;
+  border-radius: 8rpx;
+  font-size: 24rpx;
+  color: #1f2937;
 }
 
 .header-title {
-  font-size: 24rpx;
+  flex: 1;
+  text-align: center;
+  font-size: 32rpx;
   font-weight: 600;
   color: #1f2937;
 }
 
-/* Content Scroll */
-.content-scroll {
+/* 内容容器 */
+.detail-content {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 20rpx;
+  margin-bottom: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.content {
-  padding: 16rpx;
-}
-
-/* Wish Header */
-.wish-header {
+/* 标题和标签 */
+.title-section {
   background-color: white;
-  border-radius: 8rpx;
   padding: 16rpx;
+  margin-top: 12rpx;
+  margin-left: 12rpx;
+  margin-right: 12rpx;
+  border-radius: 12rpx;
+}
+
+.title-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   margin-bottom: 12rpx;
 }
 
-.wish-title {
+.item-title {
   font-size: 32rpx;
   font-weight: 700;
   color: #1f2937;
-  display: block;
-  margin-bottom: 16rpx;
+  flex: 1;
   line-height: 1.4;
 }
 
-.tags {
+.like-btn {
+  font-size: 32rpx;
+  margin-left: 12rpx;
+}
+
+.like-btn.liked {
+  color: #ef4444;
+}
+
+.tags-row {
   display: flex;
   gap: 8rpx;
-  flex-wrap: wrap;
-}
-
-.category-tag {
-  display: inline-block;
-  padding: 8rpx 16rpx;
-  background-color: #d1fae5;
-  color: #065f46;
-  border-radius: 20rpx;
-  font-size: 18rpx;
-  font-weight: 700;
-}
-
-.verified-tag {
-  display: inline-block;
-  padding: 8rpx 16rpx;
-  background-color: #dbeafe;
-  color: #0c4a6e;
-  border-radius: 20rpx;
-  font-size: 18rpx;
-  font-weight: 700;
-}
-
-/* Section */
-.section {
-  background-color: white;
-  border-radius: 8rpx;
-  padding: 16rpx;
   margin-bottom: 12rpx;
 }
 
+.tag {
+  padding: 6rpx 12rpx;
+  border-radius: 4rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+}
+
+.tag-category {
+  background-color: #d1fae5;
+  color: #10b981;
+}
+
+.tag-verified {
+  background-color: #f3f4f6;
+  color: #6b7280;
+}
+
+.info-row {
+  display: flex;
+  gap: 16rpx;
+  padding: 12rpx 0;
+  border-bottom: 1rpx solid #e5e7eb;
+  margin-bottom: 12rpx;
+  flex-wrap: wrap;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  font-size: 24rpx;
+  color: #6b7280;
+}
+
+/* 心愿描述 */
+.description-section {
+  background-color: white;
+  padding: 16rpx;
+  margin-top: 12rpx;
+  margin-left: 12rpx;
+  margin-right: 12rpx;
+  border-radius: 12rpx;
+}
+
+/* 预期价格/交换条件 */
+.budget-section {
+  background-color: white;
+  padding: 16rpx;
+  margin-top: 12rpx;
+  margin-left: 12rpx;
+  margin-right: 12rpx;
+  border-radius: 12rpx;
+}
+
 .section-title {
+  display: block;
   font-size: 28rpx;
   font-weight: 700;
   color: #1f2937;
-  display: block;
-  margin-bottom: 16rpx;
+  margin-bottom: 12rpx;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
 }
 
 .description-text {
-  font-size: 24rpx;
+  display: block;
+  font-size: 26rpx;
   color: #6b7280;
   line-height: 1.6;
-  display: block;
 }
 
 .budget-text {
@@ -123,227 +202,289 @@ page {
   display: block;
 }
 
-/* Meta Info */
-.meta-row {
+/* 发布者信息 */
+.seller-section {
+  background-color: white;
+  padding: 16rpx;
+  margin-top: 12rpx;
+  margin-left: 12rpx;
+  margin-right: 12rpx;
+  border-radius: 12rpx;
+}
+
+.report-btn {
+  padding: 6rpx 12rpx;
+  background-color: #fee2e2;
+  border-radius: 6rpx;
+  font-size: 20rpx;
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.seller-card {
   display: flex;
   align-items: center;
-  padding: 8rpx 0;
-  border-bottom: 1rpx solid #f3f4f6;
+  padding: 12rpx;
+  background-color: #f9fafb;
+  border-radius: 8rpx;
+  margin-top: 12rpx;
 }
 
-.meta-row:last-child {
-  border-bottom: none;
+.seller-avatar {
+  width: 48rpx;
+  height: 48rpx;
+  background-color: #10b981;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24rpx;
+  font-weight: 700;
+  margin-right: 12rpx;
+  flex-shrink: 0;
 }
 
-.meta-label {
+.seller-info {
+  flex: 1;
+}
+
+.seller-name {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 4rpx;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.seller-name .tag-verified {
+  font-size: 18rpx;
+  padding: 2rpx 8rpx;
+}
+
+.seller-stats {
   font-size: 20rpx;
-  color: #6b7280;
-  min-width: 80rpx;
-  font-weight: 500;
+  color: #9ca3af;
+  display: flex;
+  flex-direction: column;
+  gap: 2rpx;
 }
 
-.meta-value {
-  font-size: 22rpx;
+/* 安全提示 */
+.safety-section {
+  background-color: #fffbeb;
+  padding: 16rpx;
+  margin-top: 12rpx;
+  margin-left: 12rpx;
+  margin-right: 12rpx;
+  border-radius: 12rpx;
+  border: 2rpx solid #fbbf24;
+}
+
+.safety-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12rpx;
+  background-color: #fef3c7;
+  border-radius: 8rpx;
+  border-left: 4rpx solid #f59e0b;
+}
+
+.safety-title {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #b45309;
+}
+
+.safety-toggle {
+  font-size: 20rpx;
+  color: #b45309;
+}
+
+.safety-details {
+  margin-top: 12rpx;
+  padding: 12rpx;
+  background-color: #fef3c7;
+  border-radius: 8rpx;
+  border-left: 4rpx solid #f59e0b;
+}
+
+.safety-item {
+  font-size: 24rpx;
+  color: #b45309;
+  padding: 8rpx 0;
+  line-height: 1.5;
+}
+
+/* 联系方式 */
+.contact-section {
+  background-color: white;
+  padding: 16rpx;
+  margin-top: 12rpx;
+  margin-left: 12rpx;
+  margin-right: 12rpx;
+  border-radius: 12rpx;
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  padding: 12rpx;
+  background-color: #f9fafb;
+  border-radius: 8rpx;
+  margin-bottom: 12rpx;
+}
+
+.contact-icon {
+  font-size: 28rpx;
+  margin-right: 12rpx;
+}
+
+.contact-info {
+  flex: 1;
+}
+
+.contact-label {
+  display: block;
+  font-size: 20rpx;
+  color: #9ca3af;
+  margin-bottom: 4rpx;
+}
+
+.contact-value {
+  display: block;
+  font-size: 26rpx;
   color: #1f2937;
   font-weight: 600;
 }
 
-/* Publisher Card */
-.publisher-card {
+.contact-action {
+  font-size: 24rpx;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.login-prompt {
+  margin-top: 12rpx;
+  padding: 16rpx;
+  background-color: #f3f4f6;
+  border-radius: 8rpx;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.login-prompt:hover {
+  background-color: #e5e7eb;
+}
+
+.login-prompt-text {
+  font-size: 24rpx;
+  color: #10b981;
+  font-weight: 600;
+}
+
+/* 底部间距 */
+.bottom-spacing {
+  height: 40rpx;
+}
+
+/* 举报按钮样式 */
+.seller-actions {
   display: flex;
   align-items: center;
   gap: 12rpx;
+}
+
+.seller-actions .report-btn {
+  padding: 8rpx;
+  border-radius: 8rpx;
+  background-color: #fee2e2;
+  color: #dc2626;
+  font-size: 24rpx;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.seller-actions .report-btn:hover {
+  background-color: #fecaca;
+}
+
+/* 交易地点 */
+.location-section {
+  background-color: white;
+  padding: 16rpx;
+  margin-top: 12rpx;
+  margin-left: 12rpx;
+  margin-right: 12rpx;
+  border-radius: 12rpx;
+}
+
+.map-container-wrapper {
+  margin-top: 12rpx;
+  border-radius: 8rpx;
+  overflow: hidden;
+  border: 1rpx solid #e5e7eb;
+}
+
+.map-container {
+  width: 100%;
+  height: 300rpx;
+  background-color: #f3f4f6;
+}
+
+.location-info {
+  margin-top: 12rpx;
   padding: 12rpx;
   background-color: #f9fafb;
   border-radius: 8rpx;
 }
 
-.publisher-avatar {
-  width: 44rpx;
-  height: 44rpx;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%);
-  color: white;
+.location-header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  font-size: 18rpx;
-  font-weight: 600;
-  flex-shrink: 0;
+  margin-bottom: 4rpx;
 }
 
-.publisher-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.publisher-name {
-  font-size: 24rpx;
-  font-weight: 700;
-  color: #1f2937;
-  display: block;
-}
-
-.publisher-status {
-  font-size: 18rpx;
+.location-label {
+  font-size: 20rpx;
   color: #9ca3af;
-  display: block;
-  margin-top: 4rpx;
 }
 
-.report-btn {
-  width: 32rpx;
-  height: 32rpx;
+.distance-badge {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background-color: white;
-  border-radius: 8rpx;
-  font-size: 18rpx;
+  gap: 6rpx;
+  padding: 6rpx 12rpx;
+  background-color: #d1fae5;
+  border-radius: 16rpx;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-/* Safety Tips */
-.safety-tips {
-  display: flex;
-  flex-direction: column;
-  gap: 8rpx;
-  background-color: #eff6ff;
-  border-left: 4rpx solid #0ea5e9;
-  padding: 12rpx 16rpx;
-  border-radius: 4rpx;
+.distance-badge:hover {
+  background-color: #a7f3d0;
 }
 
-.tips-title {
+.distance-text {
   font-size: 20rpx;
-  font-weight: 700;
-  color: #0369a1;
-  display: block;
+  color: #10b981;
+  font-weight: 600;
 }
 
-.tips-text {
-  font-size: 18rpx;
-  color: #0369a1;
-  display: block;
-  line-height: 1.6;
-}
-
-/* Action Bar */
-.action-bar {
-  background-color: white;
-  border-top: 1rpx solid #e5e7eb;
-  padding: 12rpx 16rpx;
-  display: flex;
-  gap: 12rpx;
-}
-
-.action-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8rpx;
-  padding: 16rpx 16rpx;
-  border-radius: 8rpx;
+.distance-icon {
   font-size: 20rpx;
-  font-weight: 700;
-  transition: all 0.2s;
+  color: #10b981;
 }
 
-.contact-btn {
-  background-color: #10b981;
-  color: white;
-}
-
-.contact-btn:active {
-  background-color: #059669;
-  transform: scale(0.98);
-}
-
-.action-icon {
-  font-size: 16rpx;
-}
-
-.action-text {
-  font-size: 14rpx;
-}
-
-/* Modal Overlay */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: flex-end;
-  z-index: 100;
-}
-
-.modal-content {
-  width: 100%;
-  background-color: white;
-  border-radius: 16rpx 16rpx 0 0;
-  padding: 24rpx 16rpx;
-  animation: slideUp 0.3s ease-out;
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(100%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-.modal-title {
-  font-size: 18rpx;
-  font-weight: 600;
-  color: #1f2937;
+.location-value {
   display: block;
-  margin-bottom: 16rpx;
-}
-
-.report-options {
-  display: flex;
-  flex-direction: column;
-  gap: 8rpx;
-  margin-bottom: 16rpx;
-}
-
-.report-option {
-  padding: 12rpx 16rpx;
-  background-color: #f3f4f6;
-  border-radius: 8rpx;
-  font-size: 14rpx;
+  font-size: 26rpx;
   color: #1f2937;
-  transition: all 0.2s;
-}
-
-.report-option:active {
-  background-color: #e5e7eb;
-  transform: scale(0.98);
-}
-
-.modal-close {
-  padding: 12rpx 16rpx;
-  background-color: #f3f4f6;
-  border-radius: 8rpx;
-  font-size: 14rpx;
-  color: #6b7280;
-  text-align: center;
   font-weight: 600;
-  transition: all 0.2s;
 }
 
-.modal-close:active {
-  background-color: #e5e7eb;
-  transform: scale(0.98);
-}
-
-/* Footer Spacing */
-.footer-spacing {
-  height: 40rpx;
-}
