@@ -16,6 +16,18 @@
       </view>
     </view>
 
+    <!-- Machine Score Section -->
+    <view class="score-section">
+      <text class="section-title">机器审核评分</text>
+      <view class="score-display">
+        <view class="score-value">{{detail.machineScore}}</view>
+        <view class="score-bar">
+          <view class="score-fill" style="width: {{detail.machineScore}}%"></view>
+        </view>
+        <text class="score-text">综合风险评分（0-100，分数越高风险越大）</text>
+      </view>
+    </view>
+
     <!-- Images Gallery -->
     <view class="images-section">
       <text class="section-title">图片</text>
@@ -132,15 +144,24 @@
       </view>
     </view>
 
-    <!-- Machine Score Section -->
-    <view class="score-section">
-      <text class="section-title">机器审核评分</text>
-      <view class="score-display">
-        <view class="score-value">{{detail.machineScore}}</view>
-        <view class="score-bar">
-          <view class="score-fill" style="width: {{detail.machineScore}}%"></view>
+    <!-- Contact Section -->
+    <view class="contact-section">
+      <text class="section-title">联系方式</text>
+      <view class="contact-item">
+        <view class="contact-icon">📱</view>
+        <view class="contact-info">
+          <text class="contact-label">手机号码</text>
+          <text class="contact-value">{{detail.contact.phone}}</text>
         </view>
-        <text class="score-text">综合风险评分（0-100，分数越高风险越大）</text>
+        <view class="contact-action" bindtap="copyPhone">复制</view>
+      </view>
+      <view class="contact-item">
+        <view class="contact-icon">💬</view>
+        <view class="contact-info">
+          <text class="contact-label">微信</text>
+          <text class="contact-value">{{detail.contact.wechat}}</text>
+        </view>
+        <view class="contact-action" bindtap="copyWechat">复制</view>
       </view>
     </view>
 

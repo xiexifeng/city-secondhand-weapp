@@ -29,7 +29,11 @@ Page({
       issues: ['检测到电话号码', '包含微信号'],
       status: 'pending',
       location: '北京市朝阳区望京SOHO',
-      distance: 2.5
+      distance: 2.5,
+      contact: {
+        phone: '138****8888',
+        wechat: 'wechat123456'
+      }
     },
     currentImageIndex: 0,
     reviewStatus: null,
@@ -165,6 +169,38 @@ Page({
       name: '交易地点',
       address: location,
       scale: 15
+    });
+  },
+
+  /**
+   * Copy phone number
+   */
+  copyPhone: function() {
+    const { phone } = this.data.detail.contact;
+    wx.setClipboardData({
+      data: phone,
+      success: function() {
+        wx.showToast({
+          title: '复制成功',
+          icon: 'success'
+        });
+      }
+    });
+  },
+
+  /**
+   * Copy wechat
+   */
+  copyWechat: function() {
+    const { wechat } = this.data.detail.contact;
+    wx.setClipboardData({
+      data: wechat,
+      success: function() {
+        wx.showToast({
+          title: '复制成功',
+          icon: 'success'
+        });
+      }
     });
   }
 });
