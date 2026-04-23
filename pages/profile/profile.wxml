@@ -2,18 +2,18 @@
 <view class="profile-container">
   <!-- User Header -->
   <view class="user-header">
-    <view class="header-top">
+    <!-- <view class="header-top">
       <view class="theme-switcher">
         <text class="theme-icon" bindtap="toggleTheme">🌙</text>
       </view>
-    </view>
+    </view> -->
 
     <!-- User Info -->
     <view class="user-info">
       <view class="user-avatar">
         <text class="avatar-text">U</text>
         <view class="level-badge {{userStats.level}}">
-          {{getLevelIcon(userStats.level)}}
+          {{userStats.levelIcon}}
         </view>
       </view>
 
@@ -21,7 +21,7 @@
         <view class="user-name-row">
           <text class="user-name">{{user.nickname}}</text>
           <view class="level-label {{userStats.level}}">
-            {{getLevelLabel(userStats.level)}}
+            {{userStats.levelLabel}}
           </view>
         </view>
         <text class="user-status">已实名认证 • 活跃用户</text>

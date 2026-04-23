@@ -86,15 +86,15 @@ page {
 }
 
 .level-badge.new {
-  background-color: #dbeafe;
+  background-color: #3b82f6;
 }
 
 .level-badge.active {
-  background-color: #dcfce7;
+  background-color: #22c55e;
 }
 
 .level-badge.vip {
-  background-color: #e9d5ff;
+  background-color: #8b5cf6;
 }
 
 /* User Details */
@@ -127,18 +127,18 @@ page {
 }
 
 .level-label.new {
-  background-color: #dbeafe;
-  color: #0c4a6e;
+  background-color: #3b82f6;
+  color: white;
 }
 
 .level-label.active {
-  background-color: #dcfce7;
-  color: #166534;
+  background-color: #22c55e;
+  color: white;
 }
 
 .level-label.vip {
-  background-color: #e9d5ff;
-  color: #6b21a8;
+  background-color: #8b5cf6;
+  color: white;
 }
 
 .user-status {

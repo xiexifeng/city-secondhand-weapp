@@ -12,6 +12,8 @@ Page({
       favorites: 24,
       points: 185,
       level: 'active',
+      levelIcon: '',
+      levelLabel: '',
       joinDate: '2024-01-15'
     },
     publishData: {
@@ -92,7 +94,14 @@ Page({
    * Initialize page data
    */
   initData: function() {
-    // Data is already initialized in data object
+    const level = this.data.userStats.level;
+    const levelIcon = this.getLevelIcon(level);
+    const levelLabel = this.getLevelLabel(level);
+    
+    this.setData({
+      'userStats.levelIcon': levelIcon,
+      'userStats.levelLabel': levelLabel
+    });
   },
 
   /**
