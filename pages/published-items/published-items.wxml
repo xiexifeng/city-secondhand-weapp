@@ -38,7 +38,7 @@
 
     <view wx:for="{{items}}" wx:key="id" class="item-card">
       <!-- View Mode -->
-      <view wx:if="{{editingId !== item.id}}" class="item-view">
+      <view class="item-view">
         <view class="item-header">
           <image class="item-image" src="{{item.image}}" mode="aspectFill"></image>
           <view class="item-info">
@@ -64,7 +64,7 @@
 
             <view class="item-stats">
               <text class="stat-item">👁 {{item.views}}</text>
-              <text class="stat-item">✓ {{item.likes}}</text>
+              <text class="stat-item">❤️ {{item.likes}}</text>
             </view>
           </view>
 

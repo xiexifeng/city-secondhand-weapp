@@ -4,6 +4,8 @@ App({
     userInfo: null,
     token: null,
     baseUrl: 'https://api.example.com', // 需要替换为实际的 API 地址
+    editItemId: null,
+    editWishId: null
   },
 
   onLaunch() {

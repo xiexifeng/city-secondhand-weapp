@@ -39,7 +39,7 @@
       <view class="wishes-section">
         <view wx:for="{{activeWishes}}" wx:key="id" class="wish-card">
           <!-- View Mode -->
-          <view wx:if="{{editingId !== item.id}}" class="wish-view">
+          <view class="wish-view">
             <view class="wish-header">
               <text class="wish-icon">❤️</text>
               <view class="wish-content">
