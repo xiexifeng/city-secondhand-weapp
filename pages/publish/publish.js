@@ -63,8 +63,248 @@ Page({
     scrollToView: ''
   },
 
-  onLoad: function() {
+  onLoad: function(options) {
     // 页面加载
+    this.checkEditMode();
+  },
+
+  onShow: function() {
+    // 页面显示时检查是否需要进入编辑模式
+    this.checkEditMode();
+  },
+
+  /**
+   * 检查是否需要进入编辑模式
+   */
+  checkEditMode: function() {
+    const app = getApp();
+    if (app.globalData.editItemId) {
+      console.log('Entering edit mode for item id:', app.globalData.editItemId);
+      // 先设置publishType，确保页面立即显示表单
+      this.setData({ publishType: 'sell' }, () => {
+        // 然后加载编辑数据
+        this.loadEditData(app.globalData.editItemId);
+        // 清空编辑ID，避免下次进入时自动编辑
+        app.globalData.editItemId = null;
+      });
+    } else if (app.globalData.editWishId) {
+      console.log('Entering edit mode for wish id:', app.globalData.editWishId);
+      // 先设置publishType为求换墙，确保页面立即显示表单
+      this.setData({ publishType: 'wish' }, () => {
+        // 然后加载编辑数据
+        this.loadEditWishData(app.globalData.editWishId);
+        // 清空编辑ID，避免下次进入时自动编辑
+        app.globalData.editWishId = null;
+      });
+    }
+  },
+
+  /**
+   * 加载编辑数据
+   */
+  loadEditData: function(id) {
+    console.log('Loading edit data for item id:', id);
+    // 模拟从已发布物品页面获取数据
+    const publishedItems = [
+      {
+        id: 1,
+        title: 'iPhone 14 Pro Max',
+        price: 5800,
+        image: 'https://images.unsplash.com/photo-1592286927505-1def25115558?w=400&h=400&fit=crop',
+        category: '数码3C',
+        description: '9成新，无划痕，原装配件齐全',
+        status: '在售',
+        views: 245,
+        likes: 18,
+        publishDate: '2024-03-20',
+        transactionType: '人民币',
+        reviewStatus: '已通过',
+        location: '北京市朝阳区'
+      },
+      {
+        id: 2,
+        title: 'MacBook Pro 2019',
+        price: 8500,
+        image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop',
+        category: '数码3C',
+        description: '13寸，i5处理器，8GB内存，256GB SSD',
+        status: '已成交',
+        views: 312,
+        likes: 42,
+        publishDate: '2024-03-15',
+        transactionType: '人民币',
+        reviewStatus: '已通过',
+        location: '北京市朝阳区'
+      },
+      {
+        id: 3,
+        title: 'Sony A6400 相机',
+        price: 3200,
+        image: 'https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400&h=400&fit=crop',
+        category: '数码3C',
+        description: '微单相机，配16-50mm镜头，完美状态',
+        status: '成交中',
+        views: 156,
+        likes: 12,
+        publishDate: '2024-03-18',
+        transactionType: '都可以',
+        reviewStatus: '待审核',
+        location: '北京市朝阳区'
+      },
+      {
+        id: 4,
+        title: 'Nike 跑鞋',
+        price: 599,
+        image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop',
+        category: '服装鞋帽',
+        description: '全新未穿，官方正品，尺码42',
+        status: '已下架',
+        views: 89,
+        likes: 5,
+        publishDate: '2024-03-19',
+        transactionType: '人民币',
+        reviewStatus: '审核不通过',
+        rejectionReason: '图片质量低',
+        location: '北京市朝阳区'
+      }
+    ];
+    
+    const item = publishedItems.find(item => item.id == id);
+    console.log('Found item:', item);
+    if (item) {
+      const categoryIndex = this.data.categories.indexOf(item.category);
+      const conditionIndex = this.data.conditions.indexOf(item.condition || '9成新');
+      console.log('Category index:', categoryIndex, 'Condition index:', conditionIndex);
+      
+      this.setData({
+        publishType: 'sell',
+        images: [item.image],
+        formData: {
+          title: item.title,
+          description: item.description,
+          price: item.price.toString(),
+          category: item.category,
+          wechat: '',
+          phone: '',
+          location: item.location,
+          wantItems: '',
+          budget: '',
+          condition: item.condition || '9成新',
+          contactVisibility: 'both'
+        },
+        locationDetails: {
+          province: '北京市',
+          city: '北京市',
+          district: '朝阳区'
+        },
+        categoryIndex: categoryIndex >= 0 ? categoryIndex : 0,
+        conditionIndex: conditionIndex >= 0 ? conditionIndex : 2,
+        editingId: id
+      }, function() {
+        console.log('Data set successfully');
+      });
+    } else {
+      console.log('Item not found for id:', id);
+    }
+  },
+
+  /**
+   * 加载编辑心愿数据
+   */
+  loadEditWishData: function(id) {
+    console.log('Loading edit data for wish id:', id);
+    // 模拟从求换页面获取数据
+    const wishes = [
+      {
+        id: 1,
+        title: '求 iPad Pro M4 11寸',
+        description: '想要一台iPad Pro用于设计工作，可用MacBook Pro 2019加差价交换',
+        category: '数码3C',
+        expectedMethod: '以物换物',
+        priceRange: '差价 5000-8000',
+        status: '活跃',
+        createdAt: '2024-03-20',
+        views: 45,
+        interests: 3,
+        reviewStatus: '已通过'
+      },
+      {
+        id: 2,
+        title: '求 Sony A6400 相机',
+        description: '需要一台微单相机，预算3000-4000元',
+        category: '数码3C',
+        expectedMethod: '人民币',
+        priceRange: '3000-4000',
+        status: '活跃',
+        createdAt: '2024-03-18',
+        views: 28,
+        interests: 2,
+        reviewStatus: '待审核'
+      },
+      {
+        id: 3,
+        title: '求 Dyson 吹风机',
+        description: '想要一台Dyson吹风机，可用旧吹风机加现金交换',
+        category: '美妆个护',
+        expectedMethod: '都可以',
+        status: '已下架',
+        createdAt: '2024-03-15',
+        views: 12,
+        interests: 0,
+        reviewStatus: '审核不通过',
+        rejectionReason: '描述信息不清楚'
+      },
+      {
+        id: 4,
+        title: '求 Nintendo Switch OLED',
+        description: '想要一台Nintendo Switch OLED，可用PS4加差价交换',
+        category: '数码3C',
+        expectedMethod: '以物换物',
+        priceRange: '差价 1000-1500',
+        status: '活跃',
+        createdAt: '2024-03-10',
+        views: 35,
+        interests: 1,
+        reviewStatus: '审核不通过',
+        rejectionReason: '缺少详细描述'
+      }
+    ];
+    
+    const wish = wishes.find(wish => wish.id == id);
+    console.log('Found wish:', wish);
+    if (wish) {
+      const categoryIndex = this.data.categories.indexOf(wish.category);
+      console.log('Category index:', categoryIndex);
+      
+      this.setData({
+        publishType: 'wish',
+        formData: {
+          title: wish.title,
+          description: wish.description,
+          price: '',
+          category: wish.category,
+          wechat: '',
+          phone: '',
+          location: '北京市朝阳区',
+          wantItems: wish.description,
+          budget: wish.priceRange || '',
+          condition: '9成新',
+          contactVisibility: 'both'
+        },
+        locationDetails: {
+          province: '北京市',
+          city: '北京市',
+          district: '朝阳区'
+        },
+        categoryIndex: categoryIndex >= 0 ? categoryIndex : 0,
+        conditionIndex: 2,
+        editingId: id
+      }, function() {
+        console.log('Wish data set successfully');
+      });
+    } else {
+      console.log('Wish not found for id:', id);
+    }
   },
 
   /**
@@ -294,7 +534,7 @@ Page({
    * 发布物品
    */
   handlePublish: function() {
-    const { agreed, formData, publishType, images, canPublish } = this.data;
+    const { agreed, formData, publishType, images, canPublish, editingId } = this.data;
 
     // 检查是否同意免责声明
     if (!agreed) {
@@ -379,16 +619,20 @@ Page({
 
     // 发布成功
     wx.showToast({
-      title: '发布成功！',
+      title: editingId ? '编辑成功！' : '发布成功！',
       icon: 'success',
       duration: 1500
     });
 
-    // 延迟后跳转到个人资料页
+    // 延迟后跳转到已发布物品页面
     setTimeout(() => {
-      wx.switchTab({
-        url: '/pages/profile/profile'
-      });
+      if (editingId) {
+        wx.navigateBack();
+      } else {
+        wx.switchTab({
+          url: '/pages/profile/profile'
+        });
+      }
     }, 1500);
   }
 });

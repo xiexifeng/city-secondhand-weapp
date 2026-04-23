@@ -5,11 +5,7 @@ Page({
     totalViews: 0,
     activeWishes: [],
     archivedWishes: [],
-    editingId: null,
     activeMenu: null,
-    editForm: null,
-    expectedMethodIndex: 0,
-    expectedMethods: ['以物换物', '人民币', '都可以'],
     wishes: [
       {
         id: 1,
@@ -49,6 +45,20 @@ Page({
         interests: 0,
         reviewStatus: '审核不通过',
         rejectionReason: '描述信息不清楚'
+      },
+      {
+        id: 4,
+        title: '求 Nintendo Switch OLED',
+        description: '想要一台Nintendo Switch OLED，可用PS4加差价交换',
+        category: '数码3C',
+        expectedMethod: '以物换物',
+        priceRange: '差价 1000-1500',
+        status: '活跃',
+        createdAt: '2024-03-10',
+        views: 35,
+        interests: 1,
+        reviewStatus: '审核不通过',
+        rejectionReason: '缺少详细描述'
       }
     ]
   },
@@ -62,13 +72,34 @@ Page({
    */
   computeStats: function() {
     const { wishes } = this.data;
-    const activeCount = wishes.filter(w => w.status === '活跃').length;
-    const totalInterests = wishes.reduce((sum, w) => sum + w.interests, 0);
-    const totalViews = wishes.reduce((sum, w) => sum + w.views, 0);
-    const activeWishes = wishes.filter(w => w.status === '活跃');
-    const archivedWishes = wishes.filter(w => w.status === '已下架');
+    
+    const reviewStatusClassMap = {
+      '待审核': 'review-pending',
+      '已通过': 'review-approved',
+      '审核不通过': 'review-rejected'
+    };
+    
+    const reviewStatusLabelMap = {
+      '待审核': '待审核',
+      '已通过': '已通过',
+      '审核不通过': '审核不通过'
+    };
+    
+    // 为每个心愿添加reviewStatusClass和reviewStatusLabel字段
+    const processedWishes = wishes.map(wish => ({
+      ...wish,
+      reviewStatusClass: reviewStatusClassMap[wish.reviewStatus] || 'review-pending',
+      reviewStatusLabel: reviewStatusLabelMap[wish.reviewStatus] || wish.reviewStatus
+    }));
+    
+    const activeCount = processedWishes.filter(w => w.status === '活跃').length;
+    const totalInterests = processedWishes.reduce((sum, w) => sum + w.interests, 0);
+    const totalViews = processedWishes.reduce((sum, w) => sum + w.views, 0);
+    const activeWishes = processedWishes.filter(w => w.status === '活跃');
+    const archivedWishes = processedWishes.filter(w => w.status === '已下架');
     
     this.setData({
+      wishes: processedWishes,
       activeCount,
       totalInterests,
       totalViews,
@@ -77,29 +108,7 @@ Page({
     });
   },
 
-  /**
-   * Get review status class
-   */
-  getReviewStatusClass: function(status) {
-    const classes = {
-      '待审核': 'review-pending',
-      '已通过': 'review-approved',
-      '审核不通过': 'review-rejected'
-    };
-    return classes[status] || 'review-pending';
-  },
 
-  /**
-   * Get review status label
-   */
-  getReviewStatusLabel: function(status) {
-    const labels = {
-      '待审核': '待审核',
-      '已通过': '已通过',
-      '审核不通过': '审核不通过'
-    };
-    return labels[status] || status;
-  },
 
   /**
    * Toggle menu
@@ -126,68 +135,21 @@ Page({
    */
   handleEdit: function(e) {
     const id = parseInt(e.currentTarget.dataset.id);
-    const wish = this.data.wishes.find(w => w.id === id);
-    if (wish) {
-      this.setData({
-        editingId: id,
-        editForm: { ...wish },
-        activeMenu: null
-      });
-    }
-  },
-
-  /**
-   * Handle save edit
-   */
-  handleSaveEdit: function() {
-    const { editForm, wishes } = this.data;
-    if (editForm) {
-      const updatedWishes = wishes.map(w => w.id === editForm.id ? editForm : w);
-      this.setData({
-        wishes: updatedWishes,
-        editingId: null,
-        editForm: null
-      });
-      this.computeStats();
-      wx.showToast({
-        title: '心愿已更新',
-        icon: 'success'
-      });
-    }
-  },
-
-  /**
-   * Cancel edit
-   */
-  cancelEdit: function() {
+    // 关闭菜单
     this.setData({
-      editingId: null,
-      editForm: null
+      activeMenu: null
+    });
+    // 获取全局应用实例
+    const app = getApp();
+    // 存储编辑ID到全局数据
+    app.globalData.editWishId = id;
+    // 跳转到发布页面
+    wx.switchTab({
+      url: '/pages/publish/publish'
     });
   },
 
-  /**
-   * Handle edit change
-   */
-  handleEditChange: function(e) {
-    const field = e.currentTarget.dataset.field;
-    const value = e.detail.value;
-    this.setData({
-      [`editForm.${field}`]: value
-    });
-  },
 
-  /**
-   * Handle expected method change
-   */
-  handleExpectedMethodChange: function(e) {
-    const index = parseInt(e.detail.value);
-    const method = this.data.expectedMethods[index];
-    this.setData({
-      expectedMethodIndex: index,
-      [`editForm.expectedMethod`]: method
-    });
-  },
 
   /**
    * Handle toggle status
@@ -250,5 +212,12 @@ Page({
     wx.navigateTo({
       url: '/pages/publish/publish'
     });
+  },
+
+  /**
+   * No operation
+   */
+  noop: function() {
+    // 空操作，用于阻止事件冒泡
   }
 });

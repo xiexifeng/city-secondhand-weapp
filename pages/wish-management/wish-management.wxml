@@ -54,8 +54,8 @@
             <view class="wish-tags">
               <view class="tag tag-method">{{item.expectedMethod}}</view>
               <view wx:if="{{item.priceRange}}" class="tag tag-price">{{item.priceRange}}</view>
-              <view wx:if="{{item.reviewStatus}}" class="tag {{getReviewStatusClass(item.reviewStatus)}}">
-                {{getReviewStatusLabel(item.reviewStatus)}}
+              <view wx:if="{{item.reviewStatus}}" class="tag {{item.reviewStatusClass}}">
+                {{item.reviewStatusLabel}}
               </view>
             </view>
 
@@ -67,22 +67,25 @@
               <text class="wish-date">{{item.createdAt}}</text>
               <view class="wish-stats">
                 <text class="stat-item">👁 {{item.views}}</text>
-                <text class="stat-item">💬 {{item.interests}}</text>
+                <text class="stat-item">❤️ {{item.interests}}</text>
               </view>
             </view>
 
             <!-- Menu -->
-            <view wx:if="{{activeMenu === item.id}}" class="menu-popup-wrapper">
+            <view wx:if="{{activeMenu === item.id && (item.reviewStatus === '审核不通过' || item.reviewStatus === '已通过')}}" class="menu-popup-wrapper">
               <view class="menu-popup" catchtap="noop">
-                <view class="menu-item" bindtap="handleEdit" data-id="{{item.id}}">
+                <!-- 只有审核不通过的才能编辑和删除 -->
+                <view wx:if="{{item.reviewStatus === '审核不通过'}}" class="menu-item" bindtap="handleEdit" data-id="{{item.id}}">
                   <text class="menu-icon">✏️</text>
                   <text class="menu-text">编辑</text>
                 </view>
-                <view class="menu-item" bindtap="handleToggleStatus" data-id="{{item.id}}">
+                <!-- 审核通过的能改变状态 -->
+                <view wx:if="{{item.reviewStatus === '已通过'}}" class="menu-item" bindtap="handleToggleStatus" data-id="{{item.id}}">
                   <text class="menu-icon">🔄</text>
                   <text class="menu-text">下架</text>
                 </view>
-                <view class="menu-item delete" bindtap="handleDelete" data-id="{{item.id}}">
+                <!-- 只有审核不通过的才能删除 -->
+                <view wx:if="{{item.reviewStatus === '审核不通过'}}" class="menu-item delete" bindtap="handleDelete" data-id="{{item.id}}">
                   <text class="menu-icon">🗑️</text>
                   <text class="menu-text">删除</text>
                 </view>
@@ -90,36 +93,7 @@
             </view>
           </view>
 
-          <!-- Edit Mode -->
-          <view wx:if="{{editingId === item.id}}" class="wish-edit">
-            <view class="form-group">
-              <text class="form-label">心愿标题</text>
-              <input class="form-input" value="{{editForm.title}}" bindinput="handleEditChange" data-field="title"></input>
-            </view>
 
-            <view class="form-group">
-              <text class="form-label">描述</text>
-              <textarea class="form-textarea" value="{{editForm.description}}" bindinput="handleEditChange" data-field="description"></textarea>
-            </view>
-
-            <view class="form-row">
-              <view class="form-group">
-                <text class="form-label">交换方式</text>
-                <picker class="form-input picker" bindchange="handleExpectedMethodChange" value="{{expectedMethodIndex}}" range="{{expectedMethods}}">
-                  <view>{{editForm.expectedMethod}}</view>
-                </picker>
-              </view>
-              <view class="form-group">
-                <text class="form-label">价格/差价</text>
-                <input class="form-input" value="{{editForm.priceRange}}" bindinput="handleEditChange" data-field="priceRange" placeholder="如: 3000-4000"></input>
-              </view>
-            </view>
-
-            <view class="edit-actions">
-              <view class="btn btn-save" bindtap="handleSaveEdit">保存</view>
-              <view class="btn btn-cancel" bindtap="cancelEdit">取消</view>
-            </view>
-          </view>
         </view>
       </view>
     </view>
@@ -145,8 +119,8 @@
             <view class="wish-tags">
               <view class="tag tag-method">{{item.expectedMethod}}</view>
               <view wx:if="{{item.priceRange}}" class="tag tag-price">{{item.priceRange}}</view>
-              <view wx:if="{{item.reviewStatus}}" class="tag {{getReviewStatusClass(item.reviewStatus)}}">
-                {{getReviewStatusLabel(item.reviewStatus)}}
+              <view wx:if="{{item.reviewStatus}}" class="tag {{item.reviewStatusClass}}">
+                {{item.reviewStatusLabel}}
               </view>
             </view>
 
@@ -158,22 +132,25 @@
               <text class="wish-date">{{item.createdAt}}</text>
               <view class="wish-stats">
                 <text class="stat-item">👁 {{item.views}}</text>
-                <text class="stat-item">💬 {{item.interests}}</text>
+                <text class="stat-item">❤️ {{item.interests}}</text>
               </view>
             </view>
 
             <!-- Menu -->
-            <view wx:if="{{activeMenu === item.id}}" class="menu-popup-wrapper">
+            <view wx:if="{{activeMenu === item.id && (item.reviewStatus === '审核不通过' || item.reviewStatus === '已通过')}}" class="menu-popup-wrapper">
               <view class="menu-popup" catchtap="noop">
-                <view class="menu-item" bindtap="handleEdit" data-id="{{item.id}}">
+                <!-- 只有审核不通过的才能编辑和删除 -->
+                <view wx:if="{{item.reviewStatus === '审核不通过'}}" class="menu-item" bindtap="handleEdit" data-id="{{item.id}}">
                   <text class="menu-icon">✏️</text>
                   <text class="menu-text">编辑</text>
                 </view>
-                <view class="menu-item" bindtap="handleToggleStatus" data-id="{{item.id}}">
+                <!-- 审核通过的能改变状态 -->
+                <view wx:if="{{item.reviewStatus === '已通过'}}" class="menu-item" bindtap="handleToggleStatus" data-id="{{item.id}}">
                   <text class="menu-icon">🔄</text>
                   <text class="menu-text">上架</text>
                 </view>
-                <view class="menu-item delete" bindtap="handleDelete" data-id="{{item.id}}">
+                <!-- 只有审核不通过的才能删除 -->
+                <view wx:if="{{item.reviewStatus === '审核不通过'}}" class="menu-item delete" bindtap="handleDelete" data-id="{{item.id}}">
                   <text class="menu-icon">🗑️</text>
                   <text class="menu-text">删除</text>
                 </view>

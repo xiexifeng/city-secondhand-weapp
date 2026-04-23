@@ -15,15 +15,15 @@
       <text class="stat-label">总发布</text>
     </view>
     <view class="stat-card">
-      <text class="stat-value">{{getStatusCount('在售')}}</text>
+      <text class="stat-value">{{statusCounts.onSale}}</text>
       <text class="stat-label">在售</text>
     </view>
     <view class="stat-card">
-      <text class="stat-value">{{getStatusCount('成交中')}}</text>
+      <text class="stat-value">{{statusCounts.trading}}</text>
       <text class="stat-label">成交中</text>
     </view>
     <view class="stat-card">
-      <text class="stat-value">{{getStatusCount('已成交')}}</text>
+      <text class="stat-value">{{statusCounts.completed}}</text>
       <text class="stat-label">已成交</text>
     </view>
   </view>
@@ -52,9 +52,9 @@
 
             <view class="item-badges">
               <text class="item-price">¥{{item.price}}</text>
-              <view class="status-badge {{getStatusClass(item.status)}}">{{item.status}}</view>
-              <view wx:if="{{item.reviewStatus}}" class="review-status {{getReviewStatusClass(item.reviewStatus)}}">
-                {{getReviewStatusLabel(item.reviewStatus)}}
+              <view class="status-badge {{item.statusClass}}">{{item.status}}</view>
+              <view wx:if="{{item.reviewStatus}}" class="review-status {{item.reviewStatusClass}}">
+                {{item.reviewStatusLabel}}
               </view>
             </view>
 
@@ -71,15 +71,18 @@
           <!-- Menu Popup -->
           <view wx:if="{{activeMenu === item.id}}" class="menu-popup-wrapper">
             <view class="menu-popup" catchtap="noop">
-              <view class="menu-item" bindtap="handleEdit" data-id="{{item.id}}">
+              <!-- 只有审核不通过的才能编辑和删除 -->
+              <view wx:if="{{item.reviewStatus === '审核不通过'}}" class="menu-item" bindtap="handleEdit" data-id="{{item.id}}">
                 <text class="menu-icon">✏️</text>
                 <text class="menu-text">编辑</text>
               </view>
-              <view class="menu-item" bindtap="openStatusModal" data-id="{{item.id}}">
+              <!-- 审核通过且上架/下架的能改变状态 -->
+              <view wx:if="{{item.reviewStatus === '已通过'}}" class="menu-item" bindtap="openStatusModal" data-id="{{item.id}}">
                 <text class="menu-icon">🔄</text>
                 <text class="menu-text">改变状态</text>
               </view>
-              <view class="menu-item delete" bindtap="handleDelete" data-id="{{item.id}}">
+              <!-- 只有审核不通过的才能删除 -->
+              <view wx:if="{{item.reviewStatus === '审核不通过'}}" class="menu-item delete" bindtap="handleDelete" data-id="{{item.id}}">
                 <text class="menu-icon">🗑️</text>
                 <text class="menu-text">删除</text>
               </view>
@@ -88,70 +91,7 @@
         </view>
       </view>
 
-      <!-- Edit Mode -->
-      <view wx:if="{{editingId === item.id}}" class="item-edit">
-        <view class="form-group">
-          <text class="form-label">物品标题</text>
-          <input class="form-input" value="{{editForm.title}}" bindinput="handleEditChange" data-field="title"></input>
-        </view>
 
-        <view class="form-row">
-          <view class="form-group">
-            <text class="form-label">价格 (¥)</text>
-            <input class="form-input" type="number" value="{{editForm.price}}" bindinput="handleEditChange" data-field="price"></input>
-          </view>
-          <view class="form-group">
-            <text class="form-label">交易方式</text>
-            <picker class="form-input picker" bindchange="handleTransactionTypeChange" value="{{transactionTypeIndex}}" range="{{transactionTypes}}">
-              <view>{{editForm.transactionType}}</view>
-            </picker>
-          </view>
-        </view>
-
-        <view class="form-group">
-          <text class="form-label">分类</text>
-          <picker class="form-input picker" bindchange="handleCategoryChange" value="{{categoryIndex}}" range="{{categories}}">
-            <view>{{editForm.category}}</view>
-          </picker>
-        </view>
-
-        <view class="form-group">
-          <text class="form-label">描述</text>
-          <textarea class="form-textarea" value="{{editForm.description}}" bindinput="handleEditChange" data-field="description"></textarea>
-        </view>
-
-        <view class="form-group">
-          <text class="form-label">位置详情</text>
-          <view class="location-display">
-            <view class="location-item">
-              <text class="location-label">省份</text>
-              <text class="location-value">{{editLocationDetails.province}}</text>
-            </view>
-            <view class="location-item">
-              <text class="location-label">城市</text>
-              <text class="location-value">{{editLocationDetails.city}}</text>
-            </view>
-            <view class="location-item">
-              <text class="location-label">区县</text>
-              <text class="location-value">{{editLocationDetails.district}}</text>
-            </view>
-          </view>
-          <view class="location-btn" bindtap="handleRelocation">📍 重新定位</view>
-        </view>
-
-        <view class="form-group">
-          <text class="form-label">图片</text>
-          <view class="image-preview">
-            <image class="preview-img" src="{{editForm.image}}" mode="aspectFill"></image>
-            <view class="upload-btn" bindtap="handleChangeImage">📷 更换图片</view>
-          </view>
-        </view>
-
-        <view class="edit-actions">
-          <view class="btn btn-save" bindtap="handleSaveEdit">保存</view>
-          <view class="btn btn-cancel" bindtap="cancelEdit">取消</view>
-        </view>
-      </view>
     </view>
   </view>
 
@@ -166,8 +106,8 @@
       </view>
       <view class="modal-content">
         <view class="status-options">
-          <view wx:for="{{statusOptions}}" wx:key="*this" class="status-option {{getStatusOptionClass(item)}}" bindtap="handleStatusChange" data-status="{{item}}">
-            <text class="option-label">{{getStatusLabel(item)}}</text>
+          <view wx:for="{{statusOptions}}" wx:key="status" class="status-option {{item.class}}" bindtap="handleStatusChange" data-status="{{item.status}}">
+            <text class="option-label">{{item.label}}</text>
           </view>
         </view>
       </view>

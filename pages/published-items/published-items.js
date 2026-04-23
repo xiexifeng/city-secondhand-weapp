@@ -14,7 +14,10 @@ Page({
         publishDate: '2024-03-20',
         transactionType: '人民币',
         reviewStatus: '已通过',
-        location: '北京市朝阳区'
+        location: '北京市朝阳区',
+        statusClass: 'status-on-sale',
+        reviewStatusClass: 'review-approved',
+        reviewStatusLabel: '✓ 已通过'
       },
       {
         id: 2,
@@ -29,7 +32,10 @@ Page({
         publishDate: '2024-03-15',
         transactionType: '人民币',
         reviewStatus: '已通过',
-        location: '北京市朝阳区'
+        location: '北京市朝阳区',
+        statusClass: 'status-completed',
+        reviewStatusClass: 'review-approved',
+        reviewStatusLabel: '✓ 已通过'
       },
       {
         id: 3,
@@ -44,7 +50,10 @@ Page({
         publishDate: '2024-03-18',
         transactionType: '都可以',
         reviewStatus: '待审核',
-        location: '北京市朝阳区'
+        location: '北京市朝阳区',
+        statusClass: 'status-trading',
+        reviewStatusClass: 'review-pending',
+        reviewStatusLabel: '⏳ 待审核'
       },
       {
         id: 4,
@@ -53,35 +62,45 @@ Page({
         image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop',
         category: '服装鞋帽',
         description: '全新未穿，官方正品，尺码42',
-        status: '下架',
+        status: '已下架',
         views: 89,
         likes: 5,
         publishDate: '2024-03-19',
         transactionType: '人民币',
         reviewStatus: '审核不通过',
         rejectionReason: '图片质量低',
-        location: '北京市朝阳区'
+        location: '北京市朝阳区',
+        statusClass: 'status-offline',
+        reviewStatusClass: 'review-rejected',
+        reviewStatusLabel: '✕ 审核不通过'
       }
     ],
-    editingId: null,
-    editForm: null,
     activeMenu: null,
     showStatusModal: false,
     selectedItem: null,
     statusOptions: [],
-    categories: ['数码3C', '服饰鞋包', '家居生活', '母婴用品', '书籍文具', '美妆个护', '运动户外', '其他'],
-    transactionTypes: ['人民币', '以物换物', '都可以'],
-    categoryIndex: 0,
-    transactionTypeIndex: 0,
-    editLocationDetails: {
-      province: '北京市',
-      city: '北京市',
-      district: '朝阳区'
+    statusCounts: {
+      onSale: 0,
+      trading: 0,
+      completed: 0
     }
   },
 
   onLoad: function() {
-    // Page loaded
+    this.calculateStatusCounts();
+  },
+
+  /**
+   * Calculate status counts
+   */
+  calculateStatusCounts: function() {
+    const items = this.data.items;
+    const statusCounts = {
+      onSale: items.filter(item => item.status === '在售').length,
+      trading: items.filter(item => item.status === '成交中').length,
+      completed: items.filter(item => item.status === '已成交').length
+    };
+    this.setData({ statusCounts });
   },
 
   /**
@@ -97,7 +116,7 @@ Page({
   getStatusClass: function(status) {
     const classes = {
       '在售': 'status-on-sale',
-      '下架': 'status-offline',
+      '已下架': 'status-offline',
       '成交中': 'status-trading',
       '已成交': 'status-completed'
     };
@@ -134,7 +153,7 @@ Page({
   getStatusActionText: function(status) {
     if (status === '在售') {
       return '下架';
-    } else if (status === '下架') {
+    } else if (status === '已下架') {
       return '上架';
     } else if (status === '成交中') {
       return '标记已成交';
@@ -185,7 +204,7 @@ Page({
   getStatusLabel: function(status) {
     const labels = {
       '在售': '在售',
-      '下架': '下架',
+      '已下架': '已下架',
       '成交中': '成交中',
       '已成交': '已成交'
     };
@@ -198,7 +217,7 @@ Page({
   getStatusOptionClass: function(status) {
     const classMap = {
       '在售': 'on-sale',
-      '下架': 'off-shelf',
+      '已下架': 'off-shelf',
       '成交中': 'trading',
       '已成交': 'sold'
     };
@@ -209,7 +228,7 @@ Page({
    * Get status options (all statuses except current)
    */
   getStatusOptions: function(currentStatus) {
-    const allStatuses = ['在售', '下架', '成交中', '已成交'];
+    const allStatuses = ['在售', '已下架', '成交中', '已成交'];
     return allStatuses.filter(s => s !== currentStatus);
   },
 
@@ -220,10 +239,31 @@ Page({
     const id = e.currentTarget.dataset.id;
     const item = this.data.items.find(i => i.id === id);
     const statusOptions = this.getStatusOptions(item.status);
+    
+    const statusOptionClassMap = {
+      '在售': 'on-sale',
+      '已下架': 'off-shelf',
+      '成交中': 'trading',
+      '已成交': 'sold'
+    };
+    
+    const statusLabelMap = {
+      '在售': '在售中',
+      '已下架': '已下架',
+      '成交中': '成交中',
+      '已成交': '已成交'
+    };
+    
+    const processedStatusOptions = statusOptions.map(status => ({
+      status: status,
+      class: statusOptionClassMap[status] || 'on-sale',
+      label: statusLabelMap[status] || status
+    }));
+    
     this.setData({
       showStatusModal: true,
       selectedItem: item,
-      statusOptions: statusOptions,
+      statusOptions: processedStatusOptions,
       activeMenu: null
     });
   },
@@ -244,122 +284,22 @@ Page({
    */
   handleEdit: function(e) {
     const id = e.currentTarget.dataset.id;
-    const item = this.data.items.find(i => i.id === id);
-    const categoryIndex = this.data.categories.indexOf(item.category);
-    const transactionTypeIndex = this.data.transactionTypes.indexOf(item.transactionType);
-    
-    this.setData({
-      editingId: id,
-      editForm: { ...item },
-      activeMenu: null,
-      categoryIndex: categoryIndex >= 0 ? categoryIndex : 0,
-      transactionTypeIndex: transactionTypeIndex >= 0 ? transactionTypeIndex : 0
-    });
-  },
-
-  /**
-   * Handle edit change
-   */
-  handleEditChange: function(e) {
-    const field = e.currentTarget.dataset.field;
-    const value = e.detail.value;
-    this.setData({
-      [`editForm.${field}`]: value
-    });
-  },
-
-  /**
-   * Handle category change
-   */
-  handleCategoryChange: function(e) {
-    const index = e.detail.value;
-    this.setData({
-      categoryIndex: index,
-      [`editForm.category`]: this.data.categories[index]
-    });
-  },
-
-  /**
-   * Handle transaction type change
-   */
-  handleTransactionTypeChange: function(e) {
-    const index = e.detail.value;
-    this.setData({
-      transactionTypeIndex: index,
-      [`editForm.transactionType`]: this.data.transactionTypes[index]
-    });
-  },
-
-  /**
-   * Handle relocation
-   */
-  handleRelocation: function() {
-    const locations = [
-      { province: '北京市', city: '北京市', district: '朝阳区' },
-      { province: '上海市', city: '上海市', district: '浦东新区' },
-      { province: '广东省', city: '深圳市', district: '南山区' }
-    ];
-    const randomLocation = locations[Math.floor(Math.random() * locations.length)];
-    this.setData({
-      editLocationDetails: randomLocation
-    });
-  },
-
-  /**
-   * Handle change image
-   */
-  handleChangeImage: function() {
-    wx.chooseImage({
-      count: 1,
-      sizeType: ['compressed'],
-      sourceType: ['album', 'camera'],
-      success: (res) => {
-        const tempFilePath = res.tempFilePaths[0];
-        this.setData({
-          [`editForm.image`]: tempFilePath
-        });
-        wx.showToast({
-          title: '图片已更换',
-          icon: 'success'
-        });
+    console.log('Edit button clicked, item id:', id);
+    this.setData({ activeMenu: null });
+    // 存储编辑ID到全局数据
+    getApp().globalData.editItemId = id;
+    wx.switchTab({
+      url: '/pages/publish/publish',
+      success: function(res) {
+        console.log('Switch tab success:', res);
       },
-      fail: () => {
-        wx.showToast({
-          title: '选择图片失败',
-          icon: 'none'
-        });
+      fail: function(res) {
+        console.log('Switch tab fail:', res);
       }
     });
   },
 
-  /**
-   * Handle save edit
-   */
-  handleSaveEdit: function() {
-    const { editForm, items } = this.data;
-    const updatedItems = items.map(item => 
-      item.id === editForm.id ? editForm : item
-    );
-    this.setData({
-      items: updatedItems,
-      editingId: null,
-      editForm: null
-    });
-    wx.showToast({
-      title: '物品信息已更新',
-      icon: 'success'
-    });
-  },
 
-  /**
-   * Cancel edit
-   */
-  cancelEdit: function() {
-    this.setData({
-      editingId: null,
-      editForm: null
-    });
-  },
 
   /**
    * Handle status change from modal
@@ -368,9 +308,23 @@ Page({
     const newStatus = e.currentTarget.dataset.status;
     const { selectedItem, items } = this.data;
     
-    const updatedItems = items.map(i => 
-      i.id === selectedItem.id ? { ...i, status: newStatus } : i
-    );
+    const statusClassMap = {
+      '在售': 'status-on-sale',
+      '已下架': 'status-offline',
+      '成交中': 'status-trading',
+      '已成交': 'status-completed'
+    };
+    
+    const updatedItems = items.map(i => {
+      if (i.id === selectedItem.id) {
+        return {
+          ...i, 
+          status: newStatus,
+          statusClass: statusClassMap[newStatus] || 'status-on-sale'
+        };
+      }
+      return i;
+    });
     
     this.setData({
       items: updatedItems,
@@ -378,6 +332,8 @@ Page({
       selectedItem: null,
       statusOptions: []
     });
+    
+    this.calculateStatusCounts();
     
     wx.showToast({
       title: '状态已更新为: ' + newStatus,
@@ -399,6 +355,7 @@ Page({
         if (res.confirm) {
           const items = this.data.items.filter(item => item.id !== id);
           this.setData({ items, activeMenu: null });
+          this.calculateStatusCounts();
           wx.showToast({
             title: '物品已删除',
             icon: 'success'
