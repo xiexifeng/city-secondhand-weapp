@@ -22,7 +22,7 @@
       <view class="score-display">
         <view class="score-value">{{detail.machineScore}}</view>
         <view class="score-bar">
-          <view class="score-fill" style="width: {{detail.machineScore}}%"></view>
+          <view class="score-fill" style="width: {{detail.machineScore + '%'}}"></view>
         </view>
         <text class="score-text">综合风险评分（0-100，分数越高风险越大）</text>
       </view>
