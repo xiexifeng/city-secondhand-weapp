@@ -216,6 +216,42 @@ Page({
         }
       }
     });
+  },
+
+  /**
+   * Navigate to points detail
+   */
+  navigateToPoints: function() {
+    wx.navigateTo({
+      url: '/pages/points-detail/points-detail'
+    });
+  },
+
+  /**
+   * Navigate to favorites detail
+   */
+  navigateToFavorites: function() {
+    wx.navigateTo({
+      url: '/pages/favorites-detail/favorites-detail'
+    });
+  },
+
+  /**
+   * Navigate to followers list
+   */
+  navigateToFollowers: function() {
+    wx.navigateTo({
+      url: '/pages/follow-list/follow-list?tab=followers'
+    });
+  },
+
+  /**
+   * Navigate to following list
+   */
+  navigateToFollowing: function() {
+    wx.navigateTo({
+      url: '/pages/follow-list/follow-list?tab=following'
+    });
   }
 
 });

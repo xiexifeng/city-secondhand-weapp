@@ -1,0 +1,242 @@
+/* pages/follow-list/follow-list.wxss */
+
+page {
+  background-color: #f3f4f6;
+}
+
+.follow-list-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  padding-bottom: 100rpx;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: white;
+  padding: 16rpx;
+  border-bottom: 1rpx solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-left {
+  width: 40rpx;
+  height: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8rpx;
+  background-color: #f3f4f6;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.header-left:active {
+  background-color: #e5e7eb;
+}
+
+.back-icon {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.header-center {
+  flex: 1;
+  text-align: center;
+}
+
+.header-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.header-right {
+  width: 40rpx;
+}
+
+/* Tab Bar */
+.tab-bar {
+  display: flex;
+  background-color: white;
+  border-bottom: 1rpx solid #e5e7eb;
+  position: sticky;
+  top: 80rpx;
+  z-index: 9;
+}
+
+.tab-item {
+  flex: 1;
+  padding: 16rpx;
+  text-align: center;
+  border-bottom: 2rpx solid transparent;
+  transition: all 0.2s;
+}
+
+.tab-item.active {
+  border-bottom-color: #0ea5e9;
+}
+
+.tab-text {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #9ca3af;
+  transition: all 0.2s;
+}
+
+.tab-item.active .tab-text {
+  color: #0ea5e9;
+}
+
+/* Follow List Section */
+.follow-list-section {
+  padding: 16rpx;
+  flex: 1;
+}
+
+/* Follow List */
+.follow-list {
+  background-color: white;
+  border: 1rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.follow-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx;
+  border-bottom: 1rpx solid #f3f4f6;
+  transition: all 0.2s;
+}
+
+.follow-item:last-child {
+  border-bottom: none;
+}
+
+.follow-item:active {
+  background-color: #f9fafb;
+}
+
+.follow-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  flex: 1;
+}
+
+.follow-avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.avatar-text {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: white;
+}
+
+.level-badge {
+  position: absolute;
+  bottom: -4rpx;
+  right: -4rpx;
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12rpx;
+  border: 2rpx solid white;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.level-badge.new {
+  background-color: #3b82f6;
+}
+
+.level-badge.active {
+  background-color: #22c55e;
+}
+
+.level-badge.vip {
+  background-color: #8b5cf6;
+}
+
+.follow-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.follow-name {
+  display: block;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 4rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.follow-status {
+  display: block;
+  font-size: 20rpx;
+  color: #9ca3af;
+}
+
+.follow-item-right {
+  flex-shrink: 0;
+}
+
+.follow-action {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  border: 1rpx solid #e5e7eb;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.follow-action:active {
+  background-color: #f3f4f6;
+}
+
+.follow-action.following {
+  background-color: #f3f4f6;
+}
+
+.follow-action.unfollow {
+  background-color: #fef2f2;
+  border-color: #fca5a5;
+}
+
+.follow-action-text {
+  font-size: 20rpx;
+  font-weight: 600;
+  color: #0ea5e9;
+}
+
+.follow-action.following .follow-action-text {
+  color: #9ca3af;
+}
+
+.follow-action.unfollow .follow-action-text {
+  color: #ef4444;
+}

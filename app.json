@@ -21,7 +21,10 @@
     "pages/terms-of-service/terms-of-service",
     "pages/privacy-policy/privacy-policy",
     "pages/content-moderation/content-moderation",
-    "pages/moderation-detail/moderation-detail"
+    "pages/moderation-detail/moderation-detail",
+    "pages/points-detail/points-detail",
+    "pages/favorites-detail/favorites-detail",
+    "pages/follow-list/follow-list"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -1,0 +1,77 @@
+<!--pages/follow-list/follow-list.wxml-->
+<view class="follow-list-container">
+  <!-- Header -->
+  <view class="header">
+    <view class="header-left" bindtap="goBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <view class="header-center">
+      <text class="header-title">关注与粉丝</text>
+    </view>
+    <view class="header-right"></view>
+  </view>
+
+  <!-- Tab Bar -->
+  <view class="tab-bar">
+    <view class="tab-item {{activeTab === 'followers' ? 'active' : ''}}" bindtap="switchTab" data-tab="followers">
+      <text class="tab-text">粉丝 ({{followersList.length}})</text>
+    </view>
+    <view class="tab-item {{activeTab === 'following' ? 'active' : ''}}" bindtap="switchTab" data-tab="following">
+      <text class="tab-text">关注 ({{followingList.length}})</text>
+    </view>
+  </view>
+
+  <!-- Followers List -->
+  <view wx:if="{{activeTab === 'followers'}}" class="follow-list-section">
+    <view class="follow-list">
+      <block wx:for="{{followersList}}" wx:key="id">
+        <view class="follow-item">
+          <view class="follow-item-left">
+            <view class="follow-avatar">
+              <text class="avatar-text">{{item.avatarText}}</text>
+              <view class="level-badge {{item.level}}">
+                {{item.levelIcon}}
+              </view>
+            </view>
+            <view class="follow-info">
+              <text class="follow-name">{{item.name}}</text>
+              <text class="follow-status">{{item.status}}</text>
+            </view>
+          </view>
+          <view class="follow-item-right">
+            <view class="follow-action {{item.isFollowing ? 'unfollow' : ''}}" bindtap="toggleFollow" data-id="{{item.id}}" data-type="followers">
+              <text class="follow-action-text">{{item.isFollowing ? '取消关注' : '关注'}}</text>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- Following List -->
+  <view wx:if="{{activeTab === 'following'}}" class="follow-list-section">
+    <view class="follow-list">
+      <block wx:for="{{followingList}}" wx:key="id">
+        <view class="follow-item">
+          <view class="follow-item-left">
+            <view class="follow-avatar">
+              <text class="avatar-text">{{item.avatarText}}</text>
+              <view class="level-badge {{item.level}}">
+                {{item.levelIcon}}
+              </view>
+            </view>
+            <view class="follow-info">
+              <text class="follow-name">{{item.name}}</text>
+              <text class="follow-status">{{item.status}}</text>
+            </view>
+          </view>
+          <view class="follow-item-right">
+            <view class="follow-action unfollow" bindtap="toggleFollow" data-id="{{item.id}}" data-type="following">
+              <text class="follow-action-text">取消关注</text>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

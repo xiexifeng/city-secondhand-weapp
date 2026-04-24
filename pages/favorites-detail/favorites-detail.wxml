@@ -1,0 +1,96 @@
+<!--pages/favorites-detail/favorites-detail.wxml-->
+<view class="favorites-detail-container">
+  <!-- Header -->
+  <view class="header">
+    <view class="header-left" bindtap="goBack">
+      <text class="back-icon">‹</text>
+    </view>
+    <view class="header-center">
+      <text class="header-title">收藏明细</text>
+    </view>
+    <view class="header-right"></view>
+  </view>
+
+  <!-- Tab Bar -->
+  <view class="tab-bar">
+    <view class="tab-item {{activeTab === 'items' ? 'active' : ''}}" bindtap="switchTab" data-tab="items">
+      <text class="tab-text">物品收藏 ({{itemsList.length}})</text>
+    </view>
+    <view class="tab-item {{activeTab === 'wishes' ? 'active' : ''}}" bindtap="switchTab" data-tab="wishes">
+      <text class="tab-text">心愿收藏 ({{wishesList.length}})</text>
+    </view>
+  </view>
+
+  <!-- Items Favorites -->
+  <view wx:if="{{activeTab === 'items'}}" class="favorites-section">
+    <view class="favorites-list">
+      <block wx:for="{{itemsList}}" wx:key="id">
+        <view class="item-card" bindtap="navigateToItemDetail" data-id="{{item.id}}">
+          <view class="item-view">
+            <view class="item-header">
+              <image class="item-image" src="{{item.image}}" mode="aspectFill"></image>
+              <view class="item-info">
+                <view class="item-title-row">
+                  <text class="item-title">{{item.title}}</text>
+                </view>
+                <text class="item-date">收藏于 {{item.time}}</text>
+
+                <view class="item-badges">
+                  <text wx:if="{{item.price > 0}}" class="item-price">¥{{item.price}}</text>
+                  <text wx:else class="item-price">以物换物</text>
+                  <view wx:if="{{item.transactionType === '以物换物' && item.exchangeItem}}" class="exchange-badge">
+                    换: {{item.exchangeItem}}
+                  </view>
+                </view>
+
+                <view class="item-stats">
+                  <text class="stat-item">👁 {{item.views}}</text>
+                  <text class="stat-item">❤️ {{item.interested}}</text>
+                  <text class="stat-item">⭐ {{item.collected}}</text>
+                </view>
+              </view>
+            </view>
+            <view class="item-footer">
+              <view class="favorite-action" bindtap="removeFavorite" data-id="{{item.id}}" data-type="items" catchtap="removeFavorite">
+                <text class="favorite-action-text">取消收藏</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <!-- Wishes Favorites -->
+  <view wx:if="{{activeTab === 'wishes'}}" class="favorites-section">
+    <view class="favorites-list">
+      <block wx:for="{{wishesList}}" wx:key="id">
+        <view class="wish-card" bindtap="navigateToWishDetail" data-id="{{item.id}}">
+          <view class="wish-view">
+            <view class="wish-header">
+              <text class="wish-icon">❤️</text>
+              <view class="wish-content">
+                <text class="wish-title">{{item.title}}</text>
+                <text class="wish-description">{{item.description}}</text>
+              </view>
+            </view>
+
+            <view class="wish-footer">
+              <text class="wish-date">收藏于 {{item.time}}</text>
+              <view class="wish-stats">
+                <text class="stat-item">👁 {{item.views || 0}}</text>
+                <text class="stat-item">❤️ {{item.interested || 0}}</text>
+                <text class="stat-item">⭐ {{item.collected || 0}}</text>
+              </view>
+            </view>
+            <view class="wish-actions">
+              <view class="favorite-action" bindtap="removeFavorite" data-id="{{item.id}}" data-type="wishes" catchtap="removeFavorite">
+                <text class="favorite-action-text">取消收藏</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

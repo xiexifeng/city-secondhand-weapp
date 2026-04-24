@@ -26,9 +26,9 @@
         </view>
         <text class="user-status">已实名认证 • 活跃用户</text>
         <view class="user-stats">
-          <text class="stat-item">👥 粉丝 {{user.followers}}</text>
+          <text class="stat-item" bindtap="navigateToFollowers">👥 粉丝 {{user.followers}}</text>
           <text class="stat-separator">•</text>
-          <text class="stat-item">⭐ 关注 {{user.following}}</text>
+          <text class="stat-item" bindtap="navigateToFollowing">⭐ 关注 {{user.following}}</text>
         </view>
       </view>
     </view>
@@ -127,7 +127,7 @@
 
   <!-- Points & Favorites -->
   <view class="stats-grid">
-    <view class="stat-card points-card">
+    <view class="stat-card points-card" bindtap="navigateToPoints">
       <view class="stat-card-header">
         <text class="stat-card-icon">⚡</text>
         <text class="stat-card-label">积分</text>
@@ -139,7 +139,7 @@
       <text class="stat-card-desc">本月获得 +45 积分</text>
     </view>
 
-    <view class="stat-card favorites-card">
+    <view class="stat-card favorites-card" bindtap="navigateToFavorites">
       <view class="stat-card-header">
         <text class="stat-card-icon">❤️</text>
         <text class="stat-card-label">收藏</text>
