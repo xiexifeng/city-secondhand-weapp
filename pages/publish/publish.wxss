@@ -561,7 +561,7 @@ page {
 .checkbox-checked::after {
   content: '✓';
   color: white;
-  font-size: 16rpx;
+  font-size: 20rpx;
   font-weight: bold;
 }
 

@@ -10,8 +10,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 50px;
-  padding: 0 15px;
+  height: 100rpx;
+  padding: 0 30rpx;
   background-color: #fff;
   border-bottom: 1rpx solid #eee;
   position: relative;
@@ -19,27 +19,27 @@
 }
 
 .header-left {
-  width: 50px;
+  width: 100rpx;
 }
 
 .header-left text {
-  font-size: 24px;
+  font-size: 48rpx;
   color: #333;
 }
 
 .header-title {
-  font-size: 16px;
+  font-size: 32rpx;
   font-weight: 500;
   color: #333;
 }
 
 .header-right {
-  width: 50px;
+  width: 100rpx;
   text-align: right;
 }
 
 .confirm-btn {
-  font-size: 14px;
+  font-size: 28rpx;
   color: #007aff;
 }
 
@@ -60,92 +60,92 @@
 }
 
 .marker-icon {
-  font-size: 30px;
+  font-size: 60rpx;
   color: #ff4d4f;
 }
 
 /* 位置信息卡片 */
 .location-card {
   background-color: #fff;
-  border-top-left-radius: 20px;
-  border-top-right-radius: 20px;
-  padding: 20px;
+  border-top-left-radius: 40rpx;
+  border-top-right-radius: 40rpx;
+  padding: 40rpx;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   position: relative;
   z-index: 10;
 }
 
 .card-header {
-  margin-bottom: 20px;
+  margin-bottom: 40rpx;
 }
 
 .card-title {
-  font-size: 16px;
+  font-size: 32rpx;
   font-weight: 500;
   color: #333;
-  margin-bottom: 5px;
+  margin-bottom: 10rpx;
   display: block;
 }
 
 .card-subtitle {
-  font-size: 14px;
+  font-size: 28rpx;
   color: #666;
   display: block;
 }
 
 /* 位置详情 */
 .location-details {
-  margin-bottom: 20px;
+  margin-bottom: 40rpx;
 }
 
 .detail-item {
   width: 33.33%;
-  margin-bottom: 15px;
+  margin-bottom: 30rpx;
 }
 
 .detail-label {
-  font-size: 12px;
+  font-size: 24rpx;
   color: #999;
-  margin-bottom: 5px;
+  margin-bottom: 10rpx;
   display: block;
 }
 
 /* 省市区选择器 */
 .picker-text {
-  font-size: 14px;
+  font-size: 28rpx;
   color: #333;
-  padding: 10px;
+  padding: 20rpx;
   border: 1rpx solid #eee;
-  border-radius: 8px;
-  margin-top: 10px;
+  border-radius: 16rpx;
+  margin-top: 20rpx;
   position: relative;
 }
 
 .picker-text::after {
   content: '▼';
   position: absolute;
-  right: 10px;
+  right: 20rpx;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 12px;
+  font-size: 24rpx;
   color: #999;
 }
 
 /* 周边地点列表 */
 .nearby-pois {
-  margin-bottom: 20px;
+  margin-bottom: 40rpx;
 }
 
 .poi-list {
-  margin-top: 10px;
+  margin-top: 20rpx;
   height: 300rpx;
   overflow-y: auto;
   border: 1rpx solid #eee;
-  border-radius: 8px;
+  border-radius: 16rpx;
 }
 
 .poi-item {
-  padding: 10px;
+  padding: 20rpx;
   border-bottom: 1rpx solid #eee;
   background-color: #f9f9f9;
 }
@@ -155,27 +155,27 @@
 }
 
 .poi-name {
-  font-size: 14px;
+  font-size: 28rpx;
   font-weight: bold;
   color: #333;
-  margin-bottom: 5px;
+  margin-bottom: 10rpx;
   display: block;
 }
 
 .poi-address {
-  font-size: 12px;
+  font-size: 24rpx;
   color: #666;
 }
 
 /* 位置描述 */
 .location-description {
-  margin-bottom: 20px;
+  margin-bottom: 40rpx;
 }
 
 .desc-label {
-  font-size: 12px;
+  font-size: 24rpx;
   color: #999;
-  margin-bottom: 5px;
+  margin-bottom: 10rpx;
   display: block;
 }
 
@@ -186,37 +186,37 @@
 
 .desc-input {
   width: 100%;
-  font-size: 14px;
+  font-size: 28rpx;
   color: #333;
-  padding: 12px 70px 12px 12px; /* 右侧留出空间给计数器，增加上下内边距 */
+  padding: 24rpx 140rpx 24rpx 24rpx; /* 右侧留出空间给计数器，增加上下内边距 */
   border: 1rpx solid #eee;
-  border-radius: 8px;
+  border-radius: 16rpx;
   box-sizing: border-box;
-  min-height: 44px; /* 增加最小高度 */
+  min-height: 88rpx; /* 增加最小高度 */
 }
 
 .input-counter {
   position: absolute;
-  bottom: 10px;
-  right: 12px;
-  font-size: 12px;
+  bottom: 20rpx;
+  right: 24rpx;
+  font-size: 24rpx;
   color: #999;
   z-index: 1;
   pointer-events: none;
   background-color: #fff; /* 添加背景色，避免覆盖输入框内容 */
-  padding: 0 5px;
-  border-radius: 4px;
+  padding: 0 10rpx;
+  border-radius: 8rpx;
 }
 
 /* 定位按钮 */
 .locate-btn {
   position: absolute;
-  bottom: 220px;
-  right: 20px;
+  bottom: 440rpx;
+  right: 40rpx;
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 100rpx;
+  height: 100rpx;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -226,11 +226,11 @@
 }
 
 .locate-icon {
-  font-size: 20px;
-  margin-bottom: 2px;
+  font-size: 40rpx;
+  margin-bottom: 4rpx;
 }
 
 .locate-text {
-  font-size: 10px;
+  font-size: 20rpx;
   color: #666;
 }

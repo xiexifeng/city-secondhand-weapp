@@ -342,7 +342,7 @@ page {
 }
 
 .seller-name .tag-verified {
-  font-size: 18rpx;
+  font-size: 20rpx;
   padding: 2rpx 8rpx;
 }
 

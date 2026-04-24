@@ -162,7 +162,7 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12rpx;
+  font-size: 20rpx;
   border: 2rpx solid white;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
 }

@@ -43,7 +43,7 @@ page {
 }
 
 .header-subtitle {
-  font-size: 16rpx;
+  font-size: 20rpx;
   color: #9ca3af;
   font-weight: 500;
 }
