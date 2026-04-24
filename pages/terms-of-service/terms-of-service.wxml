@@ -11,79 +11,166 @@
   <!-- Content -->
   <scroll-view scroll-y class="content">
     <view class="section">
-      <text class="section-title">1. 服务条款</text>
+      <text class="section-title">第一章 总则</text>
       <text class="section-content">
-        欢迎使用同城二手平台。本条款规定了您使用本平台的权利和义务。使用本平台即表示您同意遵守本条款的所有规定。
+        <text style="font-weight: bold;">第一条【目的与依据】</text>
+        为规范换换么平台（以下简称"本平台"）的服务行为，保障用户合法权益，维护平台秩序，根据《中华人民共和国民法典》《中华人民共和国电子商务法》《网络交易监督管理办法》等相关法律法规，制定本条款。
+        
+        <text style="font-weight: bold;">第二条【定义】</text>
+        1. <text style="font-weight: bold;">换换么平台</text>：指由[运营主体名称]运营的信息发布与展示平台，App名称为"换换么"。
+        2. <text style="font-weight: bold;">用户</text>：指注册并使用本平台服务的自然人、法人或非法人组织。
+        3. <text style="font-weight: bold;">发布者</text>：指在本平台发布换物信息的用户。
+        4. <text style="font-weight: bold;">浏览者</text>：指在本平台浏览信息的用户。
+        5. <text style="font-weight: bold;">信息</text>：指用户在本平台发布的物品描述、图片、交换意向等内容，以及用户为使用平台服务而提交的注册信息（包括但不限于昵称、头像、联系方式、地理位置等）。
+        
+        <text style="font-weight: bold;">第三条【平台性质声明】</text>
+        1. 本平台为<text style="font-weight: bold;">纯信息展示与匹配平台</text>，不具备以下功能：
+           - 不提供在线交易、支付、担保服务
+           - 不提供即时通讯、私信聊天功能
+           - 不参与、不介入用户之间的任何线下交换行为
+        2. 用户之间的物品交换、人民币支付等行为均为<text style="font-weight: bold;">线下自主行为</text>，由用户自行协商、自行负责。
       </text>
     </view>
 
     <view class="section">
-      <text class="section-title">2. 用户责任</text>
+      <text class="section-title">第二章 用户注册与账号</text>
       <text class="section-content">
-        您同意：
-        • 提供真实、准确、完整的个人信息
-        • 不发布违法、违规或不当内容
-        • 不进行欺诈、骚扰或骂人的行为
-        • 遵守所有适用的法律法规
-        • 尊重他人的知识产权和隐私
+        <text style="font-weight: bold;">第四条【注册资格】</text>
+        1. 用户须为具有完全民事行为能力的自然人，或依法成立的法人/非法人组织。
+        2. 未满18周岁的未成年人须在监护人同意下使用本平台。
+        
+        <text style="font-weight: bold;">第五条【账号管理】</text>
+        1. 用户应使用真实、准确、完整的身份信息进行注册。
+        2. 用户对其账号下的所有行为承担法律责任。
+        3. 禁止转让、出租、借用账号。
       </text>
     </view>
 
     <view class="section">
-      <text class="section-title">3. 禁止行为</text>
+      <text class="section-title">第三章 信息发布规范</text>
       <text class="section-content">
-        您不得：
-        • 发布虚假或误导性信息
-        • 进行诈骗或欺骗交易
-        • 发布违禁品或非法物品
-        • 骚扰、威胁或辱骂其他用户
-        • 尝试破坏平台安全或系统
-        • 进行任何形式的不正当竞争
+        <text style="font-weight: bold;">第六条【发布内容要求】</text>
+        用户发布的信息须真实、合法、有效，包括但不限于：
+        1. 物品信息：须为本人合法拥有、有权处置的物品
+        2. 图片要求：须为实物实拍，禁止使用网络图片、虚假图片
+        3. 描述要求：如实描述物品新旧程度、功能状况、瑕疵情况
+        4. 交换意向：明确说明期望交换的物品类别或人民币补差价意愿
+        
+        <text style="font-weight: bold;">第七条【禁止发布内容】</text>
+        用户不得发布以下信息：
+        1. 国家法律法规禁止流通的物品（枪支弹药、毒品、管制刀具等）
+        2. 假冒伪劣、侵权盗版物品
+        3. 食品、药品、保健品、化妆品等涉及人身安全的物品
+        4. 活体动物（法律法规允许范围内除外）
+        5. 个人隐私信息、他人联系方式
+        6. 虚假、欺诈、诱导性信息
+        7. 色情、暴力、赌博相关信息
+        8. 其他平台认为不适宜发布的内容
+        
+        <text style="font-weight: bold;">第八条【信息审核】</text>
+        1. 平台有权对用户发布的信息进行形式审核。
+        2. 平台有权对违规信息进行删除、屏蔽、下架处理，无需事先通知。
       </text>
     </view>
 
     <view class="section">
-      <text class="section-title">4. 交易条款</text>
+      <text class="section-title">第四章 交换行为与责任</text>
       <text class="section-content">
-        • 买卖双方应当自行协商交易条件
-        • 平台不对交易结果负责
-        • 交易纠纷由买卖双方自行解决
-        • 平台可提供调解服务
-        • 严重违规行为将被举报至相关部门
+        <text style="font-weight: bold;">第九条【交换方式】</text>
+        1. 用户通过平台获取信息后，<text style="font-weight: bold;">须自行联系对方</text>，协商交换细节。
+        2. 平台不提供任何联系方式展示以外的沟通渠道。
+        3. 鼓励用户<text style="font-weight: bold;">选择公共场所</text>进行面对面交换。
+        
+        <text style="font-weight: bold;">第十条【风险提示】</text>
+        1. 用户应充分了解线下交换的风险，包括但不限于：
+           - 物品与描述不符
+           - 物品存在隐藏瑕疵
+           - 交易过程中的安全问题
+           - 人民币支付纠纷
+        2. <text style="font-weight: bold;">平台不对任何交换结果承担责任</text>。
+        
+        <text style="font-weight: bold;">第十一条【安全建议】</text>
+        1. 首次交换建议选择白天、公共场所（如校园、社区活动中心、商场等）。
+        2. 建议邀请同伴同行。
+        3. 涉及高价值物品交换，建议保留物品凭证、交换记录。
+        4. 涉及人民币支付，建议使用可追溯的支付方式并保留凭证。
+        
+        <text style="font-weight: bold;">第十二条【禁止行为】</text>
+        1. 禁止利用平台进行任何形式的商业销售行为。
+        2. 禁止以换物为名实施诈骗、盗窃、抢劫等违法犯罪行为。
+        3. 禁止在交换过程中实施人身侵害、言语侮辱等行为。
       </text>
     </view>
 
     <view class="section">
-      <text class="section-title">5. 知识产权</text>
+      <text class="section-title">第五章 平台责任与免责</text>
       <text class="section-content">
-        本平台上的所有内容（包括但不限于文本、图片、视频、代码等）的知识产权归属于同城二手或其内容提供者。未经授权，您不得复制、修改或传播这些内容。
+        <text style="font-weight: bold;">第十三条【平台义务】</text>
+        1. 提供稳定的信息发布与展示服务。
+        2. 对明显违规信息进行及时处理。
+        3. 保护用户注册信息安全。
+        
+        <text style="font-weight: bold;">第十四条【平台免责】</text>
+        1. 因用户发布虚假信息导致的损失，由发布者承担全部责任，平台不承担连带责任。
+        2. 因用户线下交换行为产生的任何纠纷、损失、伤害，由当事人自行解决和承担，平台不承担任何责任。
+        3. 因不可抗力导致的服务中断，平台不承担责任。
+        4. 因第三方原因（如网络运营商、设备故障）导致的服务问题，平台不承担责任。
       </text>
     </view>
 
     <view class="section">
-      <text class="section-title">6. 免责声明</text>
+      <text class="section-title">第六章 用户权益保护</text>
       <text class="section-content">
-        同城二手平台按"现状"提供服务，不提供任何明示或暗示的保证。我们不对以下内容负责：
-        • 用户发布的内容
-        • 交易过程中的任何问题
-        • 第三方的行为
-        • 因使用本平台而导致的任何损失
+        <text style="font-weight: bold;">第十五条【隐私保护】</text>
+        1. 平台仅收集用户注册必需的最少信息。
+        2. 平台不向第三方出售、提供用户个人信息。
+        3. 用户联系方式仅对达成匹配意向的对方展示（如平台提供此功能）。
+        
+        <text style="font-weight: bold;">第十六条【投诉举报】</text>
+        1. 用户发现违规信息或行为，可通过[举报渠道]进行投诉。
+        2. 平台将在合理期限内对投诉进行处理。
+        
+        <text style="font-weight: bold;">第十七条【账号处置】</text>
+        用户有以下行为之一的，平台有权采取警告、限制功能、封禁账号等措施：
+        1. 发布违规信息
+        2. 实施欺诈行为
+        3. 多次被投诉且核实属实
+        4. 其他违反本条款或法律法规的行为
       </text>
     </view>
 
     <view class="section">
-      <text class="section-title">7. 条款修改</text>
+      <text class="section-title">第七章 知识产权</text>
       <text class="section-content">
-        我们保留随时修改本条款的权利。修改后的条款将在平台上发布。继续使用本平台即表示您接受修改后的条款。
+        <text style="font-weight: bold;">第十八条【内容权属】</text>
+        1. 用户发布的内容，知识产权归用户所有，用户授予平台展示、传播的许可。
+        2. 平台标识、界面设计、系统代码等知识产权归平台所有。
       </text>
     </view>
 
     <view class="section">
-      <text class="section-title">8. 联系我们</text>
+      <text class="section-title">第八章 附则</text>
       <text class="section-content">
-        如对本条款有任何疑问，请联系我们：
-        邮箱：support@secondhand.com
-        电话：400-123-4567
+        <text style="font-weight: bold;">第十九条【条款更新】</text>
+        平台有权根据法律法规变化及运营需要修改本条款，修改后的条款将在平台公示。
+        
+        <text style="font-weight: bold;">第二十条【争议解决】</text>
+        本条款的订立、执行和解释适用中华人民共和国法律。因本条款产生的争议，双方应友好协商解决；协商不成的，任何一方可向平台运营主体所在地有管辖权的人民法院提起诉讼。
+        
+        <text style="font-weight: bold;">第二十一条【生效时间】</text>
+        本条款自[日期]起生效。
+      </text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">免责声明</text>
+      <text class="section-content">
+        <text style="font-weight: bold;">重要提示：</text>
+        换换么平台仅为信息展示平台，不参与、不担保、不介入任何用户之间的物品交换或人民币支付行为。
+        
+        所有交换行为均由用户自主决定、自行承担风险。请您在交换前仔细核实物品信息，选择安全的交换地点，保护自身人身和财产安全。
+        
+        如遇违法犯罪行为，请立即向公安机关报案，电话：<text style="font-weight: bold;">110</text>。
       </text>
     </view>
 

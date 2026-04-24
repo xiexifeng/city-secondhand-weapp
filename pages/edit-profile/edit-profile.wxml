@@ -12,11 +12,7 @@
   <view class="avatar-card">
     <view class="avatar-container">
       <view class="avatar">
-        <text class="avatar-text">U</text>
-      </view>
-      <view class="avatar-action" bindtap="changeAvatar">
-        <text class="action-icon">📷</text>
-        <text class="action-text">更换头像</text>
+        <text class="avatar-text">{{avatarText}}</text>
       </view>
     </view>
   </view>
@@ -39,10 +35,17 @@
     <!-- Location -->
     <view class="form-group">
       <text class="form-label">所在地区</text>
-      <view class="location-input" bindtap="selectLocation">
-        <text class="location-text">{{profile.location || '请选择地区'}}</text>
-        <text class="location-arrow">›</text>
-      </view>
+      <picker 
+        mode="region" 
+        bindchange="onRegionChange"
+        value="{{region}}"
+        custom-item="请选择"
+      >
+        <view class="location-input">
+          <text class="location-text">{{profile.location || '请选择地区'}}</text>
+          <text class="location-arrow">›</text>
+        </view>
+      </picker>
     </view>
 
     <!-- Contact Info -->
@@ -57,6 +60,11 @@
       <view class="contact-item">
         <text class="contact-label">邮箱</text>
         <input class="contact-input" type="email" value="{{profile.email}}" bindinput="handleChange" data-field="email" placeholder="请输入邮箱"></input>
+      </view>
+
+      <view class="contact-item">
+        <text class="contact-label">微信号</text>
+        <input class="contact-input" value="{{profile.wechat}}" bindinput="handleChange" data-field="wechat" placeholder="请输入微信号"></input>
       </view>
     </view>
 

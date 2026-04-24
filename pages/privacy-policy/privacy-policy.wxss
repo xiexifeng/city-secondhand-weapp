@@ -68,3 +68,40 @@ page {
 .footer-spacing {
   height: 40rpx;
 }
+
+/* Table Styles */
+.table-container {
+  width: 100%;
+  margin: 16rpx 0;
+  border: 1rpx solid #e5e7eb;
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+
+.table-row {
+  display: flex;
+  border-bottom: 1rpx solid #e5e7eb;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-row.header {
+  background-color: #f9fafb;
+  font-weight: 600;
+}
+
+.table-cell {
+  flex: 1;
+  padding: 12rpx 8rpx;
+  font-size: 22rpx;
+  color: var(--text-color-secondary);
+  text-align: center;
+  word-break: break-word;
+}
+
+.table-row.header .table-cell {
+  color: var(--text-color);
+  font-weight: 600;
+}

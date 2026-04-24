@@ -12,46 +12,86 @@
   <view class="content">
     <!-- Logo Section -->
     <view class="logo-section">
-      <text class="logo">🏪</text>
-      <text class="app-name">同城二手</text>
+      <text class="logo">🔄</text>
+      <text class="app-name">换换么</text>
       <text class="version">v1.0.0</text>
     </view>
 
     <!-- About -->
     <view class="section">
-      <text class="section-title">关于我们</text>
+      <text class="section-title">我们的初心</text>
       <text class="section-content">
-        同城二手是一个专业的本地二手物品交易平台，致力于为用户提供安全、便捷、高效的交易体验。我们连接买家和卖家，让闲置物品得到更好的利用。
+        在这个消费主义盛行的时代，我们相信每一件物品都有它的价值，只是需要找到对的"下一位主人"。换换么诞生于对资源浪费的反思和对社区温度的向往，致力于用最原始、最纯粹的方式——<text style="font-weight: bold;">以物换物</text>，让闲置物品重新流动起来。
       </text>
     </view>
 
-    <!-- Mission -->
     <view class="section">
-      <text class="section-title">我们的使命</text>
+      <text class="section-title">我们是谁</text>
       <text class="section-content">
-        通过建立信任的交易平台，让每一个闲置物品都能找到新的主人，促进资源的循环利用，为社区创造更多价值。
+        换换么是一个专注于<text style="font-weight: bold;">同城信息匹配</text>的纯信息服务平台。我们不介入交易、不处理支付、不提供即时通讯——我们只做好一件事：<text style="font-weight: bold;">让有交换意愿的人，找到彼此</text>。
       </text>
     </view>
 
     <!-- Features -->
     <view class="section">
-      <text class="section-title">主要功能</text>
+      <text class="section-title">我们的特色</text>
       <view class="features-list">
         <view class="feature-item">
-          <text class="feature-icon">📱</text>
-          <text class="feature-text">本地交易 - 同城用户快速交易</text>
+          <text class="feature-icon">🔄</text>
+          <text class="feature-text">原始交换 - 回归"以物易物"的本质</text>
         </view>
         <view class="feature-item">
-          <text class="feature-icon">🔒</text>
-          <text class="feature-text">安全保障 - 实名认证和交易保护</text>
+          <text class="feature-icon">💴</text>
+          <text class="feature-text">灵活支付 - 支持纯物物交换或线下补差价</text>
         </view>
         <view class="feature-item">
-          <text class="feature-icon">💬</text>
-          <text class="feature-text">即时沟通 - 快速联系和协商</text>
+          <text class="feature-icon">📍</text>
+          <text class="feature-text">同城优先 - 基于地理位置的信息展示</text>
         </view>
         <view class="feature-item">
-          <text class="feature-icon">⭐</text>
-          <text class="feature-text">信用评价 - 透明的用户评价体系</text>
+          <text class="feature-icon">🎯</text>
+          <text class="feature-text">精准社群 - 深耕大学生、社区邻里、手工艺爱好者</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Target Users - 折中软化版 -->
+    <view class="section">
+      <text class="section-title">我们服务于</text>
+      <view class="features-list">
+        <view class="feature-item">
+          <text class="feature-icon">🎓</text>
+          <text class="feature-text">希望教材流转、处理宿舍闲置的<strong>学生群体</strong></text>
+        </view>
+        <view class="feature-item">
+          <text class="feature-icon">🏠</text>
+          <text class="feature-text">热衷邻里互助、旧物新生的<strong>社区居民</strong></text>
+        </view>
+        <view class="feature-item">
+          <text class="feature-icon">✂️</text>
+          <text class="feature-text">追求作品互换、材料共享的<strong>手工创作者</strong></text>
+        </view>
+      </view>
+      <text class="section-content" style="margin-top: 16rpx; color: #888; font-size: 26rpx;">
+        以及所有相信"闲置物品值得第二次生命"的人。
+      </text>
+    </view>
+
+    <!-- Commitment -->
+    <view class="section">
+      <text class="section-title">我们的承诺</text>
+      <view class="features-list">
+        <view class="feature-item">
+          <text class="feature-icon">✅</text>
+          <text class="feature-text">只做信息发布，不触碰交易资金</text>
+        </view>
+        <view class="feature-item">
+          <text class="feature-icon">✅</text>
+          <text class="feature-text">鼓励线下面对面，重建真实社交连接</text>
+        </view>
+        <view class="feature-item">
+          <text class="feature-icon">✅</text>
+          <text class="feature-text">倡导环保理念，让每一次交换都是对地球的善意</text>
         </view>
       </view>
     </view>
@@ -62,15 +102,15 @@
       <view class="contact-list">
         <view class="contact-item">
           <text class="contact-label">邮箱</text>
-          <text class="contact-value">support@secondhand.com</text>
+          <text class="contact-value">support@huanhuanme.com</text>
         </view>
         <view class="contact-item">
           <text class="contact-label">电话</text>
-          <text class="contact-value">400-123-4567</text>
+          <text class="contact-value">400-888-8888</text>
         </view>
         <view class="contact-item">
           <text class="contact-label">地址</text>
-          <text class="contact-value">北京市朝阳区CBD</text>
+          <text class="contact-value">北京市海淀区科技园</text>
         </view>
       </view>
     </view>
@@ -89,7 +129,7 @@
 
     <!-- Copyright -->
     <view class="copyright">
-      <text>© 2024 同城二手. All rights reserved.</text>
+      <text>© 2026 换换么. All rights reserved.</text>
     </view>
   </view>
 </view>

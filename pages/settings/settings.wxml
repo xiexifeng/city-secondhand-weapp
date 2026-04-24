@@ -47,7 +47,7 @@
           <text class="item-arrow">›</text>
         </view>
 
-        <view class="settings-item" bindtap="navigateToSecurity">
+        <!-- <view class="settings-item" bindtap="navigateToSecurity">
           <view class="item-left">
             <text class="item-icon">🔐</text>
             <view class="item-text">
@@ -56,7 +56,7 @@
             </view>
           </view>
           <text class="item-arrow">›</text>
-        </view>
+        </view> -->
       </view>
     </view>
 

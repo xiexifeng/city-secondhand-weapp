@@ -4,8 +4,6 @@ Page({
       profilePublic: true,
       showLocation: true,
       showContact: true,
-      showTransactionHistory: true,
-      allowMessages: true,
       allowRecommendations: true
     }
   },

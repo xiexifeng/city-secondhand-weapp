@@ -5,12 +5,30 @@ Page({
       bio: '热爱生活，热爱分享',
       location: '北京市 朝阳区',
       phone: '13800138000',
-      email: 'user@example.com'
-    }
+      email: 'user@example.com',
+      wechat: ''
+    },
+    avatarText: 'U',
+    region: ['北京市', '北京市', '朝阳区']
   },
 
   onLoad: function() {
     // Load user profile
+    this.updateAvatarText();
+  },
+
+  /**
+   * Update avatar text based on nickname
+   */
+  updateAvatarText: function() {
+    const { nickname } = this.data.profile;
+    let avatarText = 'U';
+    if (nickname && nickname.trim()) {
+      avatarText = nickname.trim().charAt(0).toUpperCase();
+    }
+    this.setData({
+      avatarText: avatarText
+    });
   },
 
   /**
@@ -22,32 +40,24 @@ Page({
     this.setData({
       [`profile.${field}`]: value
     });
+    
+    // Update avatar text when nickname changes
+    if (field === 'nickname') {
+      this.updateAvatarText();
+    }
   },
 
-  /**
-   * Change avatar
-   */
-  changeAvatar: function() {
-    wx.chooseImage({
-      count: 1,
-      sizeType: ['compressed'],
-      sourceType: ['album', 'camera'],
-      success: (res) => {
-        wx.showToast({
-          title: '头像上传功能开发中',
-          icon: 'none'
-        });
-      }
-    });
-  },
+
 
   /**
-   * Select location
+   * Handle region change
    */
-  selectLocation: function() {
-    wx.showToast({
-      title: '地区选择功能开发中',
-      icon: 'none'
+  onRegionChange: function(e) {
+    const region = e.detail.value;
+    const location = region.join(' ');
+    this.setData({
+      region: region,
+      'profile.location': location
     });
   },
 

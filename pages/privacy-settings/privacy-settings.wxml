@@ -43,28 +43,6 @@
       </view>
     </view>
 
-    <!-- Show Transaction History -->
-    <view class="setting-item">
-      <view class="setting-content">
-        <text class="setting-title">显示交易历史</text>
-        <text class="setting-description">在个人资料中展示你的交易成功数</text>
-      </view>
-      <view class="toggle-switch {{settings.showTransactionHistory ? 'active' : ''}}" bindtap="toggleSetting" data-key="showTransactionHistory">
-        <view class="toggle-slider"></view>
-      </view>
-    </view>
-
-    <!-- Allow Messages -->
-    <view class="setting-item">
-      <view class="setting-content">
-        <text class="setting-title">允许陌生人消息</text>
-        <text class="setting-description">接收来自非好友的消息</text>
-      </view>
-      <view class="toggle-switch {{settings.allowMessages ? 'active' : ''}}" bindtap="toggleSetting" data-key="allowMessages">
-        <view class="toggle-slider"></view>
-      </view>
-    </view>
-
     <!-- Allow Recommendations -->
     <view class="setting-item">
       <view class="setting-content">

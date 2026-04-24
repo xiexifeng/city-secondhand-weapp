@@ -11,96 +11,239 @@
   <!-- Content -->
   <scroll-view scroll-y class="content">
     <view class="section">
-      <text class="section-title">1. 信息收集</text>
+      <text class="section-title">隐私政策</text>
       <text class="section-content">
-        我们收集以下信息以提供更好的服务：
-        • 您提供的个人信息（姓名、电话、邮箱等）
-        • 您的交易历史和行为数据
-        • 您的设备信息和位置信息
-        • 您的浏览和搜索记录
+        <text style="font-weight: bold;">生效日期</text>：2026年[月][日]
+        
+      </text>
+      <text class="section-content">
+        <text style="font-weight: bold;">最近更新</text>：2026年[月][日]
       </text>
     </view>
 
     <view class="section">
-      <text class="section-title">2. 信息使用</text>
+      <text class="section-title">1. 定义</text>
+      <text class="section-content">
+        本政策所称"个人信息"，是指以电子或者其他方式记录的能够单独或者与其他信息结合识别自然人个人身份的各种信息，包括但不限于自然人的姓名、出生日期、身份证件号码、个人生物识别信息、住址、电话号码等。
+      </text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">2. 信息收集</text>
+      <text class="section-content">
+        <text style="font-weight: bold;">2.1 合法性基础</text>
+        我们基于以下合法性基础收集您的信息：
+        - <text style="font-weight: bold;">用户同意</text>：经您明确同意后收集的信息（如位置信息、可选联系信息）
+        - <text style="font-weight: bold;">履行合同必需</text>：为提供平台服务所必需的信息（如账号注册信息）
+        - <text style="font-weight: bold;">合法利益</text>：为提升服务质量和保障平台安全所收集的信息（如设备信息、行为数据）
+      </text>
+      
+      <text class="section-content">
+        <text style="font-weight: bold;">2.2 收集范围</text>
+      </text>
+      
+      <view class="table-container">
+        <view class="table-row header">
+          <view class="table-cell">信息类型</view>
+          <view class="table-cell">具体内容</view>
+          <view class="table-cell">是否必需</view>
+          <view class="table-cell">用途</view>
+        </view>
+        <view class="table-row">
+          <view class="table-cell">注册信息</view>
+          <view class="table-cell">昵称、头像、手机号码</view>
+          <view class="table-cell">必需</view>
+          <view class="table-cell">账号注册与身份验证</view>
+        </view>
+        <view class="table-row">
+          <view class="table-cell">联系信息</view>
+          <view class="table-cell">微信、邮箱</view>
+          <view class="table-cell">可选</view>
+          <view class="table-cell">交换双方线下联系</view>
+        </view>
+        <view class="table-row">
+          <view class="table-cell">位置信息</view>
+          <view class="table-cell">城市/区域</view>
+          <view class="table-cell">可选</view>
+          <view class="table-cell">同城信息匹配</view>
+        </view>
+        <view class="table-row">
+          <view class="table-cell">发布信息</view>
+          <view class="table-cell">物品描述、图片、交换意向</view>
+          <view class="table-cell">用户主动提供</view>
+          <view class="table-cell">信息展示与匹配</view>
+        </view>
+        <view class="table-row">
+          <view class="table-cell">设备信息</view>
+          <view class="table-cell">设备型号、操作系统、IP地址</view>
+          <view class="table-cell">自动收集</view>
+          <view class="table-cell">安全保障与故障排查</view>
+        </view>
+        <view class="table-row">
+          <view class="table-cell">行为数据</view>
+          <view class="table-cell">浏览记录、搜索关键词</view>
+          <view class="table-cell">自动收集</view>
+          <view class="table-cell">推荐优化与服务改进</view>
+        </view>
+      </view>
+      
+      <text class="section-content">
+        <text style="font-weight: bold;">2.3 位置信息特别说明</text>
+      </text>
+      <text class="section-content">
+        <text style="font-weight: bold;">您的地理位置信息属于敏感个人信息。</text> 我们仅在您<text style="font-weight: bold;">单独同意</text>后收集，用于同城信息展示与匹配功能。您可随时在设备设置中关闭位置权限，关闭后不影响浏览功能，但无法使用基于位置的同城推荐服务。
+      </text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">3. 信息使用</text>
       <text class="section-content">
         我们使用收集的信息用于：
-        • 提供和改进服务
-        • 个性化用户体验
-        • 进行市场研究和分析
-        • 防止欺诈和安全问题
-        • 遵守法律义务
+        - 提供同城信息匹配服务
+        - 个性化内容推荐
+        - 平台安全保障和欺诈防范
+        - 服务优化和数据分析
+        - 履行法律法规义务
       </text>
     </view>
 
     <view class="section">
-      <text class="section-title">3. 信息保护</text>
+      <text class="section-title">4. 信息存储</text>
+      <text class="section-content">
+        我们仅在实现本政策所述目的所必需的期限内保留您的个人信息：
+      </text>
+      
+      <view class="table-container">
+        <view class="table-row header">
+          <view class="table-cell">信息类型</view>
+          <view class="table-cell">存储期限</view>
+          <view class="table-cell">说明</view>
+        </view>
+        <view class="table-row">
+          <view class="table-cell">账号信息</view>
+          <view class="table-cell">保留至注销后90日</view>
+          <view class="table-cell">用于争议处理和合规要求</view>
+        </view>
+        <view class="table-row">
+          <view class="table-cell">发布信息</view>
+          <view class="table-cell">保留至主动删除或账号注销</view>
+          <view class="table-cell">用户可自主管理</view>
+        </view>
+        <view class="table-row">
+          <view class="table-cell">行为数据</view>
+          <view class="table-cell">保留1年</view>
+          <view class="table-cell">用于服务优化</view>
+        </view>
+        <view class="table-row">
+          <view class="table-cell">日志信息</view>
+          <view class="table-cell">保留6个月</view>
+          <view class="table-cell">用于安全审计</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section">
+      <text class="section-title">5. 信息保护</text>
       <text class="section-content">
         我们采取以下措施保护您的信息：
-        • 使用加密技术传输数据
-        • 限制员工访问权限
-        • 定期进行安全审计
-        • 遵守数据保护法规
-        • 建立应急响应机制
+        - 使用HTTPS/TLS加密技术传输数据
+        - 遵循最小权限原则，限制员工访问
+        - 定期进行安全审计和漏洞扫描
+        - 建立数据安全事件应急响应机制
+        - 与受托处理方签署保密协议
       </text>
     </view>
 
     <view class="section">
-      <text class="section-title">4. 信息共享</text>
+      <text class="section-title">6. 信息共享</text>
       <text class="section-content">
-        我们不会出售您的个人信息。我们仅在以下情况下共享信息：
-        • 获得您的明确同意
-        • 法律要求或执法需要
-        • 与服务提供商合作
-        • 保护平台安全和用户权益
+        <text style="font-weight: bold;">我们不会出售您的个人信息。</text> 仅在以下情形共享或披露：
+        - 获得您的<text style="font-weight: bold;">明确同意</text>
+        - 法律法规要求或司法机关、行政机关依法提出要求
+        - 委托第三方处理（如云存储服务商），且受托方具备充分的数据保护能力并签署保密协议
+        - 为保护平台安全、用户权益或公共利益所必需
       </text>
     </view>
 
     <view class="section">
-      <text class="section-title">5. Cookie 和追踪</text>
+      <text class="section-title">7. 用户权利</text>
       <text class="section-content">
-        我们使用 Cookie 和类似技术来：
-        • 记住您的偏好
-        • 分析网站使用情况
-        • 改进用户体验
-        • 防止欺诈行为
-        
-        您可以在浏览器设置中禁用 Cookie。
+        您对您的个人信息享有以下权利：
+        - <text style="font-weight: bold;">访问权</text>：查看您的个人信息
+        - <text style="font-weight: bold;">更正权</text>：更正不准确或不完整的信息
+        - <text style="font-weight: bold;">删除权</text>：删除您的个人信息或注销账号
+        - <text style="font-weight: bold;">撤回同意权</text>：撤回此前授予的同意（不影响撤回前已处理数据的效力）
+        - <text style="font-weight: bold;">获取副本权</text>：获取您的数据副本
+        - <text style="font-weight: bold;">限制处理权</text>：在特定情形下限制我们对您数据的处理
+        如需行使上述权利，请通过第13条的联系方式与我们联系。
       </text>
     </view>
 
     <view class="section">
-      <text class="section-title">6. 用户权利</text>
+      <text class="section-title">8. 未成年人保护</text>
       <text class="section-content">
-        您有权：
-        • 访问您的个人信息
-        • 更正不准确的信息
-        • 删除您的账户和数据
-        • 反对某些数据处理
-        • 获取您的数据副本
+        本平台主要面向<text style="font-weight: bold;">年满18周岁的成年人</text>。若您是未满18周岁的未成年人，请在监护人指导下使用本平台，并确保监护人已阅读并同意本隐私政策。
+        <text style="font-weight: bold;">我们不会主动收集未成年人的个人信息。</text> 如发现未经监护人同意收集了未成年人信息，我们将尽快删除相关信息。
       </text>
     </view>
 
     <view class="section">
-      <text class="section-title">7. 第三方链接</text>
+      <text class="section-title">9. 隐私保护承诺</text>
       <text class="section-content">
-        本平台可能包含第三方网站的链接。我们对第三方网站的隐私政策不负责。请在访问第三方网站前查看其隐私政策。
+        - 平台仅收集<text style="font-weight: bold;">提供服务所必需的最少信息</text>
+        - 平台<text style="font-weight: bold;">不存储用户之间的私信聊天记录</text>
+        - 用户联系方式<text style="font-weight: bold;">仅对达成匹配意向的对方展示</text>（如平台提供此功能）
+        - 平台<text style="font-weight: bold;">不向第三方出售、提供用户个人信息</text>
       </text>
     </view>
 
     <view class="section">
-      <text class="section-title">8. 政策更新</text>
+      <text class="section-title">10. Cookie 和类似技术</text>
       <text class="section-content">
-        我们可能会不时更新本隐私政策。重大变更将通过电子邮件或平台通知通知您。继续使用本平台即表示您接受更新后的政策。
+        我们使用 Cookie、本地存储（LocalStorage）、缓存等类似技术来：
+        - 记住您的偏好设置
+        - 分析平台使用情况
+        - 改进用户体验
+        - 防止欺诈行为
+        您可以在浏览器或设备设置中管理或禁用这些技术，但可能影响部分功能体验。
       </text>
     </view>
 
     <view class="section">
-      <text class="section-title">9. 联系我们</text>
+      <text class="section-title">11. 第三方链接</text>
       <text class="section-content">
-        如对本隐私政策有任何疑问或关切，请联系我们：
-        邮箱：privacy@secondhand.com
-        电话：400-123-4567
+        本平台可能包含第三方网站的链接。我们对第三方网站的隐私政策不承担责任。请在访问第三方网站前查看其隐私政策。
+      </text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">12. 数据存储地点</text>
+      <text class="section-content">
+        您的个人信息存储于<text style="font-weight: bold;">中华人民共和国境内</text>。如因业务需要向境外传输，我们将事先征得您的单独同意，并确保接收方具备充分的数据保护能力。
+      </text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">13. 政策更新</text>
+      <text class="section-content">
+        我们可能会不时更新本隐私政策。<text style="font-weight: bold;">重大变更</text>将通过平台公告或电子邮件通知您。如您继续使用本平台，即视为接受更新后的政策。
+      </text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">14. 联系我们</text>
+      <text class="section-content">
+        如对本隐私政策有任何疑问、意见或投诉，请通过以下方式联系我们：
+        - <text style="font-weight: bold;">邮箱</text>：privacy@huanhuanme.com
+        - <text style="font-weight: bold;">电话</text>：400-888-8888
+        - <text style="font-weight: bold;">地址</text>：北京市海淀区科技园
+        我们将在收到您的请求后<text style="font-weight: bold;">15个工作日内</text>予以回复。
+      </text>
+    </view>
+
+    <view class="section">
+      <text class="section-content">
+        © 2026 换换么. 保留所有权利。
       </text>
     </view>
 
