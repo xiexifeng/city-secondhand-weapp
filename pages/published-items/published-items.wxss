@@ -157,22 +157,7 @@
   flex: 1;
 }
 
-.item-menu {
-  width: 48rpx;
-  height: 48rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8rpx;
-  background-color: #f3f4f6;
-  cursor: pointer;
-  flex-shrink: 0;
-}
 
-.menu-icon {
-  font-size: 30rpx;
-  color: #9ca3af;
-}
 
 .item-date {
   display: block;
@@ -268,63 +253,93 @@
   display: inline-block;
 }
 
-/* Menu */
-.menu-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 50;
-}
-
-.menu-popup-wrapper {
-  position: absolute;
-  right: 0;
-  top: 32rpx;
-  z-index: 100;
-}
-
-.menu-popup {
-  position: absolute;
-  background-color: white;
-  border: 1rpx solid #e5e7eb;
-  border-radius: 8rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  z-index: 100;
-  min-width: 190rpx;
-  right: 0;
-  top: 0;
-}
-
-.menu-item {
-  padding: 16rpx 20rpx;
+/* Item Actions */
+.item-actions {
   display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
   align-items: center;
+  padding-top: 12rpx;
+  border-top: 1rpx solid #f3f4f6;
   gap: 12rpx;
-  border-bottom: 1rpx solid #f3f4f6;
-  font-size: 26rpx;
-  color: #1f2937;
+  margin-top: 8rpx;
+  flex-wrap: wrap;
+}
+
+/* Action Item */
+.action-item {
+  padding: 8rpx 20rpx;
+  border-radius: 20rpx;
+  background-color: #f3f4f6;
+  border: 1rpx solid #e5e7eb;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
 }
 
-.menu-item:last-child {
-  border-bottom: none;
+.action-item:active {
+  background-color: #e5e7eb;
 }
 
-.menu-item:active {
-  background-color: #f9fafb;
+.action-item.delete {
+  background-color: #fef2f2;
+  border: 1rpx solid #fca5a5;
 }
 
-.menu-item.delete {
-  color: #dc2626;
+.action-item.delete:active {
+  background-color: #fecaca;
 }
 
-.menu-item.delete:active {
-  background-color: #fee2e2;
+/* Status-specific action items */
+.action-item.completed {
+  background-color: #dcfce7;
+  border: 1rpx solid #86efac;
 }
+
+.action-item.completed:active {
+  background-color: #bbf7d0;
+}
+
+.action-item.offline {
+  background-color: #f3f4f6;
+  border: 1rpx solid #d1d5db;
+}
+
+.action-item.offline:active {
+  background-color: #e5e7eb;
+}
+
+.action-item.on-sale {
+  background-color: #dbeafe;
+  border: 1rpx solid #93c5fd;
+}
+
+.action-item.on-sale:active {
+  background-color: #bfdbfe;
+}
+
+.action-text {
+  font-size: 20rpx;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.action-item.delete .action-text {
+  color: #ef4444;
+}
+
+.action-item.completed .action-text {
+  color: #166534;
+}
+
+.action-item.offline .action-text {
+  color: #4b5563;
+}
+
+.action-item.on-sale .action-text {
+  color: #0c4a6e;
+}
+
+
 
 /* Item Edit */
 .item-edit {

@@ -1,12 +1,5 @@
 <!--pages/published-items/published-items.wxml-->
 <view class="published-items-container">
-  <!-- Header -->
-  <view class="header">
-    <view class="header-left" bindtap="goBack">
-      <text class="back-arrow">‹</text>
-      <text class="header-title">我的发布</text>
-    </view>
-  </view>
 
   <!-- Stats Cards -->
   <view class="stats-section">
@@ -44,9 +37,6 @@
           <view class="item-info">
             <view class="item-title-row">
               <text class="item-title">{{item.title}}</text>
-              <view class="item-menu" bindtap="toggleMenu" data-id="{{item.id}}">
-                <text class="menu-icon">⋯</text>
-              </view>
             </view>
             <text class="item-date">{{item.publishDate}}</text>
 
@@ -67,25 +57,47 @@
               <text class="stat-item">❤️ {{item.likes}}</text>
               <text class="stat-item">⭐ {{item.favorites}}</text>
             </view>
-          </view>
 
-          <!-- Menu Popup -->
-          <view wx:if="{{activeMenu === item.id}}" class="menu-popup-wrapper">
-            <view class="menu-popup" catchtap="noop">
-              <!-- 只有审核不通过的才能编辑和删除 -->
-              <view wx:if="{{item.reviewStatus === '审核不通过'}}" class="menu-item" bindtap="handleEdit" data-id="{{item.id}}">
-                <text class="menu-icon">✏️</text>
-                <text class="menu-text">编辑</text>
+            <!-- Actions -->
+            <view class="item-actions">
+              <!-- 审核通过的物品操作 -->
+              <view wx:if="{{item.reviewStatus === '已通过'}}">
+                <!-- 出售中 -->
+                <view wx:if="{{item.status === '在售'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
+                  <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
+                    <text class="action-text">删除</text>
+                  </view>
+                  <view class="action-item offline" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="offline">
+                    <text class="action-text">取消发布</text>
+                  </view>
+                  <view class="action-item completed" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="completed">
+                    <text class="action-text">已成交</text>
+                  </view>
+                </view>
+                <!-- 已下架 -->
+                <view wx:if="{{item.status === '已下架'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
+                  <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
+                    <text class="action-text">删除</text>
+                  </view>
+                  <view class="action-item on-sale" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="onSale">
+                    <text class="action-text">发起出售</text>
+                  </view>
+                </view>
+                <!-- 已成交 -->
+                <view wx:if="{{item.status === '已成交'}}">
+                  <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
+                    <text class="action-text">删除</text>
+                  </view>
+                </view>
               </view>
-              <!-- 审核通过且上架/下架的能改变状态 -->
-              <view wx:if="{{item.reviewStatus === '已通过'}}" class="menu-item" bindtap="openStatusModal" data-id="{{item.id}}">
-                <text class="menu-icon">🔄</text>
-                <text class="menu-text">改变状态</text>
-              </view>
-              <!-- 只有审核不通过的才能删除 -->
-              <view wx:if="{{item.reviewStatus === '审核不通过'}}" class="menu-item delete" bindtap="handleDelete" data-id="{{item.id}}">
-                <text class="menu-icon">🗑️</text>
-                <text class="menu-text">删除</text>
+              <!-- 审核不通过的物品操作 -->
+              <view wx:if="{{item.reviewStatus === '审核不通过'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
+                <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
+                  <text class="action-text">删除</text>
+                </view>
+                <view class="action-item" bindtap="handleEdit" data-id="{{item.id}}">
+                  <text class="action-text">编辑</text>
+                </view>
               </view>
             </view>
           </view>
@@ -96,8 +108,7 @@
     </view>
   </view>
 
-  <!-- Menu Overlay -->
-  <view wx:if="{{activeMenu !== null}}" class="menu-overlay" bindtap="closeMenu"></view>
+
 
   <!-- Status Change Modal -->
   <view wx:if="{{showStatusModal && selectedItem}}" class="status-modal-overlay" bindtap="closeStatusModal">

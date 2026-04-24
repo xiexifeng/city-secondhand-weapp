@@ -79,10 +79,6 @@ Page({
         reviewStatusLabel: '✕ 审核不通过'
       }
     ],
-    activeMenu: null,
-    showStatusModal: false,
-    selectedItem: null,
-    statusOptions: [],
     statusCounts: {
       onSale: 0,
       trading: 0,
@@ -191,105 +187,7 @@ Page({
     });
   },
 
-  /**
-   * Toggle menu
-   */
-  toggleMenu: function(e) {
-    const id = e.currentTarget.dataset.id;
-    this.setData({
-      activeMenu: this.data.activeMenu === id ? null : id
-    });
-  },
 
-  /**
-   * Close menu
-   */
-  closeMenu: function() {
-    this.setData({
-      activeMenu: null
-    });
-  },
-
-  /**
-   * Get status label
-   */
-  getStatusLabel: function(status) {
-    const labels = {
-      '在售': '在售',
-      '已下架': '已下架',
-      '成交中': '成交中',
-      '已成交': '已成交'
-    };
-    return labels[status] || status;
-  },
-
-  /**
-   * Get status option class name
-   */
-  getStatusOptionClass: function(status) {
-    const classMap = {
-      '在售': 'on-sale',
-      '已下架': 'off-shelf',
-      '成交中': 'trading',
-      '已成交': 'sold'
-    };
-    return classMap[status] || 'on-sale';
-  },
-
-  /**
-   * Get status options (all statuses except current)
-   */
-  getStatusOptions: function(currentStatus) {
-    const allStatuses = ['在售', '已下架', '成交中', '已成交'];
-    return allStatuses.filter(s => s !== currentStatus);
-  },
-
-  /**
-   * Open status modal
-   */
-  openStatusModal: function(e) {
-    const id = e.currentTarget.dataset.id;
-    const item = this.data.items.find(i => i.id === id);
-    const statusOptions = this.getStatusOptions(item.status);
-    
-    const statusOptionClassMap = {
-      '在售': 'on-sale',
-      '已下架': 'off-shelf',
-      '成交中': 'trading',
-      '已成交': 'sold'
-    };
-    
-    const statusLabelMap = {
-      '在售': '在售中',
-      '已下架': '已下架',
-      '成交中': '成交中',
-      '已成交': '已成交'
-    };
-    
-    const processedStatusOptions = statusOptions.map(status => ({
-      status: status,
-      class: statusOptionClassMap[status] || 'on-sale',
-      label: statusLabelMap[status] || status
-    }));
-    
-    this.setData({
-      showStatusModal: true,
-      selectedItem: item,
-      statusOptions: processedStatusOptions,
-      activeMenu: null
-    });
-  },
-
-  /**
-   * Close status modal
-   */
-  closeStatusModal: function() {
-    this.setData({
-      showStatusModal: false,
-      selectedItem: null,
-      statusOptions: []
-    });
-  },
 
   /**
    * Handle edit
@@ -314,11 +212,18 @@ Page({
 
 
   /**
-   * Handle status change from modal
+   * Handle status change
    */
   handleStatusChange: function(e) {
+    const id = e.currentTarget.dataset.id;
     const newStatus = e.currentTarget.dataset.status;
-    const { selectedItem, items } = this.data;
+    const { items } = this.data;
+    
+    const statusMap = {
+      'onSale': '在售',
+      'offline': '已下架',
+      'completed': '已成交'
+    };
     
     const statusClassMap = {
       '在售': 'status-on-sale',
@@ -327,29 +232,39 @@ Page({
       '已成交': 'status-completed'
     };
     
-    const updatedItems = items.map(i => {
-      if (i.id === selectedItem.id) {
-        return {
-          ...i, 
-          status: newStatus,
-          statusClass: statusClassMap[newStatus] || 'status-on-sale'
-        };
+    const actualStatus = statusMap[newStatus] || newStatus;
+    
+    // 二次确认弹窗
+    wx.showModal({
+      title: '确认操作',
+      content: '确定要将物品状态更新为: ' + actualStatus + ' 吗？',
+      confirmText: '确定',
+      cancelText: '取消',
+      success: (res) => {
+        if (res.confirm) {
+          const updatedItems = items.map(i => {
+            if (i.id === id) {
+              return {
+                ...i, 
+                status: actualStatus,
+                statusClass: statusClassMap[actualStatus] || 'status-on-sale'
+              };
+            }
+            return i;
+          });
+          
+          this.setData({
+            items: updatedItems
+          });
+          
+          this.calculateStatusCounts();
+          
+          wx.showToast({
+            title: '状态已更新为: ' + actualStatus,
+            icon: 'success'
+          });
+        }
       }
-      return i;
-    });
-    
-    this.setData({
-      items: updatedItems,
-      showStatusModal: false,
-      selectedItem: null,
-      statusOptions: []
-    });
-    
-    this.calculateStatusCounts();
-    
-    wx.showToast({
-      title: '状态已更新为: ' + newStatus,
-      icon: 'success'
     });
   },
 
@@ -366,7 +281,7 @@ Page({
       success: (res) => {
         if (res.confirm) {
           const items = this.data.items.filter(item => item.id !== id);
-          this.setData({ items, activeMenu: null });
+          this.setData({ items });
           this.calculateStatusCounts();
           wx.showToast({
             title: '物品已删除',
@@ -377,8 +292,5 @@ Page({
     });
   },
 
-  /**
-   * Noop for preventing menu close
-   */
-  noop: function() {}
+
 });

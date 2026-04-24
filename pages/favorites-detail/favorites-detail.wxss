@@ -12,63 +12,13 @@ page {
   padding-bottom: 100rpx;
 }
 
-/* Header */
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: white;
-  padding: 16rpx;
-  border-bottom: 1rpx solid #e5e7eb;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.header-left {
-  width: 40rpx;
-  height: 40rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8rpx;
-  background-color: #f3f4f6;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.header-left:active {
-  background-color: #e5e7eb;
-}
-
-.back-icon {
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #1f2937;
-}
-
-.header-center {
-  flex: 1;
-  text-align: center;
-}
-
-.header-title {
-  font-size: 28rpx;
-  font-weight: bold;
-  color: #1f2937;
-}
-
-.header-right {
-  width: 40rpx;
-}
-
 /* Tab Bar */
 .tab-bar {
   display: flex;
   background-color: white;
   border-bottom: 1rpx solid #e5e7eb;
   position: sticky;
-  top: 80rpx;
+  top: 0;
   z-index: 9;
 }
 

@@ -122,35 +122,13 @@ Page({
 
 
 
-  /**
-   * Toggle menu
-   */
-  toggleMenu: function(e) {
-    const id = parseInt(e.currentTarget.dataset.id);
-    const { activeMenu } = this.data;
-    this.setData({
-      activeMenu: activeMenu === id ? null : id
-    });
-  },
 
-  /**
-   * Close menu
-   */
-  closeMenu: function() {
-    this.setData({
-      activeMenu: null
-    });
-  },
 
   /**
    * Handle edit
    */
   handleEdit: function(e) {
     const id = parseInt(e.currentTarget.dataset.id);
-    // 关闭菜单
-    this.setData({
-      activeMenu: null
-    });
     // 获取全局应用实例
     const app = getApp();
     // 存储编辑ID到全局数据
@@ -169,19 +147,33 @@ Page({
   handleToggleStatus: function(e) {
     const id = parseInt(e.currentTarget.dataset.id);
     const { wishes } = this.data;
-    const updatedWishes = wishes.map(w => 
-      w.id === id 
-        ? { ...w, status: w.status === '活跃' ? '已下架' : '活跃' }
-        : w
-    );
-    this.setData({
-      wishes: updatedWishes,
-      activeMenu: null
-    });
-    this.computeStats();
-    wx.showToast({
-      title: '状态已更新',
-      icon: 'success'
+    const wish = wishes.find(w => w.id === id);
+    const newStatus = wish.status === '活跃' ? '已下架' : '活跃';
+    
+    // 二次确认弹窗
+    wx.showModal({
+      title: '确认操作',
+      content: '确定要将心愿状态更新为: ' + newStatus + ' 吗？',
+      confirmText: '确定',
+      cancelText: '取消',
+      success: (res) => {
+        if (res.confirm) {
+          const updatedWishes = wishes.map(w => 
+            w.id === id 
+              ? { ...w, status: newStatus }
+              : w
+          );
+          this.setData({
+            wishes: updatedWishes,
+            activeMenu: null
+          });
+          this.computeStats();
+          wx.showToast({
+            title: '状态已更新',
+            icon: 'success'
+          });
+        }
+      }
     });
   },
 
@@ -197,8 +189,7 @@ Page({
         if (res.confirm) {
           const updatedWishes = this.data.wishes.filter(w => w.id !== id);
           this.setData({
-            wishes: updatedWishes,
-            activeMenu: null
+            wishes: updatedWishes
           });
           this.computeStats();
           wx.showToast({
@@ -226,10 +217,5 @@ Page({
     });
   },
 
-  /**
-   * No operation
-   */
-  noop: function() {
-    // 空操作，用于阻止事件冒泡
-  }
+
 });
