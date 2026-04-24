@@ -129,7 +129,7 @@ Page({
    * Check login status
    */
   checkLoginStatus: function() {
-    const token = wx.getStorageSync('authToken');
+    const token = wx.getStorageSync('token');
     this.setData({ isLoggedIn: !!token });
   },
 

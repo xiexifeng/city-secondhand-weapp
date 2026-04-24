@@ -318,8 +318,8 @@
           </view>
           
           <!-- 发布按钮 -->
-          <button class="btn-publish {{(!agreed || !canPublish) ? 'btn-disabled' : ''}}" bindtap="handlePublish" disabled="{{!agreed || !canPublish}}">
-            {{readCountdown > 0 ? '阅读中 ' + readCountdown + 's' : '发布'}}
+          <button class="btn-publish {{(!agreed || !canPublish || isSubmitting) ? 'btn-disabled' : ''}}" bindtap="handlePublish" disabled="{{!agreed || !canPublish || isSubmitting}}">
+            {{isSubmitting ? '发布中...' : (readCountdown > 0 ? '阅读中 ' + readCountdown + 's' : '发布')}}
           </button>
         </view>
 

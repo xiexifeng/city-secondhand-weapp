@@ -18,6 +18,14 @@ Page({
   },
 
   onLoad: function(options) {
+    // 检查登录状态
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.reLaunch({
+        url: '/pages/login/login'
+      });
+      return;
+    }
     // 页面加载时获取用户当前位置
     this.getLocation();
   },

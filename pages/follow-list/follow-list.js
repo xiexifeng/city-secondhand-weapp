@@ -102,6 +102,14 @@ Page({
   },
 
   onLoad: function(options) {
+    // 检查登录状态
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.reLaunch({
+        url: '/pages/login/login'
+      });
+      return;
+    }
     // 根据URL参数设置初始tab
     if (options.tab) {
       this.setData({

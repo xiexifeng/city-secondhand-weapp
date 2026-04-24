@@ -77,7 +77,7 @@ App({
             this.globalData.userInfo = null
             wx.removeStorageSync('token')
             wx.removeStorageSync('userInfo')
-            wx.navigateTo({ url: '/pages/login/login' })
+            wx.reLaunch({ url: '/pages/login/login' })
             reject(res.data)
           } else {
             reject(res.data)

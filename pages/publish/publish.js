@@ -59,11 +59,21 @@ Page({
     // 免责声明阅读倒计时
     readCountdown: 0,
     canPublish: false,
+    // 防重复提交
+    isSubmitting: false,
     // 滚动到指定位置
     scrollToView: ''
   },
 
   onLoad: function(options) {
+    // 检查登录状态
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.reLaunch({
+        url: '/pages/login/login'
+      });
+      return;
+    }
     // 页面加载
     this.checkEditMode();
   },
@@ -534,7 +544,12 @@ Page({
    * 发布物品
    */
   handlePublish: function() {
-    const { agreed, formData, publishType, images, canPublish, editingId } = this.data;
+    const { agreed, formData, publishType, images, canPublish, editingId, isSubmitting } = this.data;
+
+    // 防重复提交
+    if (isSubmitting) {
+      return;
+    }
 
     // 检查是否同意免责声明
     if (!agreed) {
@@ -617,22 +632,37 @@ Page({
       return;
     }
 
-    // 发布成功
-    wx.showToast({
-      title: editingId ? '编辑成功！' : '发布成功！',
-      icon: 'success',
-      duration: 1500
-    });
+    // 设置提交中状态
+    this.setData({ isSubmitting: true });
 
-    // 延迟后跳转到已发布物品页面
-    setTimeout(() => {
-      if (editingId) {
-        wx.navigateBack();
-      } else {
-        wx.switchTab({
-          url: '/pages/profile/profile'
-        });
-      }
-    }, 1500);
+    try {
+      // 发布成功
+      wx.showToast({
+        title: editingId ? '编辑成功！' : '发布成功！',
+        icon: 'success',
+        duration: 1500
+      });
+
+      // 延迟后跳转到已发布物品页面
+      setTimeout(() => {
+        if (editingId) {
+          wx.navigateBack();
+        } else {
+          wx.switchTab({
+            url: '/pages/profile/profile'
+          });
+        }
+        // 恢复提交状态
+        this.setData({ isSubmitting: false });
+      }, 1500);
+    } catch (error) {
+      // 处理错误
+      wx.showToast({
+        title: '发布失败，请重试',
+        icon: 'none'
+      });
+      // 恢复提交状态
+      this.setData({ isSubmitting: false });
+    }
   }
 });

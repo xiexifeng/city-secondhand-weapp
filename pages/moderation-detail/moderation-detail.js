@@ -42,6 +42,14 @@ Page({
   },
 
   onLoad: function(options) {
+    // 检查登录状态
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.reLaunch({
+        url: '/pages/login/login'
+      });
+      return;
+    }
     const itemId = options.id;
     if (itemId) {
       this.loadDetail(itemId);

@@ -40,7 +40,7 @@ function request(url, options = {}) {
           // 未授权
           wx.removeStorageSync('token')
           wx.removeStorageSync('userInfo')
-          wx.navigateTo({ url: '/pages/login/login' })
+          wx.reLaunch({ url: '/pages/login/login' })
           reject({ message: '请重新登录' })
         } else {
           reject(res.data || { message: '请求失败' })

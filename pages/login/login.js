@@ -14,7 +14,7 @@ Page({
 
   onLoad: function() {
     // Check if already logged in
-    const token = wx.getStorageSync('authToken');
+    const token = wx.getStorageSync('token');
     if (token) {
       wx.redirectTo({
         url: '/pages/home/home'
@@ -76,7 +76,7 @@ Page({
       wx.hideLoading();
       
       // Simulate successful login
-      wx.setStorageSync('authToken', 'wechat_token_' + Date.now());
+      wx.setStorageSync('token', 'wechat_token_' + Date.now());
       wx.setStorageSync('userPhone', '138****0000');
       
       wx.showToast({
@@ -233,7 +233,7 @@ Page({
       this.setData({ isLoggingIn: false });
 
       // Simulate successful login
-      wx.setStorageSync('authToken', 'sms_token_' + Date.now());
+      wx.setStorageSync('token', 'sms_token_' + Date.now());
       wx.setStorageSync('userPhone', phoneNumber);
 
       wx.showToast({
@@ -381,5 +381,24 @@ Page({
       return false;
     }
     return true;
+  },
+
+  /**
+   * Handle page unload (including back button)
+   */
+  onUnload: function() {
+    // Check if user is not logged in
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      // If not logged in, check if we need to redirect to home
+      const pages = getCurrentPages();
+      // If this is the only page or we came from a non-home page
+      // We need to use setTimeout to ensure the redirect happens after the page is unloaded
+      setTimeout(() => {
+        wx.redirectTo({
+          url: '/pages/home/home'
+        });
+      }, 0);
+    }
   }
 });

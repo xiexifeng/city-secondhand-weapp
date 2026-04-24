@@ -62,6 +62,14 @@ Page({
   },
 
   onLoad: function() {
+    // 检查登录状态
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.reLaunch({
+        url: '/pages/login/login'
+      });
+      return;
+    }
     // 页面加载时的初始化
   },
 
