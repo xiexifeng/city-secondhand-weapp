@@ -149,15 +149,40 @@
     </view>
 
     <view class="section">
-      <text class="section-title">第八章 附则</text>
+      <text class="section-title">第八章 积分规则</text>
       <text class="section-content">
-        <text style="font-weight: bold;">第十九条【条款更新】</text>
+        <text style="font-weight: bold;">第十九条【积分定义】</text>
+        本平台设立"换换么积分"（以下简称"积分"）作为用户参与平台活动的奖励机制。积分是平台内部的虚拟数值，不具有实际货币价值，不可兑换现金。
+        
+        <text style="font-weight: bold;">第二十条【积分获取】</text>
+        用户可通过以下方式获取积分：
+        1. 完成平台发布的任务（如首次注册、完善个人资料、发布物品/心愿等）
+        2. 参与平台举办的活动
+        3. 邀请新用户注册并完成首次发布
+        
+        <text style="font-weight: bold;">第二十一条【积分使用】</text>
+        当前平台积分功能处于建设阶段，暂未开放积分使用渠道。平台将在积分使用功能上线后，通过平台公告或站内通知告知用户具体使用规则。
+        
+        <text style="font-weight: bold;">第二十二条【积分管理】</text>
+        1. 积分有效期：<text style="font-weight: bold;">积分永久有效</text>，无过期时间限制
+        2. 平台有权根据运营需要调整积分规则，调整后将通过平台公告通知用户
+        3. 用户账号注销后，其账户内的积分将自动清零
+        
+        <text style="font-weight: bold;">第二十三条【积分争议】</text>
+        如用户对积分获取或使用有异议，可通过平台客服渠道反馈，平台将在15个工作日内处理并回复。
+      </text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">第九章 附则</text>
+      <text class="section-content">
+        <text style="font-weight: bold;">第二十四条【条款更新】</text>
         平台有权根据法律法规变化及运营需要修改本条款，修改后的条款将在平台公示。
         
-        <text style="font-weight: bold;">第二十条【争议解决】</text>
+        <text style="font-weight: bold;">第二十五条【争议解决】</text>
         本条款的订立、执行和解释适用中华人民共和国法律。因本条款产生的争议，双方应友好协商解决；协商不成的，任何一方可向平台运营主体所在地有管辖权的人民法院提起诉讼。
         
-        <text style="font-weight: bold;">第二十一条【生效时间】</text>
+        <text style="font-weight: bold;">第二十六条【生效时间】</text>
         本条款自[日期]起生效。
       </text>
     </view>
