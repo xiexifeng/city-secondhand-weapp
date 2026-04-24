@@ -1,64 +1,14 @@
 /* pages/publish/publish.wxss */
 
 page {
-  background-color: #f9fafb;
+  background-color: #ffffff;
 }
 
 .publish-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #f9fafb;
-}
-
-/* ========== 顶部导航栏 ========== */
-.publish-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: white;
-  border-bottom: 1rpx solid #e5e7eb;
-  padding: 12rpx 16rpx;
-  z-index: 10;
-  position: sticky;
-  top: 0;
-}
-
-.header-left,
-.header-right {
-  width: 40rpx;
-  height: 40rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.back-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40rpx;
-  height: 40rpx;
-  border-radius: 8rpx;
-  transition: background-color 0.2s;
-}
-
-.back-btn:active {
-  background-color: #f3f4f6;
-}
-
-.back-btn .back-text {
-  font-size: 24rpx;
-  color: #0ea5e9;
-  font-weight: bold;
-}
-
-.header-title {
-  flex: 1;
-  text-align: center;
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #0ea5e9;
+  background-color: #ffffff;
 }
 
 /* ========== 发布方式选择页面 ========== */
@@ -71,7 +21,7 @@ page {
 
 .publish-content {
   flex: 1;
-  padding: 32rpx 16rpx;
+  padding: 24rpx 16rpx;
 }
 
 .publish-subtitle {
@@ -90,7 +40,7 @@ page {
   border-radius: 12rpx;
   padding: 24rpx;
   margin-bottom: 16rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2rpx 10rpx rgba(15, 23, 42, 0.06);
   transition: all 0.2s;
 }
 
@@ -167,14 +117,48 @@ page {
   margin: 16rpx;
   border-radius: 12rpx;
   padding: 24rpx;
-  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2rpx 10rpx rgba(15, 23, 42, 0.06);
+}
+
+.form-top-actions {
+  margin-bottom: 20rpx;
+}
+
+.switch-type-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6rpx;
+  padding: 6rpx 12rpx;
+  background-color: #f0fdf4;
+  border: 1rpx solid #bbf7d0;
+  border-radius: 16rpx;
+  margin-bottom: 12rpx;
+}
+
+.switch-type-icon {
+  font-size: 24rpx;
+  color: #059669;
+  font-weight: 700;
+}
+
+.switch-type-text {
+  font-size: 22rpx;
+  color: #059669;
+  font-weight: 600;
+}
+
+.form-page-title {
+  display: block;
+  font-size: 32rpx;
+  color: #1f2937;
+  font-weight: 700;
 }
 
 /* ========== 表单区域 ========== */
 .form-section {
   margin-bottom: 24rpx;
   padding-bottom: 24rpx;
-  border-bottom: 1rpx solid #f3f4f6;
+  border-bottom: 1rpx solid #eef2f7;
 }
 
 .form-section:last-of-type {
@@ -205,7 +189,7 @@ page {
 .section-hint {
   display: block;
   font-size: 22rpx;
-  color: #9ca3af;
+  color: #64748b;
   margin-top: 8rpx;
   line-height: 1.4;
 }
@@ -224,7 +208,7 @@ page {
   aspect-ratio: 1;
   border-radius: 8rpx;
   overflow: hidden;
-  background-color: #f3f4f6;
+  background-color: #f8fafc;
 }
 
 .image-preview {
@@ -263,21 +247,21 @@ page {
 }
 
 .image-upload:active {
-  background-color: #f3f4f6;
+  background-color: #f8fafc;
   border-color: #9ca3af;
 }
 
 .upload-icon {
   display: block;
   font-size: 32rpx;
-  color: #9ca3af;
+  color: #64748b;
   margin-bottom: 4rpx;
 }
 
 .upload-count {
   display: block;
   font-size: 20rpx;
-  color: #9ca3af;
+  color: #64748b;
 }
 
 /* ========== 表单输入 ========== */
@@ -290,9 +274,9 @@ page {
 .form-textarea {
   width: 100%;
   padding: 14rpx 16rpx;
-  border: 1rpx solid #e5e7eb;
+  border: 1rpx solid #eef2f7;
   border-radius: 8rpx;
-  background-color: #f9fafb;
+  background-color: #f8fafc;
   font-size: 28rpx;
   color: #1f2937;
   box-sizing: border-box;
@@ -305,7 +289,7 @@ page {
   bottom: 10rpx;
   right: 16rpx;
   font-size: 20rpx;
-  color: #9ca3af;
+  color: #64748b;
   z-index: 1;
   pointer-events: none;
 }
@@ -667,7 +651,7 @@ page {
   right: 0;
   background-color: white;
   border-top: 1rpx solid #e5e7eb;
-  padding: 16rpx;
+  padding: 16rpx 16rpx calc(16rpx + env(safe-area-inset-bottom));
   box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
   z-index: 100;
   display: flex;

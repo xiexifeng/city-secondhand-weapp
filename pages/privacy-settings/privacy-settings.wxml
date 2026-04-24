@@ -1,13 +1,5 @@
 <!--pages/privacy-settings/privacy-settings.wxml-->
 <view class="privacy-settings-container">
-  <!-- Header -->
-  <view class="header">
-    <view class="header-left" bindtap="goBack">
-      <text class="back-arrow">‹</text>
-      <text class="header-title">隐私设置</text>
-    </view>
-  </view>
-
   <!-- Settings List -->
   <view class="settings-list">
     <!-- Profile Visibility -->

@@ -1,22 +1,23 @@
 /* pages/profile/profile.wxss */
 
 page {
-  background-color: #f3f4f6;
+  background-color: #ffffff;
 }
 
 .profile-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f3f4f6;
+  background-color: #ffffff;
   padding-bottom: 100rpx;
 }
 
 /* User Header */
 .user-header {
   background-color: white;
-  border-bottom: 1rpx solid #e5e7eb;
+  border-bottom: 1rpx solid #eef2f7;
   padding: 16rpx;
+  box-shadow: 0 1rpx 2rpx rgba(15, 23, 42, 0.03);
 }
 
 .header-top {
@@ -32,13 +33,13 @@ page {
   align-items: center;
   justify-content: center;
   border-radius: 8rpx;
-  background-color: #f3f4f6;
+  background-color: #f8fafc;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .theme-switcher:active {
-  background-color: #e5e7eb;
+  background-color: #eef2f7;
 }
 
 .theme-icon {
@@ -80,7 +81,7 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16rpx;
+  font-size: 20rpx;
   border: 2rpx solid white;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
 }
@@ -120,7 +121,7 @@ page {
 
 .level-label {
   display: inline-block;
-  font-size: 20rpx;
+  font-size: 22rpx;
   padding: 4rpx 8rpx;
   border-radius: 4rpx;
   font-weight: 600;
@@ -142,8 +143,8 @@ page {
 }
 
 .user-status {
-  font-size: 20rpx;
-  color: #9ca3af;
+  font-size: 22rpx;
+  color: #64748b;
   margin-bottom: 8rpx;
 }
 
@@ -151,8 +152,8 @@ page {
   display: flex;
   align-items: center;
   gap: 8rpx;
-  font-size: 20rpx;
-  color: #9ca3af;
+  font-size: 22rpx;
+  color: #64748b;
 }
 
 .stat-item {
@@ -173,10 +174,11 @@ page {
 
 .data-card {
   background-color: white;
-  border: 1rpx solid #e5e7eb;
+  border: 1rpx solid #eef2f7;
   border-radius: 12rpx;
   padding: 16rpx;
   transition: all 0.2s;
+  box-shadow: 0 1rpx 3rpx rgba(15, 23, 42, 0.05);
 }
 
 .data-card:active {
@@ -197,7 +199,7 @@ page {
 }
 
 .card-icon {
-  font-size: 20rpx;
+  font-size: 22rpx;
 }
 
 .card-label {
@@ -227,12 +229,12 @@ page {
   padding: 12rpx;
   border-radius: 8rpx;
   text-align: center;
-  background-color: #f3f4f6;
+  background-color: #f8fafc;
   transition: all 0.2s;
 }
 
 .data-item:active {
-  background-color: #e5e7eb;
+  background-color: #eef2f7;
 }
 
 .data-value {
@@ -251,8 +253,8 @@ page {
 }
 
 .data-label {
-  font-size: 20rpx;
-  color: #9ca3af;
+  font-size: 22rpx;
+  color: #64748b;
 }
 
 /* Tasks Section */
@@ -274,7 +276,7 @@ page {
 }
 
 .section-icon {
-  font-size: 20rpx;
+  font-size: 22rpx;
 }
 
 .section-label {
@@ -333,12 +335,12 @@ page {
 
 .task-description {
   display: block;
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #9ca3af;
 }
 
 .task-reward {
-  font-size: 20rpx;
+  font-size: 22rpx;
   font-weight: bold;
   color: #0ea5e9;
 }
@@ -370,13 +372,13 @@ page {
 }
 
 .progress-count {
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #9ca3af;
 }
 
 /* Task Completed */
 .task-completed {
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #10b981;
   font-weight: bold;
 }
@@ -393,6 +395,7 @@ page {
   border-radius: 12rpx;
   padding: 16rpx;
   transition: all 0.2s;
+  box-shadow: 0 1rpx 3rpx rgba(15, 23, 42, 0.05);
 }
 
 .stat-card:active {
@@ -418,7 +421,7 @@ page {
 }
 
 .stat-card-icon {
-  font-size: 20rpx;
+  font-size: 22rpx;
 }
 
 .stat-card-label {
@@ -449,13 +452,13 @@ page {
 }
 
 .stat-unit {
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #9ca3af;
 }
 
 .stat-card-desc {
   display: block;
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #9ca3af;
 }
 
@@ -476,7 +479,7 @@ page {
 }
 
 .discover-icon {
-  font-size: 20rpx;
+  font-size: 22rpx;
 }
 
 .discover-label {
@@ -529,7 +532,7 @@ page {
 
 .settings-section-title {
   display: block;
-  font-size: 20rpx;
+  font-size: 22rpx;
   font-weight: 600;
   color: #9ca3af;
   margin-bottom: 8rpx;
@@ -541,6 +544,7 @@ page {
   border: 1rpx solid #e5e7eb;
   border-radius: 12rpx;
   overflow: hidden;
+  box-shadow: 0 1rpx 3rpx rgba(15, 23, 42, 0.05);
 }
 
 .settings-item {
@@ -567,7 +571,7 @@ page {
 }
 
 .settings-icon {
-  font-size: 20rpx;
+  font-size: 22rpx;
 }
 
 .settings-icon.logout {
@@ -585,6 +589,6 @@ page {
 }
 
 .settings-arrow {
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #9ca3af;
 }

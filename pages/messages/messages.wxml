@@ -1,12 +1,8 @@
 <!--pages/messages/messages.wxml-->
 <view class="messages-container">
-  <!-- 顶部导航栏 -->
+  <!-- 顶部标题 -->
   <view class="messages-header">
-    <view class="header-left">
-      <view class="back-btn" bindtap="handleBack">
-        <text>←</text>
-      </view>
-    </view>
+    <view class="header-left"></view>
     <view class="header-content">
       <text class="header-title">消息中心</text>
       <text wx:if="{{unreadCount > 0}}" class="header-subtitle">{{unreadCount}} 条未读消息</text>

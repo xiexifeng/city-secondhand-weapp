@@ -1,13 +1,5 @@
 <!--pages/privacy-policy/privacy-policy.wxml-->
 <view class="privacy-policy-container">
-  <!-- Header -->
-  <view class="header">
-    <view class="header-left" bindtap="goBack">
-      <text class="back-arrow">‹</text>
-      <text class="header-title">隐私政策</text>
-    </view>
-  </view>
-
   <!-- Content -->
   <scroll-view scroll-y class="content">
     <view class="section">

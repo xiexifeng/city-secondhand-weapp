@@ -1,7 +1,7 @@
 /* pages/wish-detail/wish-detail.wxss */
 
 page {
-  background-color: #f9fafb;
+  background-color: #ffffff;
   overflow-x: hidden;
   width: 100vw;
   box-sizing: border-box;
@@ -20,52 +20,10 @@ image, video, img {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f9fafb;
+  background-color: #ffffff;
   overflow-x: hidden;
   width: 100%;
   position: relative;
-}
-
-/* 顶部导航栏 */
-.detail-header {
-  background-color: white;
-  padding: 12rpx 16rpx;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 1rpx solid #e5e7eb;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.header-left, .header-right {
-  width: 50rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.back-btn {
-  width: 40rpx;
-  height: 40rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #f3f4f6;
-  border-radius: 8rpx;
-  font-size: 24rpx;
-  color: #1f2937;
-}
-
-.header-title {
-  flex: 1;
-  text-align: center;
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #1f2937;
 }
 
 /* 内容容器 */
@@ -87,6 +45,7 @@ image, video, img {
   margin-left: 12rpx;
   margin-right: 12rpx;
   border-radius: 12rpx;
+  border: 1rpx solid #eef2f7;
 }
 
 .title-header {
@@ -110,14 +69,24 @@ image, video, img {
   align-items: center;
 }
 
-.like-btn, .collect-btn {
+.share-btn,
+.like-btn,
+.collect-btn {
   font-size: 32rpx;
-  cursor: pointer;
+  color: #64748b;
   transition: transform 0.2s;
 }
 
-.like-btn:active, .collect-btn:active {
+.share-btn:active,
+.like-btn:active,
+.collect-btn:active {
   transform: scale(1.1);
+}
+
+.share-icon-image {
+  width: 32rpx;
+  height: 32rpx;
+  opacity: 0.9;
 }
 
 .like-btn.liked {
@@ -147,15 +116,15 @@ image, video, img {
 }
 
 .tag-verified {
-  background-color: #f3f4f6;
-  color: #6b7280;
+  background-color: #f8fafc;
+  color: #475569;
 }
 
 .info-row {
   display: flex;
   gap: 16rpx;
   padding: 12rpx 0;
-  border-bottom: 1rpx solid #e5e7eb;
+  border-bottom: 1rpx solid #eef2f7;
   margin-bottom: 12rpx;
   flex-wrap: wrap;
 }
@@ -165,7 +134,7 @@ image, video, img {
   align-items: center;
   gap: 6rpx;
   font-size: 24rpx;
-  color: #6b7280;
+  color: #475569;
 }
 
 /* 心愿描述 */
@@ -176,6 +145,7 @@ image, video, img {
   margin-left: 12rpx;
   margin-right: 12rpx;
   border-radius: 12rpx;
+  border: 1rpx solid #eef2f7;
 }
 
 /* 预期价格/交换条件 */
@@ -186,6 +156,7 @@ image, video, img {
   margin-left: 12rpx;
   margin-right: 12rpx;
   border-radius: 12rpx;
+  border: 1rpx solid #eef2f7;
 }
 
 .section-title {
@@ -225,6 +196,7 @@ image, video, img {
   margin-left: 12rpx;
   margin-right: 12rpx;
   border-radius: 12rpx;
+  border: 1rpx solid #e5e7eb;
 }
 
 .report-btn {
@@ -280,11 +252,11 @@ image, video, img {
 }
 
 .seller-stats {
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #9ca3af;
   display: flex;
   flex-direction: column;
-  gap: 2rpx;
+  gap: 4rpx;
 }
 
 /* 安全提示 */
@@ -296,6 +268,7 @@ image, video, img {
   margin-right: 12rpx;
   border-radius: 12rpx;
   border: 2rpx solid #fbbf24;
+  box-shadow: 0 1rpx 2rpx rgba(217, 119, 6, 0.08);
 }
 
 .safety-header {
@@ -315,7 +288,7 @@ image, video, img {
 }
 
 .safety-toggle {
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #b45309;
 }
 
@@ -328,7 +301,7 @@ image, video, img {
 }
 
 .safety-item {
-  font-size: 24rpx;
+  font-size: 25rpx;
   color: #b45309;
   padding: 8rpx 0;
   line-height: 1.5;
@@ -342,6 +315,7 @@ image, video, img {
   margin-left: 12rpx;
   margin-right: 12rpx;
   border-radius: 12rpx;
+  border: 1rpx solid #e5e7eb;
 }
 
 .contact-item {
@@ -364,7 +338,7 @@ image, video, img {
 
 .contact-label {
   display: block;
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #9ca3af;
   margin-bottom: 4rpx;
 }
@@ -436,6 +410,7 @@ image, video, img {
   margin-left: 12rpx;
   margin-right: 12rpx;
   border-radius: 12rpx;
+  border: 1rpx solid #e5e7eb;
 }
 
 .map-container-wrapper {
@@ -466,7 +441,7 @@ image, video, img {
 }
 
 .location-label {
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #9ca3af;
 }
 
@@ -486,13 +461,13 @@ image, video, img {
 }
 
 .distance-text {
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #10b981;
   font-weight: 600;
 }
 
 .distance-icon {
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #10b981;
 }
 

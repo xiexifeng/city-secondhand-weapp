@@ -1,22 +1,23 @@
 /* pages/wish-wall/wish-wall.wxss */
 
 page {
-  background-color: #f3f4f6;
+  background-color: #ffffff;
 }
 
 .wish-wall-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #f3f4f6;
+  background-color: #ffffff;
 }
 
 /* Header */
 .header {
   background-color: white;
-  border-bottom: 1rpx solid #e5e7eb;
+  border-bottom: 1rpx solid #eef2f7;
   padding: 16rpx;
   padding-top: 32rpx;
+  box-shadow: 0 1rpx 2rpx rgba(15, 23, 42, 0.03);
   z-index: 10;
   position: sticky;
   top: 0;
@@ -51,19 +52,20 @@ page {
   gap: 8rpx;
   background-color: #10b981;
   color: white;
-  padding: 10rpx 18rpx;
+  padding: 10rpx 16rpx;
   border-radius: 8rpx;
-  font-size: 15rpx;
+  font-size: 24rpx;
   font-weight: 600;
+  box-shadow: 0 2rpx 6rpx rgba(16, 185, 129, 0.2);
 }
 
 .publish-icon {
-  font-size: 18rpx;
+  font-size: 24rpx;
   font-weight: bold;
 }
 
 .publish-text {
-  font-size: 23rpx;
+  font-size: 24rpx;
 }
 
 /* Sort Container */
@@ -75,11 +77,12 @@ page {
 .sort-btn {
   padding: 8rpx 16rpx;
   border-radius: 20rpx;
-  background-color: #f3f4f6;
-  color: #6b7280;
-  font-size: 23rpx;
+  background-color: #f8fafc;
+  color: #475569;
+  font-size: 24rpx;
   font-weight: 500;
   transition: all 0.2s;
+  border: 1rpx solid #eef2f7;
 }
 
 .sort-btn.active {
@@ -117,8 +120,8 @@ page {
 }
 
 .empty-text {
-  font-size: 14rpx;
-  color: #9ca3af;
+  font-size: 24rpx;
+  color: #64748b;
 }
 
 /* Wishes List */
@@ -128,11 +131,11 @@ page {
 
 .wish-card {
   background-color: white;
-  border: 1rpx solid #e5e7eb;
-  border-radius: 8rpx;
+  border: 1rpx solid #eef2f7;
+  border-radius: 12rpx;
   padding: 20rpx;
   margin-bottom: 16rpx;
-  box-shadow: none;
+  box-shadow: 0 1rpx 3rpx rgba(15, 23, 42, 0.05);
   transition: all 0.2s;
 }
 
@@ -174,7 +177,7 @@ page {
   background-color: #d1fae5;
   color: #065f46;
   border-radius: 20rpx;
-  font-size: 20rpx;
+  font-size: 24rpx;
   font-weight: 700;
 }
 
@@ -184,14 +187,14 @@ page {
   background-color: #dbeafe;
   color: #0c4a6e;
   border-radius: 20rpx;
-  font-size: 20rpx;
+  font-size: 24rpx;
   font-weight: 700;
 }
 
 /* Description */
 .wish-description {
   font-size: 24rpx;
-  color: #6b7280;
+  color: #475569;
   display: block;
   margin-bottom: 16rpx;
   line-height: 1.6;
@@ -204,7 +207,7 @@ page {
   justify-content: space-between;
   margin-bottom: 12rpx;
   padding-bottom: 12rpx;
-  border-bottom: 1rpx solid #e5e7eb;
+  border-bottom: 1rpx solid #eef2f7;
 }
 
 .budget-info {
@@ -225,8 +228,8 @@ page {
 }
 
 .meta-item {
-  font-size: 20rpx;
-  color: #9ca3af;
+  font-size: 24rpx;
+  color: #64748b;
   font-weight: 500;
 }
 
@@ -252,7 +255,7 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16rpx;
+  font-size: 24rpx;
   font-weight: 600;
   flex-shrink: 0;
 }
@@ -263,15 +266,15 @@ page {
 }
 
 .user-name {
-  font-size: 22rpx;
+  font-size: 24rpx;
   font-weight: 600;
   color: #1f2937;
   display: block;
 }
 
 .user-status {
-  font-size: 18rpx;
-  color: #9ca3af;
+  font-size: 24rpx;
+  color: #64748b;
   display: block;
   margin-top: 2rpx;
 }
@@ -284,22 +287,23 @@ page {
   color: white;
   padding: 12rpx 16rpx;
   border-radius: 8rpx;
-  font-size: 20rpx;
+  font-size: 24rpx;
   font-weight: 700;
+  box-shadow: 0 2rpx 6rpx rgba(16, 185, 129, 0.18);
 }
 
 .contact-icon {
-  font-size: 16rpx;
+  font-size: 24rpx;
 }
 
 .contact-text {
-  font-size: 23rpx;
+  font-size: 24rpx;
 }
 
 /* Tips Container */
 .tips-container {
   background-color: white;
-  border-top: 1rpx solid #e5e7eb;
+  border-top: 1rpx solid #eef2f7;
   padding: 16rpx;
   margin-top: 12rpx;
 }

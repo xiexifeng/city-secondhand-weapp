@@ -1,14 +1,14 @@
 /* pages/messages/messages.wxss */
 
 page {
-  background-color: #f9fafb;
+  background-color: #ffffff;
 }
 
 .messages-container {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background-color: #f9fafb;
+  background-color: #ffffff;
 }
 
 /* Header */
@@ -17,11 +17,12 @@ page {
   align-items: center;
   justify-content: space-between;
   background-color: white;
-  border-bottom: 1rpx solid #e5e7eb;
+  border-bottom: 1rpx solid #eef2f7;
   padding: 12rpx 16rpx;
   z-index: 10;
   position: sticky;
   top: 0;
+  box-shadow: 0 1rpx 2rpx rgba(15, 23, 42, 0.03);
 }
 
 .header-left,
@@ -31,26 +32,6 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.back-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40rpx;
-  height: 40rpx;
-  border-radius: 8rpx;
-  transition: background-color 0.2s;
-}
-
-.back-btn:active {
-  background-color: #f3f4f6;
-}
-
-.back-btn text {
-  font-size: 24rpx;
-  color: #0ea5e9;
-  font-weight: bold;
 }
 
 .header-content {
@@ -65,13 +46,13 @@ page {
   display: block;
   font-size: 32rpx;
   font-weight: bold;
-  color: #0ea5e9;
+  color: #1f2937;
 }
 
 .header-subtitle {
   display: block;
-  font-size: 20rpx;
-  color: #9ca3af;
+  font-size: 22rpx;
+  color: #64748b;
   margin-top: 2rpx;
 }
 
@@ -81,12 +62,12 @@ page {
   grid-template-columns: repeat(4, 1fr);
   gap: 12rpx;
   padding: 16rpx;
-  background-color: #f9fafb;
+  background-color: #ffffff;
 }
 
 .stat-card {
   background-color: white;
-  border: 1rpx solid #e5e7eb;
+  border: 1rpx solid #eef2f7;
   border-radius: 12rpx;
   padding: 16rpx 12rpx;
   text-align: center;
@@ -95,6 +76,7 @@ page {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 1rpx 3rpx rgba(15, 23, 42, 0.05);
 }
 
 .stat-card:active {
@@ -124,16 +106,16 @@ page {
 
 .stat-label {
   display: block;
-  font-size: 20rpx;
-  color: #9ca3af;
+  font-size: 22rpx;
+  color: #64748b;
 }
 
 /* Filter Tabs */
 .filter-tabs {
   display: flex;
   padding: 0 16rpx;
-  background-color: #f9fafb;
-  border-bottom: 1rpx solid #e5e7eb;
+  background-color: #ffffff;
+  border-bottom: 1rpx solid #eef2f7;
   white-space: nowrap;
   overflow-x: auto;
 }
@@ -142,7 +124,7 @@ page {
   padding: 8rpx 16rpx;
   margin-right: 10rpx;
   border-radius: 20rpx;
-  background-color: #f3f4f6;
+  background-color: #f8fafc;
   color: #1f2937;
   font-size: 26rpx;
   font-weight: 600;
@@ -152,7 +134,7 @@ page {
   border: 1rpx solid transparent;
   display: inline-flex;
   align-items: center;
-  height: 36rpx;
+  height: 44rpx;
 }
 
 .filter-tab.active {
@@ -184,10 +166,11 @@ page {
   align-items: flex-start;
   gap: 12rpx;
   background-color: white;
-  border: 1rpx solid #e5e7eb;
+  border: 1rpx solid #eef2f7;
   border-radius: 12rpx;
   padding: 16rpx;
   transition: all 0.2s;
+  box-shadow: 0 1rpx 3rpx rgba(15, 23, 42, 0.04);
 }
 
 .message-item.unread {
@@ -209,7 +192,7 @@ page {
   border-radius: 8rpx;
   font-size: 24rpx;
   flex-shrink: 0;
-  background-color: #f3f4f6;
+  background-color: #f8fafc;
 }
 
 .message-icon.report {
@@ -268,7 +251,7 @@ page {
 .message-description {
   display: block;
   font-size: 24rpx;
-  color: #6b7280;
+  color: #475569;
   margin-top: 4rpx;
   line-height: 1.4;
   overflow: hidden;
@@ -290,7 +273,7 @@ page {
   display: inline-block;
   padding: 4rpx 8rpx;
   border-radius: 4rpx;
-  font-size: 20rpx;
+  font-size: 22rpx;
   font-weight: 500;
 }
 
@@ -316,7 +299,7 @@ page {
 
 .status-date {
   display: block;
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #9ca3af;
 }
 
@@ -328,7 +311,7 @@ page {
   align-items: center;
   justify-content: center;
   border-radius: 8rpx;
-  font-size: 18rpx;
+  font-size: 22rpx;
   flex-shrink: 0;
   transition: all 0.2s;
 }
@@ -371,6 +354,7 @@ page {
   display: flex;
   flex-direction: column;
   animation: slideUp 0.3s ease-out;
+  box-shadow: 0 -6rpx 24rpx rgba(15, 23, 42, 0.16);
 }
 
 @keyframes slideUp {
@@ -427,7 +411,7 @@ page {
 
 .section-label {
   display: block;
-  font-size: 20rpx;
+  font-size: 22rpx;
   color: #9ca3af;
   margin-bottom: 4rpx;
   font-weight: 600;

@@ -1,47 +1,23 @@
 page {
-  background-color: #f3f4f6;
+  background-color: #f9fafb;
 }
 
 .privacy-settings-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #f3f4f6;
+  background-color: #f9fafb;
   padding-bottom: 100rpx;
-}
-
-/* Header */
-.header {
-  background-color: white;
-  border-bottom: 1rpx solid #e5e7eb;
-  padding: 12rpx 16rpx;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 8rpx;
-}
-
-.back-arrow {
-  font-size: 32rpx;
-  color: #0ea5e9;
-  font-weight: bold;
-}
-
-.header-title {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #1f2937;
 }
 
 /* Settings List */
 .settings-list {
   background-color: white;
-  margin-top: 16rpx;
+  margin: 16rpx;
+  border: 1rpx solid #e5e7eb;
+  border-radius: 12rpx;
+  overflow: hidden;
+  box-shadow: 0 1rpx 3rpx rgba(15, 23, 42, 0.05);
 }
 
 .setting-item {
@@ -66,13 +42,13 @@ page {
 .setting-title {
   font-size: 28rpx;
   font-weight: 600;
-  color: var(--text-color);
+  color: #1f2937;
   display: block;
 }
 
 .setting-description {
   font-size: 24rpx;
-  color: var(--text-color-secondary);
+  color: #6b7280;
   display: block;
 }
 
@@ -83,7 +59,6 @@ page {
   background-color: #d1d5db;
   border-radius: 14rpx;
   position: relative;
-  cursor: pointer;
   transition: background-color 0.3s ease;
   margin-left: 16rpx;
 }
@@ -111,10 +86,12 @@ page {
 /* Tips */
 .tips-section {
   background-color: #fef3c7;
-  border-left: 4rpx solid var(--warning-color);
+  border-left: 4rpx solid #f59e0b;
+  border: 1rpx solid #fcd34d;
   padding: 16rpx;
   margin: 16rpx;
   border-radius: 8rpx;
+  box-shadow: 0 1rpx 2rpx rgba(217, 119, 6, 0.08);
 }
 
 .tips-title {
@@ -144,7 +121,6 @@ page {
   font-size: 28rpx;
   font-weight: 600;
   text-align: center;
-  cursor: pointer;
   transition: all 0.2s ease;
 }
 

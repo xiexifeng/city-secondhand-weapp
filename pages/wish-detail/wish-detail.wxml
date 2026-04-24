@@ -1,17 +1,5 @@
 <!--pages/wish-detail/wish-detail.wxml-->
 <view class="wish-detail-container">
-  <!-- 顶部导航栏 -->
-  <view class="detail-header">
-  <!--
-    <view class="header-left">
-      <view class="back-btn" bindtap="goBack">
-        <text>←</text>
-      </view>
-    </view>
-    <view class="header-title">心愿详情</view> 
-  -->
-  </view>
-
   <!-- 内容容器 -->
   <view class="detail-content">
     <!-- 标题和标签 -->
@@ -19,6 +7,9 @@
       <view class="title-header">
         <text class="item-title">{{wish.title}}</text>
         <view class="action-buttons">
+          <view class="share-btn" bindtap="handleShare">
+            <image class="share-icon-image" src="/assets/images/share.svg" mode="aspectFit" />
+          </view>
           <view class="like-btn {{liked ? 'liked' : ''}}" bindtap="handleLike">
             <text>{{liked ? '❤️' : '🤍'}}</text>
           </view>

@@ -1,13 +1,5 @@
 <!--pages/settings/settings.wxml-->
 <view class="settings-container">
-  <!-- Header -->
-  <view class="header">
-    <view class="header-left" bindtap="goBack">
-      <text class="back-arrow">‹</text>
-      <text class="header-title">账户设置</text>
-    </view>
-  </view>
-
   <!-- Settings List -->
   <view class="settings-content">
     <!-- Account Section -->

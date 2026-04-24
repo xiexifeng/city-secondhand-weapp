@@ -2,17 +2,6 @@
 <view class="publish-container">
   <!-- 发布方式选择页面 -->
   <view wx:if="{{!publishType}}" class="publish-type-page">
-    <!-- 顶部导航栏 -->
-    <view class="publish-header">
-      <view class="header-left">
-          <view class="back-btn" bindtap="handleBack">
-            <text class="back-text">←</text>
-          </view>
-        </view>
-      <view class="header-title">发布物品</view>
-      <view class="header-right"></view>
-    </view>
-
     <!-- 发布方式选择 -->
     <view class="publish-content">
       <text class="publish-subtitle">选择发布方式</text>
@@ -51,24 +40,19 @@
 
   <!-- 发布表单页面 -->
   <view wx:else class="publish-form-page">
-    <!-- 顶部导航栏 -->
-    <view class="publish-header">
-      <view class="header-left">
-          <view class="back-btn" bindtap="backToTypeSelect">
-            <text class="back-text">←</text>
-          </view>
-        </view>
-      <view class="header-title">
-        <text wx:if="{{publishType === 'sell'}}">出售物品</text>
-        <text wx:if="{{publishType === 'exchange'}}">以物换物</text>
-        <text wx:if="{{publishType === 'wish'}}">发布心愿</text>
-      </view>
-      <view class="header-right"></view>
-    </view>
-
     <!-- 表单内容 -->
     <scroll-view class="form-scroll" scroll-y scroll-into-view="{{scrollToView}}" scroll-with-animation="true">
       <view class="form-container">
+        <view class="form-top-actions">
+          <view class="switch-type-btn" bindtap="backToTypeSelect">
+            <text class="switch-type-icon">‹</text>
+            <text class="switch-type-text">返回选择发布方式</text>
+          </view>
+          <text class="form-page-title">
+            {{publishType === 'sell' ? '出售物品' : (publishType === 'exchange' ? '以物换物' : '发布心愿')}}
+          </text>
+        </view>
+
         <!-- 图片上传 (不显示在求换墙) -->
         <view wx:if="{{publishType !== 'wish'}}" class="form-section">
           <view class="section-header">

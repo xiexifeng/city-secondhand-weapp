@@ -1,23 +1,5 @@
 <!--pages/item-detail/item-detail.wxml-->
 <view class="item-detail-container">
-  <!-- 顶部导航栏 -->
-  <view class="detail-header">
-  <!--
-    <view class="header-left">
-      <view class="back-btn" bindtap="handleBack">
-        <text>←</text>
-      </view>
-    </view>
-    <view class="header-title">物品详情</view>
-    -->
-    <view class="header-left"></view>
-    <view class="header-right">
-      <view class="header-action" bindtap="handleShare">
-        <text>分享</text>
-      </view>
-    </view>
-  </view>
-
   <!-- 内容容器 -->
   <view class="detail-content">
     <!-- 图片轮播 -->
@@ -61,6 +43,9 @@
       <view class="title-header">
         <text class="item-title">{{item.title}}</text>
         <view class="action-buttons">
+          <view class="share-btn" bindtap="handleShare">
+            <image class="share-icon-image" src="/assets/images/share.svg" mode="aspectFit" />
+          </view>
           <view class="like-btn {{liked ? 'liked' : ''}}" bindtap="handleLike">
             <text>{{liked ? '❤️' : '🤍'}}</text>
           </view>

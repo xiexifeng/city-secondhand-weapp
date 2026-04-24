@@ -1,13 +1,5 @@
 <!--pages/about-us/about-us.wxml-->
 <view class="about-us-container">
-  <!-- Header -->
-  <view class="header">
-    <view class="header-left" bindtap="goBack">
-      <text class="back-arrow">‹</text>
-      <text class="header-title">关于我们</text>
-    </view>
-  </view>
-
   <!-- Content -->
   <view class="content">
     <!-- Logo Section -->

@@ -1,13 +1,5 @@
 <!--pages/edit-profile/edit-profile.wxml-->
 <view class="edit-profile-container">
-  <!-- Header -->
-  <view class="header">
-    <view class="header-left" bindtap="goBack">
-      <text class="back-arrow">‹</text>
-      <text class="header-title">编辑个人信息</text>
-    </view>
-  </view>
-
   <!-- Avatar Card -->
   <view class="avatar-card">
     <view class="avatar-container">

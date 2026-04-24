@@ -12,35 +12,6 @@ page {
   padding-bottom: 100rpx;
 }
 
-/* Header */
-.header {
-  background-color: white;
-  border-bottom: 1rpx solid #e5e7eb;
-  padding: 16rpx 20rpx;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 10rpx;
-  cursor: pointer;
-}
-
-.back-arrow {
-  font-size: 36rpx;
-  color: #0ea5e9;
-  font-weight: bold;
-}
-
-.header-title {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #1f2937;
-}
-
 /* Avatar Card */
 .avatar-card {
   background-color: white;

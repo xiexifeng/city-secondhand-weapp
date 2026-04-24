@@ -313,6 +313,21 @@ Page({
   },
 
   /**
+   * Handle share
+   */
+  handleShare: function() {
+    wx.showShareMenu({
+      withShareTicket: false,
+      menus: ['shareAppMessage', 'shareTimeline']
+    });
+    wx.showToast({
+      title: '请点击右上角进行分享',
+      icon: 'none',
+      duration: 1600
+    });
+  },
+
+  /**
    * Handle report
    */
   handleReport: function() {
@@ -435,5 +450,12 @@ Page({
       icon: 'success',
       duration: 2000
     });
+  },
+  onShareAppMessage: function() {
+    const wish = this.data.wish || {};
+    return {
+      title: wish.title ? `${wish.title} - 心愿详情` : '心愿详情',
+      path: `/pages/wish-detail/wish-detail?id=${wish.id || ''}`
+    };
   }
 });

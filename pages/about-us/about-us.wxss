@@ -10,34 +10,6 @@ page {
   padding-bottom: 100rpx;
 }
 
-/* Header */
-.header {
-  background-color: white;
-  border-bottom: 1rpx solid #e5e7eb;
-  padding: 12rpx 16rpx;
-  position: sticky;
-  top: 0;
-  z-index: 10;
-}
-
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 8rpx;
-}
-
-.back-arrow {
-  font-size: 32rpx;
-  color: #0ea5e9;
-  font-weight: bold;
-}
-
-.header-title {
-  font-size: 28rpx;
-  font-weight: 600;
-  color: #1f2937;
-}
-
 /* Content */
 .content {
   flex: 1;
