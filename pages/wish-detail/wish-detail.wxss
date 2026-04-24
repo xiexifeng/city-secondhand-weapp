@@ -104,13 +104,28 @@ image, video, img {
   line-height: 1.4;
 }
 
-.like-btn {
+.action-buttons {
+  display: flex;
+  gap: 12rpx;
+  align-items: center;
+}
+
+.like-btn, .collect-btn {
   font-size: 32rpx;
-  margin-left: 12rpx;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.like-btn:active, .collect-btn:active {
+  transform: scale(1.1);
 }
 
 .like-btn.liked {
   color: #ef4444;
+}
+
+.collect-btn.collected {
+  color: #f59e0b;
 }
 
 .tags-row {

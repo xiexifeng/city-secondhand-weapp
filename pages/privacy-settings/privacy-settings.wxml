@@ -33,7 +33,7 @@
     </view>
 
     <!-- Show Contact -->
-    <view class="setting-item">
+    <!-- <view class="setting-item">
       <view class="setting-content">
         <text class="setting-title">显示联系方式</text>
         <text class="setting-description">允许其他用户看到你的微信和电话</text>
@@ -41,7 +41,7 @@
       <view class="toggle-switch {{settings.showContact ? 'active' : ''}}" bindtap="toggleSetting" data-key="showContact">
         <view class="toggle-slider"></view>
       </view>
-    </view>
+    </view> -->
 
     <!-- Allow Recommendations -->
     <view class="setting-item">

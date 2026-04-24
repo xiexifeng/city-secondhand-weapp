@@ -28,9 +28,12 @@ Page({
       },
       wishes: {
         count: 3,
-        matches: 8,
-        followers: 5,
-        newRecommendations: 2
+        views: 156,
+        viewsTrend: 25,
+        interested: 18,
+        interestedTrend: 5,
+        collected: 10,
+        collectedTrend: 2
       }
     },
     weeklyTasks: [

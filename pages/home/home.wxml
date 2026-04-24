@@ -97,8 +97,7 @@
           />
           <!-- 急出标签 -->
           <view wx:if="{{item.urgent}}" class="item-badge">急出</view>
-          <!-- 收藏按钮 -->
-          <view class="item-favorite">❤️</view>
+
         </view>
 
         <!-- 信息 -->

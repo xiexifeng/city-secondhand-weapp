@@ -23,7 +23,8 @@ const mockWishes = [
     },
     stats: {
       views: 156,
-      favorites: 23
+      likes: 23,
+      favorites: 15
     }
   },
   {
@@ -48,7 +49,8 @@ const mockWishes = [
     },
     stats: {
       views: 89,
-      favorites: 15
+      likes: 15,
+      favorites: 10
     }
   },
   {
@@ -73,7 +75,8 @@ const mockWishes = [
     },
     stats: {
       views: 234,
-      favorites: 42
+      likes: 42,
+      favorites: 28
     }
   },
   {
@@ -98,7 +101,8 @@ const mockWishes = [
     },
     stats: {
       views: 178,
-      favorites: 31
+      likes: 31,
+      favorites: 22
     }
   },
   {
@@ -123,7 +127,8 @@ const mockWishes = [
     },
     stats: {
       views: 92,
-      favorites: 18
+      likes: 18,
+      favorites: 12
     }
   },
   {
@@ -148,7 +153,8 @@ const mockWishes = [
     },
     stats: {
       views: 145,
-      favorites: 27
+      likes: 27,
+      favorites: 18
     }
   },
   {
@@ -173,7 +179,8 @@ const mockWishes = [
     },
     stats: {
       views: 189,
-      favorites: 35
+      likes: 35,
+      favorites: 25
     }
   },
   {
@@ -198,7 +205,8 @@ const mockWishes = [
     },
     stats: {
       views: 123,
-      favorites: 21
+      likes: 21,
+      favorites: 15
     }
   },
   {
@@ -223,7 +231,8 @@ const mockWishes = [
     },
     stats: {
       views: 201,
-      favorites: 38
+      likes: 38,
+      favorites: 26
     }
   },
   {
@@ -248,7 +257,8 @@ const mockWishes = [
     },
     stats: {
       views: 256,
-      favorites: 47
+      likes: 47,
+      favorites: 32
     }
   }
 ];
@@ -260,7 +270,8 @@ Page({
     showSafetyDetails: false,
     isLoggedIn: true, // 模拟登录状态
     markers: [],
-    liked: false
+    liked: false,
+    collected: false
   },
 
   onLoad: function(options) {
@@ -387,20 +398,40 @@ Page({
   },
 
   /**
-   * Handle like
+   * Handle like (interested)
    */
   handleLike: function() {
     const currentLiked = this.data.liked;
     const newLiked = !currentLiked;
     
-    // 更新收藏状态
+    // 更新感兴趣状态
     this.setData({
       liked: newLiked
     });
     
+    // 模拟感兴趣/取消感兴趣的反馈
+    wx.showToast({
+      title: newLiked ? '已标记感兴趣' : '已取消感兴趣',
+      icon: 'success',
+      duration: 2000
+    });
+  },
+
+  /**
+   * Handle collect (favorite)
+   */
+  handleCollect: function() {
+    const currentCollected = this.data.collected;
+    const newCollected = !currentCollected;
+    
+    // 更新收藏状态
+    this.setData({
+      collected: newCollected
+    });
+    
     // 模拟收藏/取消收藏的反馈
     wx.showToast({
-      title: newLiked ? '收藏成功' : '取消收藏',
+      title: newCollected ? '收藏成功' : '取消收藏',
       icon: 'success',
       duration: 2000
     });

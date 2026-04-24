@@ -74,16 +74,16 @@
 
       <view class="data-grid">
         <view class="data-item">
-          <view class="data-value">{{publishData.wishes.matches}}</view>
-          <text class="data-label">匹配</text>
+          <view class="data-value">{{publishData.wishes.views}}</view>
+          <text class="data-label">浏览</text>
         </view>
         <view class="data-item">
-          <view class="data-value">{{publishData.wishes.newRecommendations}}</view>
-          <text class="data-label">新推荐</text>
+          <view class="data-value">{{publishData.wishes.interested}}</view>
+          <text class="data-label">感兴趣</text>
         </view>
         <view class="data-item">
-          <view class="data-value">{{publishData.wishes.followers}}</view>
-          <text class="data-label">关注者</text>
+          <view class="data-value">{{publishData.wishes.collected}}</view>
+          <text class="data-label">收藏</text>
         </view>
       </view>
     </view>
@@ -96,7 +96,7 @@
         <text class="section-icon">⚡</text>
         <text class="section-label">本周任务</text>
       </view>
-      <text class="view-all" bindtap="navigateToTasks">查看全部 →</text>
+      <!-- <text class="view-all" bindtap="navigateToTasks">查看全部 →</text> -->
     </view>
 
     <view class="tasks-list">

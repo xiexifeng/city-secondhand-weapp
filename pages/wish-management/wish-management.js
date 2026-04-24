@@ -18,6 +18,7 @@ Page({
         createdAt: '2024-03-20',
         views: 45,
         interests: 3,
+        favorites: 2,
         reviewStatus: '已通过'
       },
       {
@@ -31,6 +32,7 @@ Page({
         createdAt: '2024-03-18',
         views: 28,
         interests: 2,
+        favorites: 1,
         reviewStatus: '待审核'
       },
       {
@@ -43,6 +45,7 @@ Page({
         createdAt: '2024-03-15',
         views: 12,
         interests: 0,
+        favorites: 0,
         reviewStatus: '审核不通过',
         rejectionReason: '描述信息不清楚'
       },
@@ -57,6 +60,7 @@ Page({
         createdAt: '2024-03-10',
         views: 35,
         interests: 1,
+        favorites: 1,
         reviewStatus: '审核不通过',
         rejectionReason: '缺少详细描述'
       }

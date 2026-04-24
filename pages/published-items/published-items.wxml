@@ -63,8 +63,9 @@
             </view>
 
             <view class="item-stats">
-              <text class="stat-item">👁 {{item.views}}</text>
+              <text class="stat-item">👁️ {{item.views}}</text>
               <text class="stat-item">❤️ {{item.likes}}</text>
+              <text class="stat-item">⭐ {{item.favorites}}</text>
             </view>
           </view>
 

@@ -18,8 +18,13 @@
     <view class="title-section">
       <view class="title-header">
         <text class="item-title">{{wish.title}}</text>
-        <view class="like-btn {{liked ? 'liked' : ''}}" bindtap="handleLike">
-          <text>{{liked ? '❤️' : '🤍'}}</text>
+        <view class="action-buttons">
+          <view class="like-btn {{liked ? 'liked' : ''}}" bindtap="handleLike">
+            <text>{{liked ? '❤️' : '🤍'}}</text>
+          </view>
+          <view class="collect-btn {{collected ? 'collected' : ''}}" bindtap="handleCollect">
+            <text>{{collected ? '⭐' : '☆'}}</text>
+          </view>
         </view>
       </view>
 
@@ -43,6 +48,10 @@
         </view>
         <view class="info-item">
           <text class="info-label">❤️</text>
+          <text class="info-value">{{wish.stats.likes}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">⭐</text>
           <text class="info-value">{{wish.stats.favorites}}</text>
         </view>
       </view>

@@ -66,8 +66,9 @@
             <view class="wish-footer">
               <text class="wish-date">{{item.createdAt}}</text>
               <view class="wish-stats">
-                <text class="stat-item">👁 {{item.views}}</text>
+                <text class="stat-item">👁️ {{item.views}}</text>
                 <text class="stat-item">❤️ {{item.interests}}</text>
+                <text class="stat-item">⭐ {{item.favorites}}</text>
               </view>
             </view>
 
@@ -131,8 +132,9 @@
             <view class="wish-footer">
               <text class="wish-date">{{item.createdAt}}</text>
               <view class="wish-stats">
-                <text class="stat-item">👁 {{item.views}}</text>
+                <text class="stat-item">👁️ {{item.views}}</text>
                 <text class="stat-item">❤️ {{item.interests}}</text>
+                <text class="stat-item">⭐ {{item.favorites}}</text>
               </view>
             </view>
 

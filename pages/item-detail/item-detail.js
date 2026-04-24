@@ -36,8 +36,8 @@ Page({
       },
       stats: {
         views: 245,
-        favorites: 18,
-        likes: 12
+        likes: 18,
+        favorites: 12
       }
     },
     markers: [
@@ -53,6 +53,7 @@ Page({
     ],
     currentImageIndex: 0,
     liked: false,
+    collected: false,
     showSafetyDetails: true,
     copied: false,
     // 举报相关
@@ -177,12 +178,23 @@ Page({
     this.setData({ currentImageIndex: index });
   },
 
-  // Like/favorite
+  // Like (interested)
   handleLike: function() {
     const { liked } = this.data;
     this.setData({ liked: !liked });
     wx.showToast({
-      title: liked ? '已取消收藏' : '已收藏',
+      title: liked ? '已取消感兴趣' : '已标记感兴趣',
+      icon: 'success',
+      duration: 1500
+    });
+  },
+
+  // Collect (favorite)
+  handleCollect: function() {
+    const { collected } = this.data;
+    this.setData({ collected: !collected });
+    wx.showToast({
+      title: collected ? '已取消收藏' : '已收藏',
       icon: 'success',
       duration: 1500
     });
