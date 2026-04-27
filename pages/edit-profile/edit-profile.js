@@ -22,7 +22,44 @@ Page({
       return;
     }
     // Load user profile
-    this.updateAvatarText();
+    this.getUserInfo();
+  },
+  
+  /**
+   * Get user info from API
+   */
+  getUserInfo: function() {
+    wx.showLoading({
+      title: '加载中...'
+    });
+    
+    const api = require('../../utils/api');
+    api.userAPI.getUserInfo()
+      .then(res => {
+        wx.hideLoading();
+        
+        // Update profile data
+        this.setData({
+          profile: {
+            nickname: res.nickname || '用户昵称',
+            bio: res.bio || '',
+            location: res.location || '广东省深圳市',
+            phone: res.phone || '',
+            email: res.email || '',
+            wechat: res.wechat || ''
+          }
+        });
+        
+        // Update avatar text
+        this.updateAvatarText();
+      })
+      .catch(err => {
+        wx.hideLoading();
+        wx.showToast({
+          title: '获取用户信息失败',
+          icon: 'none'
+        });
+      });
   },
 
   /**
@@ -84,39 +121,42 @@ Page({
       return;
     }
 
-    if (!profile.phone.trim()) {
-      wx.showToast({
-        title: '请输入手机号',
-        icon: 'error'
-      });
-      return;
-    }
+    // Prepare update data
+    const updateData = {
+      nickname: profile.nickname,
+      bio: profile.bio,
+      location: profile.location,
+      wechat: profile.wechat,
+      phone: profile.phone,
+      email: profile.email
+    };
 
-    if (!profile.email.trim()) {
-      wx.showToast({
-        title: '请输入邮箱',
-        icon: 'error'
-      });
-      return;
-    }
-
-    // Simulate save
+    // Call API to update user info
     wx.showLoading({
       title: '保存中...'
     });
 
-    setTimeout(() => {
-      wx.hideLoading();
-      wx.showToast({
-        title: '保存成功',
-        icon: 'success'
+    const api = require('../../utils/api');
+    api.userAPI.updateUserInfo(updateData)
+      .then(res => {
+        wx.hideLoading();
+        wx.showToast({
+          title: '保存成功',
+          icon: 'success'
+        });
+        
+        // Navigate back to profile
+        setTimeout(() => {
+          wx.navigateBack();
+        }, 1500);
+      })
+      .catch(err => {
+        wx.hideLoading();
+        wx.showToast({
+          title: '保存失败',
+          icon: 'none'
+        });
       });
-      
-      // Navigate back to profile
-      setTimeout(() => {
-        wx.navigateBack();
-      }, 1500);
-    }, 1000);
   },
 
   /**

@@ -72,6 +72,7 @@ Page({
       title: '登录中...'
     });
 
+    // Simulate successful login (to be replaced with actual API call)
     setTimeout(() => {
       wx.hideLoading();
       
@@ -86,7 +87,7 @@ Page({
       });
 
       setTimeout(() => {
-        wx.redirectTo({
+        wx.switchTab({
           url: '/pages/home/home'
         });
       }, 1500);
@@ -165,20 +166,28 @@ Page({
       title: '发送验证码中...'
     });
 
-    // Simulate API call
-    setTimeout(() => {
-      wx.hideLoading();
-      
-      this.setData({ codeSent: true });
-      wx.showToast({
-        title: '验证码已发送',
-        icon: 'success',
-        duration: 1500
-      });
+    // Call real API
+    const api = require('../../utils/api');
+    api.userAPI.sendSms(phoneNumber)
+      .then(res => {
+        wx.hideLoading();
+        this.setData({ codeSent: true });
+        wx.showToast({
+          title: '验证码已发送',
+          icon: 'success',
+          duration: 1500
+        });
 
-      // Start countdown
-      this.startCodeCountdown();
-    }, 1000);
+        // Start countdown
+        this.startCodeCountdown();
+      })
+      .catch(err => {
+        wx.hideLoading();
+        wx.showToast({
+          title: '发送验证码失败',
+          icon: 'none'
+        });
+      });
   },
 
   /**
@@ -228,26 +237,42 @@ Page({
 
     this.setData({ isLoggingIn: true });
 
-    // Simulate API call
-    setTimeout(() => {
-      this.setData({ isLoggingIn: false });
+    // Call real API
+    const api = require('../../utils/api');
+    const app = getApp();
+    api.userAPI.loginOrRegister(phoneNumber, verificationCode)
+      .then(res => {
+        this.setData({ isLoggingIn: false });
 
-      // Simulate successful login
-      wx.setStorageSync('token', 'sms_token_' + Date.now());
-      wx.setStorageSync('userPhone', phoneNumber);
+        // Save token and user info
+        wx.setStorageSync('token', res.token);
+        wx.setStorageSync('userPhone', res.phone);
+        wx.setStorageSync('userInfo', res.userContext);
+        
+        // Update global data
+        app.globalData.token = res.token;
+        app.globalData.userInfo = res.userContext;
+        app.globalData.userPhone = res.phone;
 
-      wx.showToast({
-        title: '登录成功',
-        icon: 'success',
-        duration: 1500
-      });
-
-      setTimeout(() => {
-        wx.redirectTo({
-          url: '/pages/home/home'
+        wx.showToast({
+          title: '登录成功',
+          icon: 'success',
+          duration: 1500
         });
-      }, 1500);
-    }, 1500);
+
+        setTimeout(() => {
+          wx.switchTab({
+            url: '/pages/home/home'
+          });
+        }, 1500);
+      })
+      .catch(err => {
+        this.setData({ isLoggingIn: false });
+        wx.showToast({
+          title: '登录失败',
+          icon: 'none'
+        });
+      });
   },
 
   /**

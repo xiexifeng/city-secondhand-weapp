@@ -16,7 +16,7 @@ function request(url, options = {}) {
 
   return new Promise((resolve, reject) => {
     const requestUrl = url.startsWith('http') ? url : app.globalData.baseUrl + url
-    const token = wx.getStorageSync('token')
+    const token = app.globalData.token || wx.getStorageSync('token')
 
     const requestHeader = {
       'Content-Type': 'application/json',
@@ -24,7 +24,7 @@ function request(url, options = {}) {
     }
 
     if (token) {
-      requestHeader['Authorization'] = `Bearer ${token}`
+      requestHeader['Authorization'] = token
     }
 
     wx.request({
@@ -35,11 +35,16 @@ function request(url, options = {}) {
       timeout,
       success: (res) => {
         if (res.statusCode === 200 || res.statusCode === 201) {
-          resolve(res.data)
+          // Extract data from response wrapper
+          const responseData = res.data;
+          const actualData = responseData.data || responseData;
+          resolve(actualData)
         } else if (res.statusCode === 401) {
           // 未授权
           wx.removeStorageSync('token')
           wx.removeStorageSync('userInfo')
+          app.globalData.token = null
+          app.globalData.userInfo = null
           wx.reLaunch({ url: '/pages/login/login' })
           reject({ message: '请重新登录' })
         } else {
@@ -104,40 +109,45 @@ const itemAPI = {
 
 // 用户相关 API
 const userAPI = {
-  // 登录
-  login(data) {
-    return request('/api/auth/login', {
-      method: 'POST',
-      data
+  // 发送短信验证码
+  sendSms(phoneNumbers) {
+    return request('/client/auth/send-sms?phoneNumbers=' + phoneNumbers, {
+      method: 'POST'
     })
   },
 
-  // 微信登录
-  wechatLogin(data) {
-    return request('/api/auth/wechat-login', {
-      method: 'POST',
-      data
+  // 登录或注册-手机号+验证码
+  loginOrRegister(phoneNumbers, verifyCode) {
+    return request('/client/auth/login-or-register?phoneNumbers=' + phoneNumbers + '&verifyCode=' + verifyCode, {
+      method: 'POST'
+    })
+  },
+
+  // 登录-手机号+密码
+  loginByPassword(phoneNumbers, password) {
+    return request('/client/auth/login-by-password?phoneNumbers=' + phoneNumbers + '&password=' + password, {
+      method: 'POST'
     })
   },
 
   // 获取用户信息
   getUserInfo() {
-    return request('/api/users/me', {
+    return request('/client/user/get', {
       method: 'GET'
     })
   },
 
   // 更新用户信息
   updateUserInfo(data) {
-    return request('/api/users/me', {
-      method: 'PUT',
+    return request('/client/user/update', {
+      method: 'POST',
       data
     })
   },
 
   // 获取用户发布的物品
   getUserItems(userId) {
-    return request(`/api/users/${userId}/items`, {
+    return request(`/client/item/my-list`, {
       method: 'GET'
     })
   }

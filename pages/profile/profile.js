@@ -113,6 +113,41 @@ Page({
       'userStats.levelIcon': levelIcon,
       'userStats.levelLabel': levelLabel
     });
+    
+    // Get user info from API
+    this.getUserInfo();
+  },
+  
+  /**
+   * Get user info from API
+   */
+  getUserInfo: function() {
+    wx.showLoading({
+      title: '加载中...'
+    });
+    
+    const api = require('../../utils/api');
+    api.userAPI.getUserInfo()
+      .then(res => {
+        wx.hideLoading();
+        
+        // Update user info
+        this.setData({
+          user: {
+            nickname: res.nickname || '用户昵称',
+            followers: res.followers || 0,
+            following: res.following || 0,
+            avatar: res.avatarUrl || ''
+          }
+        });
+      })
+      .catch(err => {
+        wx.hideLoading();
+        wx.showToast({
+          title: '获取用户信息失败',
+          icon: 'none'
+        });
+      });
   },
 
   /**

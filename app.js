@@ -3,7 +3,8 @@ App({
   globalData: {
     userInfo: null,
     token: null,
-    baseUrl: 'https://api.example.com', // 需要替换为实际的 API 地址
+    userPhone: null,
+    baseUrl: 'http://localhost:8080/tradex', // xtrade后端地址
     editItemId: null,
     editWishId: null
   },
@@ -16,10 +17,12 @@ App({
   checkLogin() {
     const token = wx.getStorageSync('token')
     const userInfo = wx.getStorageSync('userInfo')
+    const userPhone = wx.getStorageSync('userPhone')
     
     if (token && userInfo) {
       this.globalData.token = token
       this.globalData.userInfo = userInfo
+      this.globalData.userPhone = userPhone
     }
   },
 
