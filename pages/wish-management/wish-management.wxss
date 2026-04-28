@@ -243,12 +243,12 @@
   font-weight: 600;
 }
 
-.tag-method {
+.tag-want {
   background-color: #dbeafe;
   color: #0c4a6e;
 }
 
-.tag-price {
+.tag-budget {
   background-color: #fed7aa;
   color: #92400e;
 }
@@ -258,19 +258,34 @@
   color: #166534;
 }
 
-.tag.review-pending {
+.tag.wish-pending {
   background-color: #fef3c7;
   color: #92400e;
 }
 
-.tag.review-approved {
+.tag.wish-active {
   background-color: #dcfce7;
   color: #166534;
 }
 
-.tag.review-rejected {
+.tag.wish-rejected {
   background-color: #fee2e2;
   color: #991b1b;
+}
+
+.tag.wish-timeout {
+  background-color: #e5e7eb;
+  color: #6b7280;
+}
+
+.tag.wish-achieved {
+  background-color: #c4b5fd;
+  color: #6d28d9;
+}
+
+.tag.wish-cancelled {
+  background-color: #e5e7eb;
+  color: #6b7280;
 }
 
 /* Rejection Reason */
@@ -364,6 +379,24 @@
 
 .action-item.completed .action-text {
   color: #166534;
+}
+
+.action-item.achieve {
+  background-color: #c4b5fd;
+  border: 1rpx solid #a78bfa;
+}
+
+.action-item.achieve .action-text {
+  color: #6d28d9;
+}
+
+.action-item.withdraw {
+  background-color: #fef3c7;
+  border: 1rpx solid #fde68a;
+}
+
+.action-item.withdraw .action-text {
+  color: #92400e;
 }
 
 .wish-date {

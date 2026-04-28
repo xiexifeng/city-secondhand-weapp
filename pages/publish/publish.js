@@ -1,39 +1,47 @@
-const { itemAPI, fileAPI } = require('../../utils/api');
+const { itemAPI, wishAPI, fileAPI } = require('../../utils/api');
 const { CATEGORIES, CONDITIONS, TAGS, MAX_LENGTHS, CONDITION_MAP } = require('../../config.js');
 
-const DEFAULT_DATA = {
-  publishType: null,
-  images: [],
-  formData: {
-    title: '',
-    description: '',
-    price: '',
-    category: '数码3C',
-    wechat: '',
-    phone: '',
-    location: '北京市朝阳区',
-    latitude: null,
-    longitude: null,
-    wantItem: '',
-    budget: '',
-    condition: '9成新',
-    contactVisibility: 'both'
-  },
-  locationDetails: {
-    province: '北京市',
-    city: '北京市',
-    district: '朝阳区'
-  },
-  agreed: false,
-  categoryIndex: 0,
-  conditionIndex: 2,
-  contactSettingsExpanded: false,
-  readCountdown: 0,
-  canPublish: false,
-  isSubmitting: false,
-  scrollToView: '',
-  editingId: null
-};
+function getDefaultData() {
+  const userInfo = wx.getStorageSync('userInfo');
+  const userPhone = userInfo.phone || wx.getStorageSync('userPhone');
+  const wechat = userInfo.wechat || '';
+  
+  return {
+    publishType: null,
+    images: [],
+    formData: {
+      title: '',
+      description: '',
+      price: '',
+      category: '数码3C',
+      wechat: wechat,
+      phone: userPhone || '',
+      location: '北京市朝阳区',
+      latitude: null,
+      longitude: null,
+      wantItem: '',
+      budget: '',
+      condition: '9成新',
+      contactVisibility: 'both'
+    },
+    locationDetails: {
+      province: '北京市',
+      city: '北京市',
+      district: '朝阳区'
+    },
+    agreed: false,
+    categoryIndex: 0,
+    conditionIndex: 2,
+    contactSettingsExpanded: false,
+    readCountdown: 0,
+    canPublish: false,
+    isSubmitting: false,
+    scrollToView: '',
+    editingId: null
+  };
+}
+
+const DEFAULT_DATA = getDefaultData();
 
 Page({
   data: {
@@ -86,25 +94,6 @@ Page({
       return;
     }
     
-    // 从存储中获取用户联系方式信息
-    const userInfo = wx.getStorageSync('userInfo');
-    const userPhone = userInfo.phone || wx.getStorageSync('userPhone');
-    
-    // 如果有联系方式信息，填充到表单中
-    if (userPhone) {
-      const { formData } = this.data;
-      formData.phone = userPhone;
-      this.setData({ formData });
-    }
-    const wechat = userInfo.wechat || '';
-    
-    // 如果有联系方式信息，填充到表单中
-    if (wechat) {
-      const { formData } = this.data;
-      formData.wechat = wechat;
-      this.setData({ formData });
-    }
-    
     // 页面加载
     this.checkEditMode();
   },
@@ -139,6 +128,8 @@ Page({
         // 然后加载编辑数据
         this.loadEditWishData(editWishId);
       });
+    }else{
+      this.setData(DEFAULT_DATA);
     }
   },
 
@@ -269,99 +260,89 @@ Page({
   /**
    * 加载编辑心愿数据
    */
-  loadEditWishData: function(id) {
+  loadEditWishData: async function(id) {
     console.log('Loading edit data for wish id:', id);
-    // 模拟从求换页面获取数据
-    const wishes = [
-      {
-        id: 1,
-        title: '求 iPad Pro M4 11寸',
-        description: '想要一台iPad Pro用于设计工作，可用MacBook Pro 2019加差价交换',
-        category: '数码3C',
-        expectedMethod: '以物换物',
-        priceRange: '差价 5000-8000',
-        status: '活跃',
-        createdAt: '2024-03-20',
-        views: 45,
-        interests: 3,
-        reviewStatus: '已通过'
-      },
-      {
-        id: 2,
-        title: '求 Sony A6400 相机',
-        description: '需要一台微单相机，预算3000-4000元',
-        category: '数码3C',
-        expectedMethod: '人民币',
-        priceRange: '3000-4000',
-        status: '活跃',
-        createdAt: '2024-03-18',
-        views: 28,
-        interests: 2,
-        reviewStatus: '待审核'
-      },
-      {
-        id: 3,
-        title: '求 Dyson 吹风机',
-        description: '想要一台Dyson吹风机，可用旧吹风机加现金交换',
-        category: '美妆个护',
-        expectedMethod: '都可以',
-        status: '已下架',
-        createdAt: '2024-03-15',
-        views: 12,
-        interests: 0,
-        reviewStatus: '审核不通过',
-        rejectionReason: '描述信息不清楚'
-      },
-      {
-        id: 4,
-        title: '求 Nintendo Switch OLED',
-        description: '想要一台Nintendo Switch OLED，可用PS4加差价交换',
-        category: '数码3C',
-        expectedMethod: '以物换物',
-        priceRange: '差价 1000-1500',
-        status: '活跃',
-        createdAt: '2024-03-10',
-        views: 35,
-        interests: 1,
-        reviewStatus: '审核不通过',
-        rejectionReason: '缺少详细描述'
-      }
-    ];
     
-    const wish = wishes.find(wish => wish.id == id);
-    console.log('Found wish:', wish);
-    if (wish) {
-      const categoryIndex = this.data.categories.indexOf(wish.category);
-      console.log('Category index:', categoryIndex);
+    wx.showLoading({
+      title: '加载中...'
+    });
+    
+    try {
+      const result = await wishAPI.getMyWishDetail(id);
       
-      this.setData({
-        publishType: 'wish',
-        formData: {
-          title: wish.title,
-          description: wish.description,
-          price: '',
-          category: wish.category,
-          wechat: '',
-          phone: '',
-          location: '北京市朝阳区',
-          wantItem: wish.description,
-          budget: wish.priceRange || '',
-          condition: '9成新',
-          contactVisibility: 'both'
-        },
-        locationDetails: {
-          province: '北京市',
-          city: '北京市',
-          district: '朝阳区'
-        },
-        categoryIndex: categoryIndex >= 0 ? categoryIndex : 0,
-        conditionIndex: 2,
-        editingId: id
-      }, function() {
-        console.log('Wish data set successfully');
+      if (result && result.success && result.data) {
+        const wish = result.data;
+        console.log('Loaded wish data:', wish);
+        
+        const categoryIndex = this.data.categories.indexOf(wish.category);
+        
+        let locationDetails = {};
+        let locationStr = wish.location || '北京市朝阳区';
+        
+        try {
+          const parsedLocation = JSON.parse(wish.location);
+          locationDetails = {
+            province: parsedLocation.province || '北京市',
+            city: parsedLocation.city || '北京市',
+            district: parsedLocation.district || '朝阳区'
+          };
+          locationStr = parsedLocation.location || `${locationDetails.province}${locationDetails.city}${locationDetails.district}`;
+        } catch (e) {
+          locationDetails = {
+            province: '北京市',
+            city: '北京市',
+            district: '朝阳区'
+          };
+        }
+        
+        const images = wish.wishImageList || (wish.firstImage ? [wish.firstImage] : []);
+        
+        const savedTags = wish.tags ? wish.tags.split(',').filter(tag => tag.trim()) : [];
+        const updatedTags = this.data.tags.map(tag => ({
+          ...tag,
+          selected: savedTags.includes(tag.name)
+        }));
+        
+        this.setData({
+          publishType: 'wish',
+          images: images,
+          tags: updatedTags,
+          formData: {
+            title: wish.wishTitle || '',
+            description: wish.wishDescription || '',
+            price: '',
+            category: wish.category || '数码3C',
+            wechat: wish.wechat || '',
+            phone: wish.phone || '',
+            location: locationStr,
+            latitude: wish.latitude,
+            longitude: wish.longitude,
+            wantItem: '',
+            budget: wish.budget || '',
+            condition: '9成新',
+            contactVisibility: wish.contactVisibility || 'both'
+          },
+          locationDetails: locationDetails,
+          categoryIndex: categoryIndex >= 0 ? categoryIndex : 0,
+          conditionIndex: 2,
+          editingId: id
+        }, function() {
+          console.log('Wish edit data set successfully');
+        });
+      } else {
+        wx.showToast({
+          title: '获取心愿信息失败',
+          icon: 'none'
+        });
+      }
+    } catch (error) {
+      console.error('Failed to load edit wish data:', error);
+      wx.showToast({
+        title: '获取心愿信息失败',
+        icon: 'none'
       });
-    } else {
-      console.log('Wish not found for id:', id);
+    } finally {
+      wx.hideLoading();
     }
   },
 
@@ -626,7 +607,7 @@ Page({
   },
 
   /**
-   * 发布物品
+   * 发布物品或心愿
    */
   handlePublish: async function() {
     const { agreed, formData, publishType, images, canPublish, editingId, isSubmitting } = this.data;
@@ -665,7 +646,6 @@ Page({
 
     // 检查联系方式
     if (formData.contactVisibility === 'both') {
-      // 显示微信和电话，两个都需要填写
       if (!formData.wechat) {
         wx.showToast({
           title: '请填写微信',
@@ -681,7 +661,6 @@ Page({
         return;
       }
     } else if (formData.contactVisibility === 'wechat') {
-      // 仅显示微信，只需要填写微信
       if (!formData.wechat) {
         wx.showToast({
           title: '请填写微信',
@@ -690,7 +669,6 @@ Page({
         return;
       }
     } else if (formData.contactVisibility === 'phone') {
-      // 仅显示电话，只需要填写电话
       if (!formData.phone) {
         wx.showToast({
           title: '请填写电话',
@@ -709,7 +687,6 @@ Page({
       return;
     }
 
-    // 检查发布类型特定的必填项
     if (publishType === 'exchange' && !formData.wantItem) {
       wx.showToast({
         title: '请填写需求',
@@ -726,77 +703,96 @@ Page({
       return;
     }
 
-    // 设置提交中状态
     this.setData({ isSubmitting: true });
 
     try {
-      // 准备发布数据（包含联系方式字段）
+      const { locationDetails } = this.data;
       const locationData = {
-        ...this.data.locationDetails,
-        location: formData.location // 包含详细地址
-      };
-      
-      const publishData = {
-        itemTitle: formData.title,
-        itemDescription: formData.description,
-        itemImageList: images,
-        depreciation: this.getDepreciationValue(formData.condition),
-        price: formData.price,
-        category: formData.category,
-        tradeType: publishType,
-        wantItem: formData.wantItem,
-        location: JSON.stringify(locationData),
-        latitude: formData.latitude || 39.9042,
-        longitude: formData.longitude || 116.4074,
-        wechat: formData.contactVisibility === 'phone' ? null : formData.wechat,
-        phone: formData.contactVisibility === 'wechat' ? null : formData.phone,
-        contactVisibility: formData.contactVisibility,
-        tags: this.getSelectedTags()
+        province: locationDetails.province || '',
+        city: locationDetails.city || '',
+        district: locationDetails.district || '',
+        location: formData.location
       };
 
-      // 发布物品
       let result;
-      if (editingId) {
-        result = await itemAPI.updateItem(editingId, publishData);
+      
+      if (publishType === 'wish') {
+        const wishData = {
+          wishTitle: formData.title,
+          wishDescription: formData.description,
+          wishImageList: images,
+          category: formData.category,
+          budget: formData.budget,
+          location: JSON.stringify(locationData),
+          latitude: formData.latitude || 39.9042,
+          longitude: formData.longitude || 116.4074,
+          wechat: formData.contactVisibility === 'phone' ? null : formData.wechat,
+          phone: formData.contactVisibility === 'wechat' ? null : formData.phone,
+          contactVisibility: formData.contactVisibility,
+          tags: this.getSelectedTags()
+        };
+
+        if (editingId) {
+          result = await wishAPI.updateWish(editingId, wishData);
+        } else {
+          result = await wishAPI.publishWish(wishData);
+        }
       } else {
-        result = await itemAPI.publishItem(publishData);
+        const itemData = {
+          itemTitle: formData.title,
+          itemDescription: formData.description,
+          itemImageList: images,
+          depreciation: this.getDepreciationValue(formData.condition),
+          price: formData.price,
+          category: formData.category,
+          tradeType: publishType,
+          wantItem: formData.wantItem,
+          location: JSON.stringify(locationData),
+          latitude: formData.latitude || 39.9042,
+          longitude: formData.longitude || 116.4074,
+          wechat: formData.contactVisibility === 'phone' ? null : formData.wechat,
+          phone: formData.contactVisibility === 'wechat' ? null : formData.phone,
+          contactVisibility: formData.contactVisibility,
+          tags: this.getSelectedTags()
+        };
+
+        if (editingId) {
+          result = await itemAPI.updateItem(editingId, itemData);
+        } else {
+          result = await itemAPI.publishItem(itemData);
+        }
       }
       
-      // 检查后端返回的结果
       if (result && result.success) {
-        // 立即恢复提交状态
         this.setData({ isSubmitting: false });
         
         wx.showToast({
           title: editingId ? '编辑成功！' : '发布成功！',
           icon: 'success',
-          duration: 1500,
-          success: () => {
-            // 清空表单数据
-            this.setData({
-              ...DEFAULT_DATA,
-              tags: TAGS.map(tag => ({ ...tag, selected: false })),
-              categories: CATEGORIES,
-              conditions: CONDITIONS
-            });
-            
-            // 跳转到个人中心页面
-            wx.switchTab({
-              url: '/pages/profile/profile'
-            });
-          }
+          duration: 1500
         });
+        
+        setTimeout(() => {
+          this.setData({
+            ...DEFAULT_DATA,
+            tags: TAGS.map(tag => ({ ...tag, selected: false })),
+            categories: CATEGORIES,
+            conditions: CONDITIONS
+          });
+          
+          wx.switchTab({
+            url: '/pages/profile/profile'
+          });
+        }, 1500);
       } else {
         throw new Error(result && result.desc || '发布失败');
       }
     } catch (error) {
       console.error('发布失败:', error);
-      // 处理错误
       wx.showToast({
         title: '发布失败，请重试',
         icon: 'none'
       });
-      // 恢复提交状态
       this.setData({ isSubmitting: false });
     }
   },

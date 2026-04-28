@@ -1,3 +1,6 @@
+const { wishAPI } = require('../../utils/api');
+const { WISH_STATUS, WISH_STATUS_LABELS, getWishStatusClass } = require('../../utils/enums');
+
 Page({
   data: {
     activeCount: 0,
@@ -6,69 +9,10 @@ Page({
     activeWishes: [],
     archivedWishes: [],
     activeMenu: null,
-    wishes: [
-      {
-        id: 1,
-        title: '求 iPad Pro M4 11寸',
-        description: '想要一台iPad Pro用于设计工作，可用MacBook Pro 2019加差价交换',
-        category: '数码3C',
-        expectedMethod: '以物换物',
-        priceRange: '差价 5000-8000',
-        status: '活跃',
-        createdAt: '2024-03-20',
-        views: 45,
-        interests: 3,
-        favorites: 2,
-        reviewStatus: '已通过'
-      },
-      {
-        id: 2,
-        title: '求 Sony A6400 相机',
-        description: '需要一台微单相机，预算3000-4000元',
-        category: '数码3C',
-        expectedMethod: '人民币',
-        priceRange: '3000-4000',
-        status: '活跃',
-        createdAt: '2024-03-18',
-        views: 28,
-        interests: 2,
-        favorites: 1,
-        reviewStatus: '待审核'
-      },
-      {
-        id: 3,
-        title: '求 Dyson 吹风机',
-        description: '想要一台Dyson吹风机，可用旧吹风机加现金交换',
-        category: '美妆个护',
-        expectedMethod: '都可以',
-        status: '已下架',
-        createdAt: '2024-03-15',
-        views: 12,
-        interests: 0,
-        favorites: 0,
-        reviewStatus: '审核不通过',
-        rejectionReason: '描述信息不清楚'
-      },
-      {
-        id: 4,
-        title: '求 Nintendo Switch OLED',
-        description: '想要一台Nintendo Switch OLED，可用PS4加差价交换',
-        category: '数码3C',
-        expectedMethod: '以物换物',
-        priceRange: '差价 1000-1500',
-        status: '活跃',
-        createdAt: '2024-03-10',
-        views: 35,
-        interests: 1,
-        favorites: 1,
-        reviewStatus: '审核不通过',
-        rejectionReason: '缺少详细描述'
-      }
-    ]
+    wishes: []
   },
 
   onLoad: function() {
-    // 检查登录状态
     const token = wx.getStorageSync('token');
     if (!token) {
       wx.reLaunch({
@@ -76,7 +20,75 @@ Page({
       });
       return;
     }
-    this.computeStats();
+    this.loadWishes();
+  },
+
+  loadWishes: async function() {
+    wx.showLoading({
+      title: '加载中...'
+    });
+    
+    try {
+      const result = await wishAPI.getMyWishes({ pageNo: 1, pageSize: 100 });
+      
+      if (result && result.success && result.data) {
+        const wishes = result.data.map(wish => {
+          const wishStatus = wish.status || WISH_STATUS.AUDITING;
+          const statusLabel = WISH_STATUS_LABELS[wishStatus] || '待审核';
+          const statusClass = getWishStatusClass(wishStatus);
+          const isActive = [WISH_STATUS.AUDITING, WISH_STATUS.ACTIVE].includes(wishStatus);
+          
+          return {
+            id: wish.id,
+            title: wish.wishTitle || '',
+            description: wish.wishDescription || '',
+            category: wish.category || '',
+            budget: wish.budget || '',
+            status: wishStatus,
+            statusLabel: statusLabel,
+            statusClass: statusClass,
+            isActive: isActive,
+            createdAt: wish.createTime ? this.formatDate(wish.createTime) : '',
+            views: wish.views || 0,
+            interests: wish.likes || 0,
+            favorites: wish.favorites || 0,
+            rejectionReason: wish.remark || ''
+          };
+        });
+        
+        this.setData({ wishes });
+        this.computeStats();
+      } else {
+        this.setData({ wishes: [] });
+        this.computeStats();
+      }
+    } catch (error) {
+      console.error('加载心愿列表失败:', error);
+      wx.showToast({
+        title: '加载失败',
+        icon: 'none'
+      });
+    } finally {
+      wx.hideLoading();
+    }
+  },
+
+  formatDate: function(dateStr) {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  },
+
+  getReviewStatus: function(status) {
+    const statusMap = {
+      'auditing': '待审核',
+      'active': '已通过',
+      'inactive': '审核不通过'
+    };
+    return statusMap[status] || '待审核';
   },
 
   /**
@@ -85,33 +97,13 @@ Page({
   computeStats: function() {
     const { wishes } = this.data;
     
-    const reviewStatusClassMap = {
-      '待审核': 'review-pending',
-      '已通过': 'review-approved',
-      '审核不通过': 'review-rejected'
-    };
-    
-    const reviewStatusLabelMap = {
-      '待审核': '待审核',
-      '已通过': '已通过',
-      '审核不通过': '审核不通过'
-    };
-    
-    // 为每个心愿添加reviewStatusClass和reviewStatusLabel字段
-    const processedWishes = wishes.map(wish => ({
-      ...wish,
-      reviewStatusClass: reviewStatusClassMap[wish.reviewStatus] || 'review-pending',
-      reviewStatusLabel: reviewStatusLabelMap[wish.reviewStatus] || wish.reviewStatus
-    }));
-    
-    const activeCount = processedWishes.filter(w => w.status === '活跃').length;
-    const totalInterests = processedWishes.reduce((sum, w) => sum + w.interests, 0);
-    const totalViews = processedWishes.reduce((sum, w) => sum + w.views, 0);
-    const activeWishes = processedWishes.filter(w => w.status === '活跃');
-    const archivedWishes = processedWishes.filter(w => w.status === '已下架');
+    const activeCount = wishes.filter(w => w.isActive).length;
+    const totalInterests = wishes.reduce((sum, w) => sum + w.interests, 0);
+    const totalViews = wishes.reduce((sum, w) => sum + w.views, 0);
+    const activeWishes = wishes.filter(w => w.isActive);
+    const archivedWishes = wishes.filter(w => !w.isActive);
     
     this.setData({
-      wishes: processedWishes,
       activeCount,
       totalInterests,
       totalViews,
@@ -128,12 +120,11 @@ Page({
    * Handle edit
    */
   handleEdit: function(e) {
-    const id = parseInt(e.currentTarget.dataset.id);
-    // 获取全局应用实例
+    const id = e.currentTarget.dataset.id;
+    console.log('handleEdit clicked, id:', id);
     const app = getApp();
-    // 存储编辑ID到全局数据
     app.globalData.editWishId = id;
-    // 跳转到发布页面
+    console.log('editWishId set to:', app.globalData.editWishId);
     wx.switchTab({
       url: '/pages/publish/publish'
     });
@@ -142,36 +133,82 @@ Page({
 
 
   /**
-   * Handle toggle status
+   * Handle withdraw wish (撤回心愿)
    */
-  handleToggleStatus: function(e) {
-    const id = parseInt(e.currentTarget.dataset.id);
-    const { wishes } = this.data;
-    const wish = wishes.find(w => w.id === id);
-    const newStatus = wish.status === '活跃' ? '已下架' : '活跃';
-    
-    // 二次确认弹窗
+  handleWithdraw: async function(e) {
+    const id = e.currentTarget.dataset.id;
     wx.showModal({
-      title: '确认操作',
-      content: '确定要将心愿状态更新为: ' + newStatus + ' 吗？',
-      confirmText: '确定',
+      title: '撤回心愿',
+      content: '确定要撤回这个心愿吗？撤回后可以重新发布。',
+      confirmText: '确定撤回',
       cancelText: '取消',
-      success: (res) => {
+      success: async (res) => {
         if (res.confirm) {
-          const updatedWishes = wishes.map(w => 
-            w.id === id 
-              ? { ...w, status: newStatus }
-              : w
-          );
-          this.setData({
-            wishes: updatedWishes,
-            activeMenu: null
-          });
-          this.computeStats();
-          wx.showToast({
-            title: '状态已更新',
-            icon: 'success'
-          });
+          wx.showLoading({ title: '撤回中...' });
+          try {
+            const result = await wishAPI.updateWishStatus(id, WISH_STATUS.CANCELLED);
+            if (result && result.success) {
+              this.loadWishes();
+              wx.showToast({
+                title: '心愿已撤回',
+                icon: 'success'
+              });
+            } else {
+              wx.showToast({
+                title: '撤回失败',
+                icon: 'none'
+              });
+            }
+          } catch (error) {
+            console.error('撤回心愿失败:', error);
+            wx.showToast({
+              title: '撤回失败',
+              icon: 'none'
+            });
+          } finally {
+            wx.hideLoading();
+          }
+        }
+      }
+    });
+  },
+
+  /**
+   * Handle achieve wish (心愿达成)
+   */
+  handleAchieve: async function(e) {
+    const id = e.currentTarget.dataset.id;
+    wx.showModal({
+      title: '心愿达成',
+      content: '确定要标记心愿已达成吗？',
+      confirmText: '确定达成',
+      cancelText: '取消',
+      success: async (res) => {
+        if (res.confirm) {
+          wx.showLoading({ title: '处理中...' });
+          try {
+            const result = await wishAPI.updateWishStatus(id, WISH_STATUS.ACHIEVED);
+            if (result && result.success) {
+              this.loadWishes();
+              wx.showToast({
+                title: '心愿已达成',
+                icon: 'success'
+              });
+            } else {
+              wx.showToast({
+                title: '操作失败',
+                icon: 'none'
+              });
+            }
+          } catch (error) {
+            console.error('心愿达成失败:', error);
+            wx.showToast({
+              title: '操作失败',
+              icon: 'none'
+            });
+          } finally {
+            wx.hideLoading();
+          }
         }
       }
     });
@@ -180,25 +217,48 @@ Page({
   /**
    * Handle delete
    */
-  handleDelete: function(e) {
-    const id = parseInt(e.currentTarget.dataset.id);
+  handleDelete: async function(e) {
+    const id = e.currentTarget.dataset.id;
     wx.showModal({
       title: '删除心愿',
       content: '确定要删除这个心愿吗？',
-      success: (res) => {
+      success: async (res) => {
         if (res.confirm) {
-          const updatedWishes = this.data.wishes.filter(w => w.id !== id);
-          this.setData({
-            wishes: updatedWishes
-          });
-          this.computeStats();
-          wx.showToast({
-            title: '心愿已删除',
-            icon: 'success'
-          });
+          wx.showLoading({ title: '删除中...' });
+          try {
+            const result = await wishAPI.deleteWish(id);
+            if (result && result.success) {
+              const updatedWishes = this.data.wishes.filter(w => w.id !== id);
+              this.setData({
+                wishes: updatedWishes
+              });
+              this.computeStats();
+              wx.showToast({
+                title: '心愿已删除',
+                icon: 'success'
+              });
+            } else {
+              wx.showToast({
+                title: '删除失败',
+                icon: 'none'
+              });
+            }
+          } catch (error) {
+            console.error('删除心愿失败:', error);
+            wx.showToast({
+              title: '删除失败',
+              icon: 'none'
+            });
+          } finally {
+            wx.hideLoading();
+          }
         }
       }
     });
+  },
+
+  onShow: function() {
+    this.loadWishes();
   },
 
   /**

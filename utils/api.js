@@ -196,15 +196,31 @@ const messageAPI = {
 const wishAPI = {
   // 获取求换墙列表
   getWishes(params) {
-    return request('/api/wishes', {
-      method: 'GET',
+    return request('/client/wish/list', {
+      method: 'POST',
+      data: params
+    })
+  },
+
+  // 获取我的求换列表
+  getMyWishes(params) {
+    return request('/client/wish/list-mine', {
+      method: 'POST',
       data: params
     })
   },
 
   // 发布求换
   publishWish(data) {
-    return request('/api/wishes', {
+    return request('/client/wish/publish', {
+      method: 'POST',
+      data
+    })
+  },
+
+  // 更新求换
+  updateWish(wishId, data) {
+    return request(`/client/wish/update/${wishId}`, {
       method: 'POST',
       data
     })
@@ -212,15 +228,43 @@ const wishAPI = {
 
   // 获取求换详情
   getWishDetail(wishId) {
-    return request(`/api/wishes/${wishId}`, {
-      method: 'GET'
+    return request(`/client/wish/get-detail/${wishId}`, {
+      method: 'POST'
+    })
+  },
+
+  // 获取我的求换详情
+  getMyWishDetail(wishId) {
+    return request(`/client/wish/detail/${wishId}`, {
+      method: 'POST'
     })
   },
 
   // 删除求换
   deleteWish(wishId) {
-    return request(`/api/wishes/${wishId}`, {
-      method: 'DELETE'
+    return request(`/client/wish/delete/${wishId}`, {
+      method: 'POST'
+    })
+  },
+
+  // 更新心愿状态
+  updateWishStatus(wishId, status) {
+    return request(`/client/wish/status/${wishId}?status=${status}`, {
+      method: 'POST'
+    })
+  },
+
+  // 点赞求换
+  likeWish(wishId) {
+    return request(`/client/wish/like/${wishId}`, {
+      method: 'POST'
+    })
+  },
+
+  // 收藏求换
+  collectWish(wishId) {
+    return request(`/client/wish/collect/${wishId}`, {
+      method: 'POST'
     })
   }
 }
