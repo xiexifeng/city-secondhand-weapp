@@ -1,6 +1,40 @@
 const { itemAPI, fileAPI } = require('../../utils/api');
 const { CATEGORIES, CONDITIONS, TAGS, MAX_LENGTHS, CONDITION_MAP } = require('../../config.js');
 
+const DEFAULT_DATA = {
+  publishType: null,
+  images: [],
+  formData: {
+    title: '',
+    description: '',
+    price: '',
+    category: '数码3C',
+    wechat: '',
+    phone: '',
+    location: '北京市朝阳区',
+    latitude: null,
+    longitude: null,
+    wantItems: '',
+    budget: '',
+    condition: '9成新',
+    contactVisibility: 'both'
+  },
+  locationDetails: {
+    province: '北京市',
+    city: '北京市',
+    district: '朝阳区'
+  },
+  agreed: false,
+  categoryIndex: 0,
+  conditionIndex: 2,
+  contactSettingsExpanded: false,
+  readCountdown: 0,
+  canPublish: false,
+  isSubmitting: false,
+  scrollToView: '',
+  editingId: null
+};
+
 Page({
   data: {
     publishType: null,  // 'sell' | 'exchange' | 'wish'
@@ -87,21 +121,23 @@ Page({
     const app = getApp();
     if (app.globalData.editItemId) {
       console.log('Entering edit mode for item id:', app.globalData.editItemId);
+      // 立即清空编辑ID，避免onShow再次触发
+      const editItemId = app.globalData.editItemId;
+      app.globalData.editItemId = null;
       // 先设置publishType，确保页面立即显示表单
       this.setData({ publishType: 'sell' }, () => {
         // 然后加载编辑数据
-        this.loadEditData(app.globalData.editItemId);
-        // 清空编辑ID，避免下次进入时自动编辑
-        app.globalData.editItemId = null;
+        this.loadEditData(editItemId);
       });
     } else if (app.globalData.editWishId) {
       console.log('Entering edit mode for wish id:', app.globalData.editWishId);
+      // 立即清空编辑ID，避免onShow再次触发
+      const editWishId = app.globalData.editWishId;
+      app.globalData.editWishId = null;
       // 先设置publishType为求换墙，确保页面立即显示表单
       this.setData({ publishType: 'wish' }, () => {
         // 然后加载编辑数据
-        this.loadEditWishData(app.globalData.editWishId);
-        // 清空编辑ID，避免下次进入时自动编辑
-        app.globalData.editWishId = null;
+        this.loadEditWishData(editWishId);
       });
     }
   },
@@ -109,130 +145,125 @@ Page({
   /**
    * 加载编辑数据
    */
-  loadEditData: function(id) {
+  loadEditData: async function(id) {
     console.log('Loading edit data for item id:', id);
-    // 模拟从已发布物品页面获取数据
-    const publishedItems = [
-      {
-        id: 1,
-        title: 'iPhone 14 Pro Max',
-        price: 5800,
-        image: 'https://images.unsplash.com/photo-1592286927505-1def25115558?w=400&h=400&fit=crop',
-        category: '数码3C',
-        description: '9成新，无划痕，原装配件齐全',
-        status: '在售',
-        views: 245,
-        likes: 18,
-        publishDate: '2024-03-20',
-        transactionType: '人民币',
-        reviewStatus: '已通过',
-        location: '北京市朝阳区'
-      },
-      {
-        id: 2,
-        title: 'MacBook Pro 2019',
-        price: 8500,
-        image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop',
-        category: '数码3C',
-        description: '13寸，i5处理器，8GB内存，256GB SSD',
-        status: '已成交',
-        views: 312,
-        likes: 42,
-        publishDate: '2024-03-15',
-        transactionType: '人民币',
-        reviewStatus: '已通过',
-        location: '北京市朝阳区'
-      },
-      {
-        id: 3,
-        title: 'Sony A6400 相机',
-        price: 3200,
-        image: 'https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400&h=400&fit=crop',
-        category: '数码3C',
-        description: '微单相机，配16-50mm镜头，完美状态',
-        status: '成交中',
-        views: 156,
-        likes: 12,
-        publishDate: '2024-03-18',
-        transactionType: '都可以',
-        reviewStatus: '待审核',
-        location: '北京市朝阳区'
-      },
-      {
-        id: 4,
-        title: 'Nike 跑鞋',
-        price: 599,
-        image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop',
-        category: '服装鞋帽',
-        description: '全新未穿，官方正品，尺码42',
-        status: '已下架',
-        views: 89,
-        likes: 5,
-        publishDate: '2024-03-19',
-        transactionType: '人民币',
-        reviewStatus: '审核不通过',
-        rejectionReason: '图片质量低',
-        location: '北京市朝阳区'
-      }
-    ];
     
-    const item = publishedItems.find(item => item.id == id);
-    console.log('Found item:', item);
-    if (item) {
-      const categoryIndex = this.data.categories.indexOf(item.category);
-      const conditionIndex = this.data.conditions.indexOf(item.condition || '9成新');
-      console.log('Category index:', categoryIndex, 'Condition index:', conditionIndex);
+    wx.showLoading({
+      title: '加载中...'
+    });
+    
+    try {
+      const result = await itemAPI.getMyItemDetail(id);
       
-      // 解析位置信息
-      let locationDetails = {};
-      let locationStr = item.location;
-      
-      try {
-        // 尝试解析JSON格式的location
-        const parsedLocation = JSON.parse(item.location);
-        // 提取省市区信息，构建locationDetails
-        locationDetails = {
-          province: parsedLocation.province || '',
-          city: parsedLocation.city || '',
-          district: parsedLocation.district || ''
-        };
-        // 使用存储的详细地址，如果没有则拼接省市区
-        locationStr = parsedLocation.location || `${locationDetails.province}${locationDetails.city}${locationDetails.district}`;
-      } catch (e) {
-        // 如果不是JSON格式，使用默认值
-        locationDetails = {
-          province: '北京市',
-          city: '北京市',
-          district: '朝阳区'
-        };
+      if (result && result.success && result.data) {
+        const item = result.data;
+        console.log('Loaded item data:', item);
+        
+        const categoryIndex = this.data.categories.indexOf(item.category);
+        const conditionIndex = this.getConditionIndex(item.depreciation);
+        
+        let locationDetails = {};
+        let locationStr = item.location || '北京市朝阳区';
+        
+        try {
+          const parsedLocation = JSON.parse(item.location);
+          locationDetails = {
+            province: parsedLocation.province || '北京市',
+            city: parsedLocation.city || '北京市',
+            district: parsedLocation.district || '朝阳区'
+          };
+          locationStr = parsedLocation.location || `${locationDetails.province}${locationDetails.city}${locationDetails.district}`;
+        } catch (e) {
+          locationDetails = {
+            province: '北京市',
+            city: '北京市',
+            district: '朝阳区'
+          };
+        }
+        
+        const images = item.itemImageList || (item.firstImage ? [item.firstImage] : []);
+        
+        const savedTags = item.tags ? item.tags.split(',').filter(tag => tag.trim()) : [];
+        const updatedTags = this.data.tags.map(tag => ({
+          ...tag,
+          selected: savedTags.includes(tag.name)
+        }));
+        
+        this.setData({
+          publishType: 'sell',
+          images: images,
+          tags: updatedTags,
+          formData: {
+            title: item.itemTitle || '',
+            description: item.itemDescription || '',
+            price: item.price ? item.price.toString() : '',
+            category: item.category || '数码3C',
+            wechat: item.wechat || '',
+            phone: item.phone || '',
+            location: locationStr,
+            latitude: item.latitude,
+            longitude: item.longitude,
+            wantItems: '',
+            budget: '',
+            condition: this.getConditionLabel(item.depreciation),
+            contactVisibility: item.contactVisibility || 'both'
+          },
+          locationDetails: locationDetails,
+          categoryIndex: categoryIndex >= 0 ? categoryIndex : 0,
+          conditionIndex: conditionIndex >= 0 ? conditionIndex : 2,
+          editingId: id
+        }, function() {
+          console.log('Edit data set successfully');
+        });
+      } else {
+        wx.showToast({
+          title: '获取物品信息失败',
+          icon: 'none'
+        });
       }
-      
-      this.setData({
-        publishType: 'sell',
-        images: [item.image],
-        formData: {
-          title: item.title,
-          description: item.description,
-          price: item.price.toString(),
-          category: item.category,
-          wechat: '',
-          phone: '',
-          location: locationStr,
-          wantItems: '',
-          budget: '',
-          condition: item.condition || '9成新',
-          contactVisibility: 'both'
-        },
-        locationDetails: locationDetails,
-        categoryIndex: categoryIndex >= 0 ? categoryIndex : 0,
-        conditionIndex: conditionIndex >= 0 ? conditionIndex : 2,
-        editingId: id
-      }, function() {
-        console.log('Data set successfully');
+    } catch (error) {
+      console.error('Failed to load edit data:', error);
+      wx.showToast({
+        title: '获取物品信息失败',
+        icon: 'none'
       });
-    } else {
-      console.log('Item not found for id:', id);
+    } finally {
+      wx.hideLoading();
     }
+  },
+
+  /**
+   * 根据折旧值获取成色索引
+   */
+  getConditionIndex: function(depreciation) {
+    const conditions = this.data.conditions;
+    const conditionMap = {
+      1: '全新',
+      2: '95成新',
+      3: '9成新',
+      4: '8成新',
+      5: '7成新',
+      6: '6成新',
+      7: '5成新及以下'
+    };
+    const conditionLabel = conditionMap[depreciation] || '9成新';
+    return conditions.indexOf(conditionLabel);
+  },
+
+  /**
+   * 根据折旧值获取成色标签
+   */
+  getConditionLabel: function(depreciation) {
+    const conditionMap = {
+      1: '全新',
+      2: '95成新',
+      3: '9成新',
+      4: '8成新',
+      5: '7成新',
+      6: '6成新',
+      7: '5成新及以下'
+    };
+    return conditionMap[depreciation] || '9成新';
   },
 
   /**
@@ -704,12 +735,13 @@ Page({
         price: formData.price,
         category: formData.category,
         tradeType: publishType === 'sell' ? '人民币' : '以物换物',
-        location: JSON.stringify(locationData), // 存储包含省市区和详细地址的JSON串
-        latitude: formData.latitude || 39.9042, // 使用从location页面返回的纬度，否则使用默认值
-        longitude: formData.longitude || 116.4074, // 使用从location页面返回的经度，否则使用默认值
-        wechat: formData.wechat,
-        phone: formData.phone,
-        contactVisibility: formData.contactVisibility
+        location: JSON.stringify(locationData),
+        latitude: formData.latitude || 39.9042,
+        longitude: formData.longitude || 116.4074,
+        wechat: formData.contactVisibility === 'phone' ? null : formData.wechat,
+        phone: formData.contactVisibility === 'wechat' ? null : formData.phone,
+        contactVisibility: formData.contactVisibility,
+        tags: this.getSelectedTags()
       };
 
       // 发布物品
@@ -722,53 +754,31 @@ Page({
       
       // 检查后端返回的结果
       if (result && result.success) {
+        // 立即恢复提交状态
+        this.setData({ isSubmitting: false });
+        
         wx.showToast({
           title: editingId ? '编辑成功！' : '发布成功！',
           icon: 'success',
-          duration: 1500
+          duration: 1500,
+          success: () => {
+            // 清空表单数据
+            this.setData({
+              ...DEFAULT_DATA,
+              tags: TAGS.map(tag => ({ ...tag, selected: false })),
+              categories: CATEGORIES,
+              conditions: CONDITIONS
+            });
+            
+            // 跳转到个人中心页面
+            wx.switchTab({
+              url: '/pages/profile/profile'
+            });
+          }
         });
       } else {
         throw new Error(result && result.desc || '发布失败');
       }
-
-      // 延迟后跳转到已发布物品页面
-      setTimeout(() => {
-        if (editingId) {
-          wx.navigateBack();
-        } else {
-          // 清空表单数据
-          this.setData({
-            images: [],
-            formData: {
-              title: '',
-              description: '',
-              price: '',
-              category: '数码3C',
-              wechat: '',
-              phone: '',
-              location: '北京市朝阳区',
-              wantItems: '',
-              budget: '',
-              condition: '9成新',
-              contactVisibility: 'both'
-            },
-            categoryIndex: 0,
-            conditionIndex: 2,
-            tags: TAGS.map(tag => ({ ...tag, selected: false })),
-            locationDetails: {
-              province: '北京市',
-              city: '北京市',
-              district: '朝阳区'
-            }
-          });
-          
-          wx.switchTab({
-            url: '/pages/profile/profile'
-          });
-        }
-        // 恢复提交状态
-        this.setData({ isSubmitting: false });
-      }, 1500);
     } catch (error) {
       console.error('发布失败:', error);
       // 处理错误
@@ -786,5 +796,14 @@ Page({
    */
   getDepreciationValue: function(condition) {
     return CONDITION_MAP[condition] || 5;
+  },
+
+  /**
+   * 获取选中的标签，返回逗号分隔的字符串
+   */
+  getSelectedTags: function() {
+    const { tags } = this.data;
+    const selectedTags = tags.filter(tag => tag.selected).map(tag => tag.name);
+    return selectedTags.join(',');
   }
 });

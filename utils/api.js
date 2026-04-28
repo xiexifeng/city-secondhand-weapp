@@ -110,6 +110,13 @@ const itemAPI = {
       method: 'POST',
       data: { itemId, transferStatus }
     })
+  },
+
+  // 获取我的物品详情
+  getMyItemDetail(itemId) {
+    return request(`/client/item/detail/${itemId}`, {
+      method: 'POST'
+    })
   }
 }
 
