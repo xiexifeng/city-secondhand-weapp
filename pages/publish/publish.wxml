@@ -137,12 +137,12 @@
               type="text" 
               class="form-input"
               placeholder="例如：MacBook Pro 或其他3C产品"
-              value="{{formData.wantItems}}"
+              value="{{formData.wantItem}}"
               bindinput="updateFormData"
-              data-field="wantItems"
+              data-field="wantItem"
               maxlength="50"
             />
-            <text class="input-counter">{{formData.wantItems.length}}/50</text>
+            <text class="input-counter">{{formData.wantItem.length}}/50</text>
           </view>
         </view>
 

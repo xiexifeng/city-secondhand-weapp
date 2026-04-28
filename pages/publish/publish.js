@@ -14,7 +14,7 @@ const DEFAULT_DATA = {
     location: '北京市朝阳区',
     latitude: null,
     longitude: null,
-    wantItems: '',
+    wantItem: '',
     budget: '',
     condition: '9成新',
     contactVisibility: 'both'
@@ -49,7 +49,7 @@ Page({
       location: '北京市朝阳区',
       latitude: null,
       longitude: null,
-      wantItems: '',
+      wantItem: '',
       budget: '',
       condition: '9成新',
       contactVisibility: 'both'
@@ -203,7 +203,7 @@ Page({
             location: locationStr,
             latitude: item.latitude,
             longitude: item.longitude,
-            wantItems: '',
+            wantItem: item.wantItem || '',
             budget: '',
             condition: this.getConditionLabel(item.depreciation),
             contactVisibility: item.contactVisibility || 'both'
@@ -344,7 +344,7 @@ Page({
           wechat: '',
           phone: '',
           location: '北京市朝阳区',
-          wantItems: wish.description,
+          wantItem: wish.description,
           budget: wish.priceRange || '',
           condition: '9成新',
           contactVisibility: 'both'
