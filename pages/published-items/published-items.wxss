@@ -203,6 +203,12 @@
   color: #f97316;
 }
 
+.item-price.exchange {
+  color: #0ea5e9;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
 .status-badge {
   display: inline-block;
   padding: 4rpx 8rpx;
