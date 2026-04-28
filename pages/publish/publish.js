@@ -190,7 +190,7 @@ Page({
         }));
         
         this.setData({
-          publishType: 'sell',
+          publishType: item.tradeType,
           images: images,
           tags: updatedTags,
           formData: {
@@ -709,6 +709,15 @@ Page({
       return;
     }
 
+    // 检查发布类型特定的必填项
+    if (publishType === 'exchange' && !formData.wantItem) {
+      wx.showToast({
+        title: '请填写需求',
+        icon: 'none'
+      });
+      return;
+    }
+
     if (publishType !== 'wish' && images.length === 0) {
       wx.showToast({
         title: '请上传至少一张图片',
@@ -734,7 +743,8 @@ Page({
         depreciation: this.getDepreciationValue(formData.condition),
         price: formData.price,
         category: formData.category,
-        tradeType: publishType === 'sell' ? '人民币' : '以物换物',
+        tradeType: publishType,
+        wantItem: formData.wantItem,
         location: JSON.stringify(locationData),
         latitude: formData.latitude || 39.9042,
         longitude: formData.longitude || 116.4074,
