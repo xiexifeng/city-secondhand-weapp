@@ -1,0 +1,14 @@
+<view class="image-upload-container">
+  <view class="image-list">
+    <view wx:for="{{images}}" wx:key="{{index}}" class="image-item">
+      <image src="{{item}}" mode="aspectFill" />
+      <view class="delete-btn" bindtap="handleDelete" data-index="{{index}}">
+        <text>×</text>
+      </view>
+    </view>
+    <view wx:if="{{images.length < maxCount}}" class="add-btn" bindtap="handleAdd">
+      <text>+</text>
+    </view>
+  </view>
+  <view class="tip">{{images.length}}/{{maxCount}}</view>
+</view>

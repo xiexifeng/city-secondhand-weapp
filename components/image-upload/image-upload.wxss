@@ -1,0 +1,57 @@
+.image-upload-container {
+  margin: 20rpx 0;
+}
+
+.image-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.image-item {
+  position: relative;
+  width: 210rpx;
+  height: 210rpx;
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+
+.image-item image {
+  width: 100%;
+  height: 100%;
+}
+
+.delete-btn {
+  position: absolute;
+  top: 8rpx;
+  right: 8rpx;
+  width: 36rpx;
+  height: 36rpx;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 32rpx;
+  line-height: 36rpx;
+}
+
+.add-btn {
+  width: 210rpx;
+  height: 210rpx;
+  border: 2rpx dashed #ddd;
+  border-radius: 8rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
+  color: #999;
+}
+
+.tip {
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #999;
+  text-align: right;
+}

@@ -34,23 +34,21 @@ function request(url, options = {}) {
       header: requestHeader,
       timeout,
       success: (res) => {
-        if (res.statusCode === 200 || res.statusCode === 201) {
-          // Extract data from response wrapper
-          const responseData = res.data;
-          const actualData = responseData.data || responseData;
-          resolve(actualData)
-        } else if (res.statusCode === 401) {
-          // 未授权
-          wx.removeStorageSync('token')
-          wx.removeStorageSync('userInfo')
-          app.globalData.token = null
-          app.globalData.userInfo = null
-          wx.reLaunch({ url: '/pages/login/login' })
-          reject({ message: '请重新登录' })
-        } else {
-          reject(res.data || { message: '请求失败' })
-        }
-      },
+          if (res.statusCode === 200 || res.statusCode === 201) {
+            // 返回完整的响应对象，包括success、code、desc、data字段
+            resolve(res.data)
+          } else if (res.statusCode === 401) {
+            // 未授权
+            wx.removeStorageSync('token')
+            wx.removeStorageSync('userInfo')
+            app.globalData.token = null
+            app.globalData.userInfo = null
+            wx.reLaunch({ url: '/pages/login/login' })
+            reject({ message: '请重新登录' })
+          } else {
+            reject(res.data || { message: '请求失败' })
+          }
+        },
       fail: (err) => {
         reject({ message: '网络请求失败', error: err })
       }
@@ -62,22 +60,22 @@ function request(url, options = {}) {
 const itemAPI = {
   // 获取物品列表
   getItems(params) {
-    return request('/api/items', {
-      method: 'GET',
+    return request('/client/square/list-item', {
+      method: 'POST',
       data: params
     })
   },
 
   // 获取物品详情
   getItemDetail(itemId) {
-    return request(`/api/items/${itemId}`, {
-      method: 'GET'
+    return request(`/client/square/detail-item/${itemId}`, {
+      method: 'POST'
     })
   },
 
   // 发布物品
   publishItem(data) {
-    return request('/api/items', {
+    return request('/client/item/publish', {
       method: 'POST',
       data
     })
@@ -85,24 +83,32 @@ const itemAPI = {
 
   // 更新物品
   updateItem(itemId, data) {
-    return request(`/api/items/${itemId}`, {
-      method: 'PUT',
+    return request(`/client/item/update/${itemId}`, {
+      method: 'POST',
       data
     })
   },
 
   // 删除物品
   deleteItem(itemId) {
-    return request(`/api/items/${itemId}`, {
-      method: 'DELETE'
+    return request(`/client/item/delete/${itemId}`, {
+      method: 'POST'
     })
   },
 
-  // 搜索物品
-  searchItems(keyword, params) {
-    return request('/api/items/search', {
-      method: 'GET',
-      data: { keyword, ...params }
+  // 获取我的物品列表
+  getMyItems(params) {
+    return request('/client/item/list-mine', {
+      method: 'POST',
+      data: params
+    })
+  },
+
+  // 更新物品转让状态
+  updateTransferStatus(itemId, transferStatus) {
+    return request('/client/item/transfer-status', {
+      method: 'POST',
+      data: { itemId, transferStatus }
     })
   }
 }
@@ -220,18 +226,23 @@ const fileAPI = {
       const token = wx.getStorageSync('token')
       
       wx.uploadFile({
-        url: app.globalData.baseUrl + '/api/upload/image',
+        url: app.globalData.baseUrl + '/basic/oss/uploadFile',
         filePath,
         name: 'file',
         header: {
           'Authorization': `Bearer ${token}`
         },
         success: (res) => {
-          const data = JSON.parse(res.data)
           if (res.statusCode === 200) {
-            resolve(data)
+            // 后端返回JSON格式响应
+            const data = JSON.parse(res.data);
+            if (data.success) {
+              resolve({ data: { fileUrl: data.data } });
+            } else {
+              reject({ message: data.desc || '上传失败' });
+            }
           } else {
-            reject(data)
+            reject({ message: '上传失败', error: res.data });
           }
         },
         fail: (err) => {

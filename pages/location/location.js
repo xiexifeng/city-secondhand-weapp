@@ -195,13 +195,15 @@ Page({
    * 确认选择位置
    */
   confirmLocation: function() {
-    const { currentAddress, locationDetails } = this.data;
+    const { currentAddress, locationDetails, latitude, longitude } = this.data;
     // 返回上一页并传递位置信息
     const pages = getCurrentPages();
     const prevPage = pages[pages.length - 2];
     prevPage.setData({
       'formData.location': currentAddress,
-      locationDetails: locationDetails
+      locationDetails: locationDetails,
+      'formData.latitude': latitude,
+      'formData.longitude': longitude
     });
     wx.navigateBack();
   },

@@ -4,7 +4,7 @@ App({
     userInfo: null,
     token: null,
     userPhone: null,
-    baseUrl: 'http://localhost:8080/tradex', // xtrade后端地址
+    baseUrl: 'http://localhost:80/tradex', // xtrade后端地址
     editItemId: null,
     editWishId: null
   },

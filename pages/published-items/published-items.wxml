@@ -1,6 +1,12 @@
 <!--pages/published-items/published-items.wxml-->
 <view class="published-items-container">
 
+  <!-- Safety Tip -->
+  <view class="safety-tip">
+    <view class="tip-icon">🔒</view>
+    <text class="tip-text">安全交易提示：请选择公共场所进行物品交接，保护个人财产安全</text>
+  </view>
+
   <!-- Stats Cards -->
   <view class="stats-section">
     <view class="stat-card">
@@ -8,16 +14,16 @@
       <text class="stat-label">总发布</text>
     </view>
     <view class="stat-card">
-      <text class="stat-value">{{statusCounts.onSale}}</text>
-      <text class="stat-label">在售</text>
+      <text class="stat-value">{{statusCounts.transferring}}</text>
+      <text class="stat-label">发布中</text>
     </view>
     <view class="stat-card">
-      <text class="stat-value">{{statusCounts.trading}}</text>
-      <text class="stat-label">成交中</text>
+      <text class="stat-value">{{statusCounts.transfer_accepted}}</text>
+      <text class="stat-label">已达成</text>
     </view>
     <view class="stat-card">
-      <text class="stat-value">{{statusCounts.completed}}</text>
-      <text class="stat-label">已成交</text>
+      <text class="stat-value">{{statusCounts.transferred}}</text>
+      <text class="stat-label">已转让</text>
     </view>
   </view>
 
@@ -38,12 +44,11 @@
             <view class="item-title-row">
               <text class="item-title">{{item.title}}</text>
             </view>
-            <text class="item-date">{{item.publishDate}}</text>
 
             <view class="item-badges">
               <text class="item-price">¥{{item.price}}</text>
-              <view class="status-badge {{item.statusClass}}">{{item.status}}</view>
-              <view wx:if="{{item.reviewStatus}}" class="review-status {{item.reviewStatusClass}}">
+              <view wx:if="{{item.transferStatus}}" class="status-badge {{item.transferStatusClass}}">{{item.transferStatusLabel}}</view>
+              <view wx:if="{{item.status}}" class="review-status {{item.reviewStatusClass}}">
                 {{item.reviewStatusLabel}}
               </view>
             </view>
@@ -60,43 +65,87 @@
 
             <!-- Actions -->
             <view class="item-actions">
-              <!-- 审核通过的物品操作 -->
-              <view wx:if="{{item.reviewStatus === '已通过'}}">
-                <!-- 出售中 -->
-                <view wx:if="{{item.status === '在售'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
-                  <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
-                    <text class="action-text">删除</text>
-                  </view>
-                  <view class="action-item offline" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="offline">
-                    <text class="action-text">取消发布</text>
-                  </view>
-                  <view class="action-item completed" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="completed">
-                    <text class="action-text">已成交</text>
-                  </view>
-                </view>
-                <!-- 已下架 -->
-                <view wx:if="{{item.status === '已下架'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
-                  <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
-                    <text class="action-text">删除</text>
-                  </view>
-                  <view class="action-item on-sale" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="onSale">
-                    <text class="action-text">发起出售</text>
-                  </view>
-                </view>
-                <!-- 已成交 -->
-                <view wx:if="{{item.status === '已成交'}}">
-                  <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
-                    <text class="action-text">删除</text>
-                  </view>
-                </view>
+              <view class="actions-left">
+                <text class="item-date">{{item.publishDate}}</text>
               </view>
-              <!-- 审核不通过的物品操作 -->
-              <view wx:if="{{item.reviewStatus === '审核不通过'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
-                <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
-                  <text class="action-text">删除</text>
+              <view class="actions-right">
+                <!-- 审核不通过的物品操作 -->
+                <view wx:if="{{item.status === 'inactive'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
+                  <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
+                    <text class="action-text">删除</text>
+                  </view>
+                  <view class="action-item" bindtap="handleEdit" data-id="{{item.id}}">
+                    <text class="action-text">编辑</text>
+                  </view>
                 </view>
-                <view class="action-item" bindtap="handleEdit" data-id="{{item.id}}">
-                  <text class="action-text">编辑</text>
+                
+                <!-- 审核通过的物品操作 -->
+                <view wx:if="{{item.status === 'active'}}">
+                  <!-- 待发布 -->
+                  <view wx:if="{{item.transferStatus === 'own'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
+                    <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
+                      <text class="action-text">删除</text>
+                    </view>
+                    <view class="action-item on-sale" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="transferring">
+                      <text class="action-text">发起转让</text>
+                    </view>
+                  </view>
+                  
+                  <!-- 发布中 -->
+                  <view wx:if="{{item.transferStatus === 'transferring'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
+                    <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
+                      <text class="action-text">删除</text>
+                    </view>
+                    <view class="action-item offline" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="transfer_cancelled">
+                      <text class="action-text">取消发布</text>
+                    </view>
+                    <view class="action-item accepted" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="transfer_accepted">
+                      <text class="action-text">已接受</text>
+                    </view>
+                    <view class="action-item completed" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="transferred">
+                      <text class="action-text">已转让</text>
+                    </view>
+                  </view>
+                  
+                  <!-- 已接受 -->
+                  <view wx:if="{{item.transferStatus === 'transfer_accepted'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
+                    <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
+                      <text class="action-text">删除</text>
+                    </view>
+                    <view class="action-item offline" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="transfer_cancelled">
+                      <text class="action-text">取消发布</text>
+                    </view>
+                    <view class="action-item on-sale" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="transferring">
+                      <text class="action-text">退回发布</text>
+                    </view>
+                    <view class="action-item completed" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="transferred">
+                      <text class="action-text">已转让</text>
+                    </view>
+                  </view>
+                  
+                  <!-- 已转让 -->
+                  <view wx:if="{{item.transferStatus === 'transferred'}}">
+                    <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
+                      <text class="action-text">删除</text>
+                    </view>
+                  </view>
+                  
+                  <!-- 已取消 -->
+                  <view wx:if="{{item.transferStatus === 'transfer_cancelled'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
+                    <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
+                      <text class="action-text">删除</text>
+                    </view>
+                    <view class="action-item on-sale" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="transferring">
+                      <text class="action-text">重新发布</text>
+                    </view>
+                  </view>
+                </view>
+                
+                <!-- 审核中的物品操作 -->
+                <view wx:if="{{item.status === 'auditing'}}">
+                  <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
+                    <text class="action-text">删除</text>
+                  </view>
                 </view>
               </view>
             </view>
@@ -105,27 +154,6 @@
       </view>
 
 
-    </view>
-  </view>
-
-
-
-  <!-- Status Change Modal -->
-  <view wx:if="{{showStatusModal && selectedItem}}" class="status-modal-overlay" bindtap="closeStatusModal">
-    <view class="status-modal" catchtap="noop">
-      <view class="modal-header">
-        <text class="modal-title">改变"{{selectedItem.title}}"的状态</text>
-      </view>
-      <view class="modal-content">
-        <view class="status-options">
-          <view wx:for="{{statusOptions}}" wx:key="status" class="status-option {{item.class}}" bindtap="handleStatusChange" data-status="{{item.status}}">
-            <text class="option-label">{{item.label}}</text>
-          </view>
-        </view>
-      </view>
-      <view class="modal-footer">
-        <view class="btn btn-close" bindtap="closeStatusModal">关闭</view>
-      </view>
     </view>
   </view>
 </view>

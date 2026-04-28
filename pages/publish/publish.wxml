@@ -60,21 +60,11 @@
             <text class="required">*</text>
           </view>
           
-          <view class="image-grid">
-            <!-- 已上传的图片 -->
-            <view wx:for="{{images}}" wx:key="index" class="image-item">
-              <image src="{{item}}" class="image-preview" mode="aspectFill" />
-              <view class="image-remove" bindtap="removeImage" data-index="{{index}}">
-                <text>×</text>
-              </view>
-            </view>
-
-            <!-- 上传按钮 -->
-            <view wx:if="{{images.length < 9}}" class="image-upload" bindtap="handleUploadImage">
-              <text class="upload-icon">+</text>
-              <text class="upload-count">{{images.length}}/9</text>
-            </view>
-          </view>
+          <image-upload 
+            images="{{images}}" 
+            maxCount="9"
+            bindchange="handleImageChange"
+          />
 
           <text class="section-hint">最多上传9张图片，建议上传清晰的物品照片</text>
         </view>

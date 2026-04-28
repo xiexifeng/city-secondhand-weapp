@@ -1,3 +1,6 @@
+const { itemAPI, fileAPI } = require('../../utils/api');
+const { CATEGORIES, CONDITIONS, TAGS, MAX_LENGTHS, CONDITION_MAP } = require('../../config.js');
+
 Page({
   data: {
     publishType: null,  // 'sell' | 'exchange' | 'wish'
@@ -10,6 +13,8 @@ Page({
       wechat: '',
       phone: '',
       location: '北京市朝阳区',
+      latitude: null,
+      longitude: null,
       wantItems: '',
       budget: '',
       condition: '9成新',
@@ -23,37 +28,9 @@ Page({
     agreed: false,
     categoryIndex: 0,
     conditionIndex: 2,
-    tags: [
-      { name: '全新未拆封', selected: false },
-      { name: '国行版本', selected: false },
-      { name: '原装配件', selected: false },
-      { name: '保修期内', selected: false },
-      { name: '无划痕', selected: false },
-      { name: '当面交易', selected: false },
-      { name: '可小刀', selected: false },
-      { name: '包邮', selected: false }
-    ],
-    categories: [
-      '数码3C',
-      '服饰鞋包',
-      '家居生活',
-      '母婴用品',
-      '书籍文具',
-      '美妆个护',
-      '运动户外',
-      '其他'
-    ],
-    conditions: [
-      '全新',
-      '9.5成新',
-      '9成新',
-      '8.5成新',
-      '8成新',
-      '7成新',
-      '6成新',
-      '5成新',
-      '以下'
-    ],
+    tags: TAGS,
+    categories: CATEGORIES,
+    conditions: CONDITIONS,
     // 折叠状态
     contactSettingsExpanded: false,
     // 免责声明阅读倒计时
@@ -74,6 +51,26 @@ Page({
       });
       return;
     }
+    
+    // 从存储中获取用户联系方式信息
+    const userInfo = wx.getStorageSync('userInfo');
+    const userPhone = userInfo.phone || wx.getStorageSync('userPhone');
+    
+    // 如果有联系方式信息，填充到表单中
+    if (userPhone) {
+      const { formData } = this.data;
+      formData.phone = userPhone;
+      this.setData({ formData });
+    }
+    const wechat = userInfo.wechat || '';
+    
+    // 如果有联系方式信息，填充到表单中
+    if (wechat) {
+      const { formData } = this.data;
+      formData.wechat = wechat;
+      this.setData({ formData });
+    }
+    
     // 页面加载
     this.checkEditMode();
   },
@@ -186,6 +183,30 @@ Page({
       const conditionIndex = this.data.conditions.indexOf(item.condition || '9成新');
       console.log('Category index:', categoryIndex, 'Condition index:', conditionIndex);
       
+      // 解析位置信息
+      let locationDetails = {};
+      let locationStr = item.location;
+      
+      try {
+        // 尝试解析JSON格式的location
+        const parsedLocation = JSON.parse(item.location);
+        // 提取省市区信息，构建locationDetails
+        locationDetails = {
+          province: parsedLocation.province || '',
+          city: parsedLocation.city || '',
+          district: parsedLocation.district || ''
+        };
+        // 使用存储的详细地址，如果没有则拼接省市区
+        locationStr = parsedLocation.location || `${locationDetails.province}${locationDetails.city}${locationDetails.district}`;
+      } catch (e) {
+        // 如果不是JSON格式，使用默认值
+        locationDetails = {
+          province: '北京市',
+          city: '北京市',
+          district: '朝阳区'
+        };
+      }
+      
       this.setData({
         publishType: 'sell',
         images: [item.image],
@@ -196,17 +217,13 @@ Page({
           category: item.category,
           wechat: '',
           phone: '',
-          location: item.location,
+          location: locationStr,
           wantItems: '',
           budget: '',
           condition: item.condition || '9成新',
           contactVisibility: 'both'
         },
-        locationDetails: {
-          province: '北京市',
-          city: '北京市',
-          district: '朝阳区'
-        },
+        locationDetails: locationDetails,
         categoryIndex: categoryIndex >= 0 ? categoryIndex : 0,
         conditionIndex: conditionIndex >= 0 ? conditionIndex : 2,
         editingId: id
@@ -354,14 +371,59 @@ Page({
 
     wx.chooseImage({
       count: 9 - images.length,
-      sizeType: ['original', 'compressed'],
+      sizeType: ['compressed'], // 只选择压缩后的图片
       sourceType: ['album', 'camera'],
       success: (res) => {
-        this.setData({
-          images: [...images, ...res.tempFilePaths]
-        });
+        // 立即上传选中的图片
+        this.uploadImages(res.tempFilePaths);
       }
     });
+  },
+
+  /**
+   * 上传图片到服务器
+   */
+  uploadImages: async function(tempFilePaths) {
+    const { images } = this.data;
+    const uploadedImages = [...images];
+
+    for (const tempFilePath of tempFilePaths) {
+      try {
+        // 显示上传中提示
+        wx.showLoading({
+          title: '上传中...',
+          mask: true
+        });
+
+        // 上传图片
+        const uploadResult = await fileAPI.uploadImage(tempFilePath);
+        uploadedImages.push(uploadResult.data.fileUrl);
+
+        // 更新图片列表
+        this.setData({
+          images: uploadedImages
+        });
+      } catch (error) {
+        console.error('图片上传失败:', error);
+        // 上传失败，提示用户
+        wx.showToast({
+          title: '图片上传失败，请重试',
+          icon: 'none'
+        });
+        // 移除失败的图片（这里只是不添加到列表）
+      } finally {
+        // 隐藏加载提示
+        wx.hideLoading();
+      }
+    }
+  },
+
+  /**
+   * 处理图片变更事件
+   */
+  handleImageChange: function(e) {
+    const { images } = e.detail;
+    this.setData({ images });
   },
 
   /**
@@ -383,15 +445,7 @@ Page({
     const { formData } = this.data;
     
     // 检查字数限制
-    const maxLengths = {
-      title: 30,
-      description: 500,
-      price: 10,
-      wantItems: 50,
-      budget: 100,
-      wechat: 20,
-      phone: 11
-    };
+    const maxLengths = MAX_LENGTHS;
     
     if (maxLengths[field] && value.length > maxLengths[field]) {
       wx.showToast({
@@ -543,7 +597,7 @@ Page({
   /**
    * 发布物品
    */
-  handlePublish: function() {
+  handlePublish: async function() {
     const { agreed, formData, publishType, images, canPublish, editingId, isSubmitting } = this.data;
 
     // 防重复提交
@@ -636,18 +690,78 @@ Page({
     this.setData({ isSubmitting: true });
 
     try {
-      // 发布成功
-      wx.showToast({
-        title: editingId ? '编辑成功！' : '发布成功！',
-        icon: 'success',
-        duration: 1500
-      });
+      // 准备发布数据（包含联系方式字段）
+      const locationData = {
+        ...this.data.locationDetails,
+        location: formData.location // 包含详细地址
+      };
+      
+      const publishData = {
+        itemTitle: formData.title,
+        itemDescription: formData.description,
+        itemImageList: images,
+        depreciation: this.getDepreciationValue(formData.condition),
+        price: formData.price,
+        category: formData.category,
+        tradeType: publishType === 'sell' ? '人民币' : '以物换物',
+        location: JSON.stringify(locationData), // 存储包含省市区和详细地址的JSON串
+        latitude: formData.latitude || 39.9042, // 使用从location页面返回的纬度，否则使用默认值
+        longitude: formData.longitude || 116.4074, // 使用从location页面返回的经度，否则使用默认值
+        wechat: formData.wechat,
+        phone: formData.phone,
+        contactVisibility: formData.contactVisibility
+      };
+
+      // 发布物品
+      let result;
+      if (editingId) {
+        result = await itemAPI.updateItem(editingId, publishData);
+      } else {
+        result = await itemAPI.publishItem(publishData);
+      }
+      
+      // 检查后端返回的结果
+      if (result && result.success) {
+        wx.showToast({
+          title: editingId ? '编辑成功！' : '发布成功！',
+          icon: 'success',
+          duration: 1500
+        });
+      } else {
+        throw new Error(result && result.desc || '发布失败');
+      }
 
       // 延迟后跳转到已发布物品页面
       setTimeout(() => {
         if (editingId) {
           wx.navigateBack();
         } else {
+          // 清空表单数据
+          this.setData({
+            images: [],
+            formData: {
+              title: '',
+              description: '',
+              price: '',
+              category: '数码3C',
+              wechat: '',
+              phone: '',
+              location: '北京市朝阳区',
+              wantItems: '',
+              budget: '',
+              condition: '9成新',
+              contactVisibility: 'both'
+            },
+            categoryIndex: 0,
+            conditionIndex: 2,
+            tags: TAGS.map(tag => ({ ...tag, selected: false })),
+            locationDetails: {
+              province: '北京市',
+              city: '北京市',
+              district: '朝阳区'
+            }
+          });
+          
           wx.switchTab({
             url: '/pages/profile/profile'
           });
@@ -656,6 +770,7 @@ Page({
         this.setData({ isSubmitting: false });
       }, 1500);
     } catch (error) {
+      console.error('发布失败:', error);
       // 处理错误
       wx.showToast({
         title: '发布失败，请重试',
@@ -664,5 +779,12 @@ Page({
       // 恢复提交状态
       this.setData({ isSubmitting: false });
     }
+  },
+
+  /**
+   * 根据物品成色获取折旧值
+   */
+  getDepreciationValue: function(condition) {
+    return CONDITION_MAP[condition] || 5;
   }
 });

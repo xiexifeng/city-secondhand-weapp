@@ -38,20 +38,28 @@ Page({
       .then(res => {
         wx.hideLoading();
         
-        // Update profile data
-        this.setData({
-          profile: {
-            nickname: res.nickname || '用户昵称',
-            bio: res.bio || '',
-            location: res.location || '广东省深圳市',
-            phone: res.phone || '',
-            email: res.email || '',
-            wechat: res.wechat || ''
-          }
-        });
-        
-        // Update avatar text
-        this.updateAvatarText();
+        // 检查后端返回的响应格式
+        if (res && res.success && res.data) {
+          // Update profile data
+          this.setData({
+            profile: {
+              nickname: res.data.nickname || '用户昵称',
+              bio: res.data.bio || '',
+              location: res.data.location || '广东省深圳市',
+              phone: res.data.phone || '',
+              email: res.data.email || '',
+              wechat: res.data.wechat || ''
+            }
+          });
+          
+          // Update avatar text
+          this.updateAvatarText();
+        } else {
+          wx.showToast({
+            title: '获取用户信息失败',
+            icon: 'none'
+          });
+        }
       })
       .catch(err => {
         wx.hideLoading();
@@ -144,6 +152,22 @@ Page({
           title: '保存成功',
           icon: 'success'
         });
+        
+      
+        // 更新本地存储中的userinfo对象
+        const userInfo = wx.getStorageSync('userInfo');
+        if (userInfo) {
+          const updatedUserInfo = {
+            ...userInfo,
+            nickname: updateData.nickname,
+            bio: updateData.bio,
+            location: updateData.location,
+            wechat: updateData.wechat,
+            phone: updateData.phone,
+            email: updateData.email
+          };
+          wx.setStorageSync('userInfo', updatedUserInfo);
+        }
         
         // Navigate back to profile
         setTimeout(() => {

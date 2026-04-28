@@ -1,3 +1,8 @@
+// 导入工具
+const { formatDate } = require('../../utils/format');
+const { getReviewStatusLabel, getReviewStatusClass, getTransferStatusLabel, getTransferStatusClass } = require('../../utils/enums');
+const { TRANSFER_STATUS } = require('../../utils/enums');
+
 Page({
   data: {
     items: [
@@ -80,9 +85,10 @@ Page({
       }
     ],
     statusCounts: {
-      onSale: 0,
-      trading: 0,
-      completed: 0
+      
+      transferring: 0,
+      transfer_accepted: 0,
+      transferred: 0
     }
   },
 
@@ -95,7 +101,79 @@ Page({
       });
       return;
     }
-    this.calculateStatusCounts();
+    
+    // 从后端API获取我的物品列表
+    this.getMyItems();
+  },
+  
+  /**
+   * 获取我的物品列表
+   */
+  getMyItems: function() {
+    wx.showLoading({
+      title: '加载中...'
+    });
+    
+    const api = require('../../utils/api');
+    api.itemAPI.getMyItems({})
+      .then(res => {
+        wx.hideLoading();
+        
+        // 检查后端返回的响应格式
+        if (res && res.success && res.data) {
+          // 转换数据格式
+          const items = res.data.map(item => {
+            // 解析位置信息
+            let location = '';
+            try {
+              const locationData = JSON.parse(item.location);
+              location = locationData.location || `${locationData.province}${locationData.city}${locationData.district}`;
+            } catch (e) {
+              location = item.location || '';
+            }
+            
+            
+            return {
+              id: item.id,
+              title: item.itemTitle,
+              price: item.price,
+              image: item.firstImage,
+              category: item.category,
+              description: item.itemDescription,
+              status: item.status,
+              reviewStatusLabel: getReviewStatusLabel(item.status),
+              reviewStatusClass: getReviewStatusClass(item.status),
+              transferStatus: item.transferStatus,
+              transferStatusLabel: getTransferStatusLabel(item.transferStatus),
+              transferStatusClass: getTransferStatusClass(item.transferStatus),
+              views: item.views || 0,
+              likes: item.likes || 0,
+              favorites: item.favorites || 0,
+              publishDate: item.createTime ? formatDate(item.createTime) : formatDate(Date.now()),
+              transactionType: item.tradeType,             
+              location: location
+              
+            };
+          });
+          console.log(items);
+          
+          this.setData({ items });
+          this.calculateStatusCounts();
+        } else {
+          wx.showToast({
+            title: '获取物品列表失败',
+            icon: 'none'
+          });
+        }
+      })
+      .catch(err => {
+        wx.hideLoading();
+        wx.showToast({
+          title: '获取物品列表失败',
+          icon: 'none'
+        });
+        console.log('获取物品列表失败:', err);
+      });
   },
 
   /**
@@ -104,71 +182,11 @@ Page({
   calculateStatusCounts: function() {
     const items = this.data.items;
     const statusCounts = {
-      onSale: items.filter(item => item.status === '在售').length,
-      trading: items.filter(item => item.status === '成交中').length,
-      completed: items.filter(item => item.status === '已成交').length
+      transferring: items.filter(item => item.transferStatus === TRANSFER_STATUS.TRANSFERRING).length,
+      transfer_accepted: items.filter(item => item.transferStatus === TRANSFER_STATUS.TRANSFER_ACCEPTED).length,
+      transferred: items.filter(item => item.transferStatus === TRANSFER_STATUS.TRANSFERRED).length
     };
     this.setData({ statusCounts });
-  },
-
-  /**
-   * Get status count
-   */
-  getStatusCount: function(status) {
-    return this.data.items.filter(item => item.status === status).length;
-  },
-
-  /**
-   * Get status class
-   */
-  getStatusClass: function(status) {
-    const classes = {
-      '在售': 'status-on-sale',
-      '已下架': 'status-offline',
-      '成交中': 'status-trading',
-      '已成交': 'status-completed'
-    };
-    return classes[status] || 'status-on-sale';
-  },
-
-  /**
-   * Get review status class
-   */
-  getReviewStatusClass: function(status) {
-    const classes = {
-      '待审核': 'review-pending',
-      '已通过': 'review-approved',
-      '审核不通过': 'review-rejected'
-    };
-    return classes[status] || 'review-pending';
-  },
-
-  /**
-   * Get review status label
-   */
-  getReviewStatusLabel: function(status) {
-    const labels = {
-      '待审核': '⏳ 待审核',
-      '已通过': '✓ 已通过',
-      '审核不通过': '✕ 审核不通过'
-    };
-    return labels[status] || '待审核';
-  },
-
-  /**
-   * Get status action text
-   */
-  getStatusActionText: function(status) {
-    if (status === '在售') {
-      return '下架';
-    } else if (status === '已下架') {
-      return '上架';
-    } else if (status === '成交中') {
-      return '标记已成交';
-    } else if (status === '已成交') {
-      return '重新上架';
-    }
-    return '改变状态';
   },
 
   /**
@@ -216,53 +234,81 @@ Page({
    */
   handleStatusChange: function(e) {
     const id = e.currentTarget.dataset.id;
-    const newStatus = e.currentTarget.dataset.status;
+    const newTransferStatus = e.currentTarget.dataset.status;
     const { items } = this.data;
     
-    const statusMap = {
-      'onSale': '在售',
-      'offline': '已下架',
-      'completed': '已成交'
+    const transferStatusLabels = {
+      'own': '待发布',
+      'transferring': '发布中',
+      'transfer_accepted': '已接受',
+      'transferred': '已转让',
+      'transfer_cancelled': '已取消'
     };
     
-    const statusClassMap = {
-      '在售': 'status-on-sale',
-      '已下架': 'status-offline',
-      '成交中': 'status-trading',
-      '已成交': 'status-completed'
-    };
+    const actualStatusLabel = transferStatusLabels[newTransferStatus] || newTransferStatus;
     
-    const actualStatus = statusMap[newStatus] || newStatus;
     
-    // 二次确认弹窗
+    let confirmContent = '确定要将物品状态更新为: ' + actualStatusLabel + ' 吗？';
+    
+    if (newTransferStatus === 'transfer_accepted') {
+      confirmContent = '设置为"已接受"表示您已与买家沟通清楚，即将进行交易。\n\n确定要将物品状态更新为"已接受"吗？';
+    }
+    
     wx.showModal({
       title: '确认操作',
-      content: '确定要将物品状态更新为: ' + actualStatus + ' 吗？',
+      content: confirmContent,
       confirmText: '确定',
       cancelText: '取消',
       success: (res) => {
         if (res.confirm) {
-          const updatedItems = items.map(i => {
-            if (i.id === id) {
-              return {
-                ...i, 
-                status: actualStatus,
-                statusClass: statusClassMap[actualStatus] || 'status-on-sale'
-              };
-            }
-            return i;
+          wx.showLoading({
+            title: '更新中...'
           });
           
-          this.setData({
-            items: updatedItems
-          });
-          
-          this.calculateStatusCounts();
-          
-          wx.showToast({
-            title: '状态已更新为: ' + actualStatus,
-            icon: 'success'
-          });
+          const api = require('../../utils/api');
+          api.itemAPI.updateTransferStatus(id, newTransferStatus)
+            .then(res => {
+              wx.hideLoading();
+              
+              if (res && res.success) {
+                const updatedItems = items.map(i => {
+                  if (i.id === id) {
+                    return {
+                      ...i, 
+                      transferStatus: newTransferStatus,
+                      transferStatusLabel: getTransferStatusLabel(newTransferStatus),
+                      transferStatusClass: getTransferStatusClass(newTransferStatus)
+                    };
+                  }
+                  return i;
+                });
+                
+                this.setData({
+                  items: updatedItems
+                });
+                
+                this.calculateStatusCounts();
+                
+                wx.showToast({
+                  title: actualStatusLabel,
+                  icon: 'success',
+                  duration: 2000
+                });
+              } else {
+                wx.showToast({
+                  title: '更新失败',
+                  icon: 'none'
+                });
+              }
+            })
+            .catch(err => {
+              wx.hideLoading();
+              wx.showToast({
+                title: '更新失败',
+                icon: 'none'
+              });
+              console.log('更新状态失败:', err);
+            });
         }
       }
     });
@@ -280,13 +326,38 @@ Page({
       cancelText: '取消',
       success: (res) => {
         if (res.confirm) {
-          const items = this.data.items.filter(item => item.id !== id);
-          this.setData({ items });
-          this.calculateStatusCounts();
-          wx.showToast({
-            title: '物品已删除',
-            icon: 'success'
+          wx.showLoading({
+            title: '删除中...'
           });
+          
+          const api = require('../../utils/api');
+          api.itemAPI.deleteItem(id)
+            .then(res => {
+              wx.hideLoading();
+              
+              if (res && res.success) {
+                const items = this.data.items.filter(item => item.id !== id);
+                this.setData({ items });
+                this.calculateStatusCounts();
+                wx.showToast({
+                  title: '物品已删除',
+                  icon: 'success'
+                });
+              } else {
+                wx.showToast({
+                  title: '删除失败',
+                  icon: 'none'
+                });
+              }
+            })
+            .catch(err => {
+              wx.hideLoading();
+              wx.showToast({
+                title: '删除失败',
+                icon: 'none'
+              });
+              console.log('删除物品失败:', err);
+            });
         }
       }
     });
