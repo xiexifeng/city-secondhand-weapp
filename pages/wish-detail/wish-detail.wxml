@@ -7,9 +7,6 @@
       <view class="title-header">
         <text class="item-title">{{wish.title}}</text>
         <view class="action-buttons">
-          <view class="share-btn" bindtap="handleShare">
-            <image class="share-icon-image" src="/assets/images/share.svg" mode="aspectFit" />
-          </view>
           <view class="like-btn {{liked ? 'liked' : ''}}" bindtap="handleLike">
             <text>{{liked ? '❤️' : '🤍'}}</text>
           </view>
