@@ -268,31 +268,66 @@ page {
   line-height: 1.4;
 }
 
-/* 价格和距离行 */
-.item-meta {
+/* 价格和时间行 */
+.item-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 8rpx;
   font-size: 26rpx;
+}
+
+.item-main {
+  flex: 1;
+  overflow: hidden;
 }
 
 .item-price {
   font-weight: 700;
   color: #F97316;
+  font-size: 30rpx;
+  max-width: 280rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.item-price-zero {
-  font-weight: 700;
-  color: #10B981;
+.item-want {
+  font-weight: 600;
+  color: #9333EA;
+  font-size: 24rpx;
+  background-color: #FDF4FF;
+  padding: 2rpx 8rpx;
+  border-radius: 4rpx;
+  max-width: 280rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.item-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2rpx;
+  flex-shrink: 0;
+  margin-left: 8rpx;
 }
 
 .item-distance {
-  font-size: 24rpx;
-  color: #9CA3AF;
+  font-size: 22rpx;
+  color: #3B82F6;
+  font-weight: 500;
+  white-space: nowrap;
 }
 
-/* 标签和交易方式 */
+.item-time {
+  font-size: 20rpx;
+  color: #9CA3AF;
+  white-space: nowrap;
+}
+
+/* 标签区域 */
 .item-footer {
   display: flex;
   justify-content: space-between;
@@ -306,13 +341,14 @@ page {
   gap: 4rpx;
   flex: 1;
   overflow: hidden;
+  flex-wrap: wrap;
 }
 
 .item-tag {
   background-color: #F8FAFC;
   color: #475569;
-  padding: 2rpx 6rpx;
-  border-radius: 3rpx;
+  padding: 3rpx 8rpx;
+  border-radius: 4rpx;
   font-size: 20rpx;
   white-space: nowrap;
   max-width: 120rpx;
@@ -320,15 +356,23 @@ page {
   text-overflow: ellipsis;
 }
 
-.item-type {
-  background-color: #10B981;
-  color: white;
-  padding: 4rpx 10rpx;
+.item-distance-tag {
+  padding: 3rpx 10rpx;
   border-radius: 4rpx;
   font-size: 20rpx;
   font-weight: 600;
   white-space: nowrap;
   flex-shrink: 0;
+}
+
+.item-distance-tag.near {
+  background-color: #ECFDF5;
+  color: #10B981;
+}
+
+.item-distance-tag.remote {
+  background-color: #FEF3C7;
+  color: #D97706;
 }
 
 /* ========== 加载状态 ========== */

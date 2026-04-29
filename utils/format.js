@@ -72,6 +72,30 @@ export function formatFileSize(bytes) {
 }
 
 /**
+ * 格式化距离
+ * @param {number} distance - 距离（单位：km）
+ * @returns {object} { text, type } - 距离文本和类型
+ */
+export function formatDistance(distance) {
+  if (distance === undefined || distance === null) {
+    return { text: '', type: '' };
+  }
+  
+  const numDistance = Number(distance);
+  if (isNaN(numDistance)) {
+    return { text: '', type: '' };
+  }
+  
+  if (numDistance >= 100) {
+    return { text: '非同城', type: 'remote' };
+  } else if (numDistance < 1) {
+    return { text: Math.round(numDistance * 1000) + 'm', type: 'near' };
+  } else {
+    return { text: numDistance + 'km', type: 'near' };
+  }
+}
+
+/**
  * 格式化相对时间
  * @param {number|string} timestamp - 时间戳
  * @returns {string} 相对时间字符串

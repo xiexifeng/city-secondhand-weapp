@@ -19,9 +19,11 @@
         placeholder="搜索物品..." 
         bindinput="onSearchInput"
         value="{{searchKeyword}}"
+        confirm-type="search"
+        bindconfirm="onSearch"
       />
     </view>
-    <view class="filter-btn">
+    <view class="filter-btn" bindtap="onSearch">
       <text>搜索</text>
     </view>
   </view>
@@ -105,23 +107,21 @@
           <!-- 标题 -->
           <text class="item-title">{{item.title}}</text>
           
-          <!-- 价格和距离 -->
-          <view class="item-meta">
+          <!-- 价格/想换和时间 -->
+          <view class="item-header">
             <view wx:if="{{item.price > 0}}" class="item-price">¥{{item.price}}</view>
-            <view wx:else class="item-price-zero">以物换物</view>
-            <text class="item-distance">{{item.distance}}km</text>
+            <view wx:elif="{{item.wantItem}}" class="item-want">想换: {{item.wantItem}}</view>
+            <text class="item-time">{{item.formattedTime}}</text>
           </view>
 
-          <!-- 标签和交易方式 -->
+          <!-- 标签和距离 -->
           <view class="item-footer">
             <view class="item-tags">
               <view wx:for="{{item.tags}}" wx:key="*this" class="item-tag">
                 {{item}}
               </view>
             </view>
-            <view class="item-type">
-              {{item.method === 'sell' ? '人民币' : '以物换物'}}
-            </view>
+            <view wx:if="{{item.formattedDistance}}" class="item-distance-tag {{item.distanceType}}">{{item.formattedDistance}}</view>
           </view>
         </view>
       </view>
