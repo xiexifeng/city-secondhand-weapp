@@ -66,11 +66,11 @@
       <view class="info-row">
         <view class="info-item" bindtap="handleNavigate">
           <text class="info-label">📍</text>
-          <text class="info-value">{{item.distance}}km</text>
+          <text class="info-value distance-tag {{item.distanceType}}">{{item.formattedDistance }}</text>
         </view>
         <view class="info-item">
           <text class="info-label">🕐</text>
-          <text class="info-value">{{item.time}}</text>
+          <text class="info-value">{{item.formattedTime}}</text>
         </view>
         <view class="info-item">
           <text class="info-label">👁️</text>
@@ -198,7 +198,7 @@
         <view class="location-header">
           <text class="location-label">详细地址</text>
           <view class="distance-badge" bindtap="handleNavigate">
-            <text class="distance-text">距您{{item.distance}}km</text>
+            <text class="distance-text">距您{{item.formattedDistance }}</text>
             <text class="distance-icon">📍</text>
           </view>
         </view>

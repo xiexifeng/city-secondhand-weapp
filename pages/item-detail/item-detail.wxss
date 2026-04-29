@@ -228,6 +228,23 @@ page {
   color: #475569;
 }
 
+.distance-tag {
+  padding: 4rpx 10rpx;
+  border-radius: 4rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.distance-tag.near {
+  background-color: #ECFDF5;
+  color: #10B981;
+}
+
+.distance-tag.remote {
+  background-color: #FEF3C7;
+  color: #D97706;
+}
+
 .tags-section {
   background-color: white;
   padding: 16rpx;

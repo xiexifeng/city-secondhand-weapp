@@ -1,128 +1,117 @@
+const { formatRelativeTime, formatDistance } = require('../../utils/format.js');
+const { itemAPI, request } = require('../../utils/api.js');
+
 Page({
   data: {
     isLoggedIn: false,
-    item: {
-      id: 1,
-      title: 'iPhone 14 Pro Max',
-      price: 5800,
-      method: 'sell',
-      verified: true,
-      urgent: false,
-      images: [
-        'https://images.unsplash.com/photo-1592286927505-1def25115558?w=500&h=500&fit=crop&q=85',
-        'https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=500&h=500&fit=crop&q=85',
-        'https://images.unsplash.com/photo-1556656793-08538906a9f8?w=500&h=500&fit=crop&q=85'
-      ],
-      distance: '1.2',
-      time: '2小时前',
-      tags: ['全新未拆封', '国行版本', '原装配件'],
-      description: 'iPhone 14 Pro Max，2023年3月购买，全新未拆封，国行版本。配件齐全，有原装盒子和充电器。成色完美，无磕碰。因为已经有一部手机了，所以转让。诚心出售，价格可小刀。',
-      seller: {
-        avatar: '王',
-        name: '王先生',
-        verified: true,
-        items: 23,  // 发布物品数量
-        sold: 18,  // 已转让数量
-        transferRate: 0.5  // 已转让率
-      },
-      location: {
-        address: '深圳市福田区上梅林地铁站A口',
-        latitude: 22.5707,  // 北京坐标示例
-        longitude: 114.0595
-      },
-      contact: {
-        wechat: 'wangxiansheng123',
-        phone: '13800138000'
-      },
-      stats: {
-        views: 245,
-        likes: 18,
-        favorites: 12
-      }
-    },
-    markers: [
-      {
-        id: 1,
-        latitude: 39.9042,
-        longitude: 116.4074,
-        title: '交易地点',
-        iconPath: '',
-        width: 32,
-        height: 32
-      }
-    ],
+    item: {},
+    markers: [],
     currentImageIndex: 0,
     liked: false,
     collected: false,
     showSafetyDetails: true,
     copied: false,
-    // 举报相关
-    showReportModal: false
+    showReportModal: false,
+    loading: true
   },
 
   onLoad: function(options) {
-    // Load item details based on item ID
     if (options.id) {
-      console.log('Loading item:', options.id);
+      this.loadItemDetail(options.id);
     }
     
-    // 检查登录状态
     this.checkLoginStatus();
-    
-    // 计算已转让率
-    const item = this.data.item;
-    const transferRate = (item.seller.sold / item.seller.items * 100).toFixed(2);
-    item.seller.transferRate = transferRate;
-    this.setData({ item });
-    
-    // 获取用户位置并计算距离
-    this.calculateDistance();
-    
-    // 更新markers坐标
-    this.updateMapMarkers();
   },
 
-  // 计算实时距离
-  calculateDistance: function() {
+  loadItemDetail: function(itemId) {
     const that = this;
     wx.getLocation({
       type: 'wgs84',
       success: function(res) {
-        const userLat = res.latitude;
-        const userLng = res.longitude;
-        const item = that.data.item;
-        const itemLat = item.location.latitude;
-        const itemLng = item.location.longitude;
-        
-        // 使用Haversine公式计算距离
-        const distance = that.getDistance(userLat, userLng, itemLat, itemLng);
-        item.distance = distance.toFixed(1);
-        that.setData({ item });
+        that.fetchItemDetail(itemId, res.latitude, res.longitude);
       },
       fail: function() {
-        // 用户拒绝授权或获取位置失败，使用默认距离
-        console.log('获取位置失败，使用默认距离');
+        that.fetchItemDetail(itemId, null, null);
       }
     });
   },
 
-  // Haversine公式计算两点之间的距离（单位：公里）
-  getDistance: function(lat1, lng1, lat2, lng2) {
-    const R = 6371; // 地球半径（公里）
-    const dLat = this.deg2rad(lat2 - lat1);
-    const dLng = this.deg2rad(lng2 - lng1);
-    const a = 
-      Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(this.deg2rad(lat1)) * Math.cos(this.deg2rad(lat2)) * 
-      Math.sin(dLng/2) * Math.sin(dLng/2); 
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-    const distance = R * c;
-    return distance;
+  fetchItemDetail: function(itemId, latitude, longitude) {
+    const that = this;
+    let url = `/client/square/detail-item/${itemId}`;
+    if (latitude && longitude) {
+      url += `?latitude=${latitude}&longitude=${longitude}`;
+    }
+    
+    request(url, { method: 'POST' })
+      .then(res => {
+        const data = res.data;
+        const item = that.transformItemData(data);
+        that.setData({ 
+          item, 
+          loading: false,
+          liked: data.isLiked || false,
+          collected: data.isCollected || false
+        });
+        console.log(item)
+        that.updateMapMarkers();
+      })
+      .catch(err => {
+        console.error('获取物品详情失败:', err);
+        that.setData({ loading: false });
+        wx.showToast({
+          title: '获取详情失败',
+          icon: 'error'
+        });
+      });
   },
 
-  // 角度转弧度
-  deg2rad: function(deg) {
-    return deg * (Math.PI/180);
+  transformItemData: function(data) {
+    let locationInfo = {};
+    try {
+      locationInfo = JSON.parse(data.location || '{}');
+    } catch (e) {
+      locationInfo = { location: data.location };
+    }
+    
+    const distanceResult = formatDistance(data.distance);
+    
+    return {
+      id: data.id,
+      title: data.title,
+      price: data.price,
+      method: data.method || 'sell',
+      urgent: data.urgent || false,
+      images: data.itemImageList || [],
+      distance: data.distance,
+      formattedDistance: distanceResult.text,
+      distanceType: distanceResult.type,
+      time: data.time,
+      formattedTime: formatRelativeTime(data.time),
+      tags: data.tags || [],
+      description: data.description || '',
+      seller: {
+        avatar: data.userExt ? data.userExt.avatarUrl || '' : '',
+        name: data.userExt ? data.userExt.nickname || '' : '',
+        verified: data.userExt ? data.userExt.verified || false : false,
+        items: data.userExt ? data.userExt.itemCount || 0 : 0,
+        transferRate: data.userExt ? Math.round((data.userExt.transferRate || 0) * 100) : 0
+      },
+      location: {
+        address: locationInfo.location || '',
+        latitude: data.latitude || 0,
+        longitude: data.longitude || 0
+      },
+      contact: {
+        wechat: data.wechat || '',
+        phone: data.phone || ''
+      },
+      stats: {
+        views: data.views || 0,
+        likes: data.likes || 0,
+        favorites: data.favorites || 0
+      }
+    };
   },
 
   /**
