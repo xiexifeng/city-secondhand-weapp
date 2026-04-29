@@ -56,6 +56,18 @@ function request(url, options = {}) {
   })
 }
 
+// 社交相关 API
+const socialAPI = {
+  // 物品社交操作（点赞、收藏、浏览）
+  socialItem(itemId, socialType, socialOperate) {
+    let url = `/client/square/social-item/${itemId}`;
+    url += `?socialType=${socialType}&socialOperate=${socialOperate}`;
+    return request(url, {
+      method: 'POST'
+    })
+  }
+}
+
 // 物品相关 API
 const itemAPI = {
   // 获取物品列表
@@ -67,8 +79,12 @@ const itemAPI = {
   },
 
   // 获取物品详情
-  getItemDetail(itemId) {
-    return request(`/client/square/detail-item/${itemId}`, {
+  getItemDetail(itemId, latitude, longitude) {
+    let url = `/client/square/detail-item/${itemId}`;
+    if (latitude && longitude) {
+      url += `?latitude=${latitude}&longitude=${longitude}`;
+    }
+    return request(url, {
       method: 'POST'
     })
   },
@@ -310,5 +326,6 @@ module.exports = {
   userAPI,
   messageAPI,
   wishAPI,
-  fileAPI
+  fileAPI,
+  socialAPI
 }

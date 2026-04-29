@@ -290,9 +290,9 @@ page {
 
 .item-want {
   font-weight: 600;
-  color: #9333EA;
+  color: #ea580c;
   font-size: 24rpx;
-  background-color: #FDF4FF;
+  background-color: #fff7ed;
   padding: 2rpx 8rpx;
   border-radius: 4rpx;
   max-width: 280rpx;

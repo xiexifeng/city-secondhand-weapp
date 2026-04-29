@@ -196,6 +196,11 @@ page {
   color: #10b981;
 }
 
+.tag-exchange {
+  background-color: #fff7ed;
+  color: #ea580c;
+}
+
 .tag-verified {
   background-color: #f8fafc;
   color: #475569;
@@ -209,6 +214,27 @@ page {
   font-size: 40rpx;
   font-weight: 700;
   color: #1f2937;
+}
+
+.exchange-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 4rpx;
+}
+
+.exchange-label {
+  font-size: 28rpx;
+  color: #6b7280;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.exchange-value {
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #ea580c;
+  word-break: break-all;
 }
 
 .info-row {

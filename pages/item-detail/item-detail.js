@@ -1,5 +1,5 @@
 const { formatRelativeTime, formatDistance } = require('../../utils/format.js');
-const { itemAPI, request } = require('../../utils/api.js');
+const { itemAPI, request, socialAPI } = require('../../utils/api.js');
 
 Page({
   data: {
@@ -16,11 +16,13 @@ Page({
   },
 
   onLoad: function(options) {
-    if (options.id) {
-      this.loadItemDetail(options.id);
-    }
-    
     this.checkLoginStatus();
+    
+    if (options.id) {
+      this.setData({ itemId: options.id });
+      this.loadItemDetail(options.id);
+      this.recordView(options.id);
+    }
   },
 
   loadItemDetail: function(itemId) {
@@ -38,12 +40,8 @@ Page({
 
   fetchItemDetail: function(itemId, latitude, longitude) {
     const that = this;
-    let url = `/client/square/detail-item/${itemId}`;
-    if (latitude && longitude) {
-      url += `?latitude=${latitude}&longitude=${longitude}`;
-    }
     
-    request(url, { method: 'POST' })
+    itemAPI.getItemDetail(itemId, latitude, longitude)
       .then(res => {
         const data = res.data;
         const item = that.transformItemData(data);
@@ -90,6 +88,7 @@ Page({
       formattedTime: formatRelativeTime(data.time),
       tags: data.tags || [],
       description: data.description || '',
+      wantItem: data.wantItem || '',
       seller: {
         avatar: data.userExt ? data.userExt.avatarUrl || '' : '',
         name: data.userExt ? data.userExt.nickname || '' : '',
@@ -147,6 +146,14 @@ Page({
     this.setData({ markers });
   },
 
+  // 记录浏览
+  recordView: function(itemId) {
+    if (!this.data.isLoggedIn) return;
+    socialAPI.socialItem(itemId, 'VIEW', 'ADD').catch(err => {
+      console.error('记录浏览失败:', err);
+    });
+  },
+
   // Image navigation
   handlePrevImage: function() {
     const { currentImageIndex, item } = this.data;
@@ -169,24 +176,72 @@ Page({
 
   // Like (interested)
   handleLike: function() {
-    const { liked } = this.data;
-    this.setData({ liked: !liked });
-    wx.showToast({
-      title: liked ? '已取消感兴趣' : '已标记感兴趣',
-      icon: 'success',
-      duration: 1500
-    });
+    const { liked, itemId, isLoggedIn } = this.data;
+    
+    if (!isLoggedIn) {
+      wx.showToast({
+        title: '请先登录',
+        icon: 'none',
+        duration: 1500
+      });
+      return;
+    }
+    
+    const newLiked = !liked;
+    const operate = newLiked ? 'ADD' : 'CANCEL';
+    
+    socialAPI.socialItem(itemId, 'LOVE', operate)
+      .then(() => {
+        this.setData({ liked: newLiked });
+        wx.showToast({
+          title: newLiked ? '已标记感兴趣' : '已取消感兴趣',
+          icon: 'success',
+          duration: 1500
+        });
+      })
+      .catch(err => {
+        console.error('点赞失败:', err);
+        wx.showToast({
+          title: '操作失败',
+          icon: 'error',
+          duration: 1500
+        });
+      });
   },
 
   // Collect (favorite)
   handleCollect: function() {
-    const { collected } = this.data;
-    this.setData({ collected: !collected });
-    wx.showToast({
-      title: collected ? '已取消收藏' : '已收藏',
-      icon: 'success',
-      duration: 1500
-    });
+    const { collected, itemId, isLoggedIn } = this.data;
+    
+    if (!isLoggedIn) {
+      wx.showToast({
+        title: '请先登录',
+        icon: 'none',
+        duration: 1500
+      });
+      return;
+    }
+    
+    const newCollected = !collected;
+    const operate = newCollected ? 'ADD' : 'CANCEL';
+    
+    socialAPI.socialItem(itemId, 'COLLECTION', operate)
+      .then(() => {
+        this.setData({ collected: newCollected });
+        wx.showToast({
+          title: newCollected ? '已收藏' : '已取消收藏',
+          icon: 'success',
+          duration: 1500
+        });
+      })
+      .catch(err => {
+        console.error('收藏失败:', err);
+        wx.showToast({
+          title: '操作失败',
+          icon: 'error',
+          duration: 1500
+        });
+      });
   },
 
   // Seller
