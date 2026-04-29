@@ -131,6 +131,7 @@
         <view wx:if="{{publishType === 'exchange'}}" class="form-section">
           <view class="section-header">
             <text class="section-title">我想要的物品</text>
+            <text class="required">*</text>
           </view>
           <view class="input-with-counter">
             <input 
@@ -150,6 +151,7 @@
         <view wx:if="{{publishType === 'wish'}}" class="form-section">
           <view class="section-header">
             <text class="section-title">预期价格或交换条件</text>
+            <text class="required">*</text>
           </view>
           <view class="input-with-counter">
             <input 
