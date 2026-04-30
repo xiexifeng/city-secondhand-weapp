@@ -31,8 +31,8 @@ Page({
     try {
       const result = await wishAPI.getMyWishes({ pageNo: 1, pageSize: 100 });
       
-      if (result && result.success && result.data) {
-        const wishes = result.data.map(wish => {
+      if (result) {
+        const wishes = result.map(wish => {
           const wishStatus = wish.status || WISH_STATUS.AUDITING;
           const statusLabel = WISH_STATUS_LABELS[wishStatus] || '待审核';
           const statusClass = getWishStatusClass(wishStatus);

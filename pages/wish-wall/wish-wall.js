@@ -1,189 +1,142 @@
 // pages/wish-wall/wish-wall.js
-
-const mockWishes = [
-  {
-    id: 1,
-    title: '求购 iPhone 15 Pro',
-    description: '预算2000元以内，或用我的旧Switch换',
-    category: '数码3C',
-    budget: '2000元以内',
-    distance: 1.2,
-    time: '2小时前',
-    userName: '小明',
-    verified: true,
-    active: true
-  },
-  {
-    id: 2,
-    title: '求换 MacBook Pro',
-    description: '用我的iPad Air + 差价换，或者积分',
-    category: '数码3C',
-    budget: '差价1000-2000',
-    distance: 0.8,
-    time: '30分钟前',
-    userName: '李女士',
-    verified: true,
-    active: true
-  },
-  {
-    id: 3,
-    title: '求购 Sony A7IV 相机',
-    description: '新手摄影爱好者，预算5000-6000',
-    category: '摄影器材',
-    budget: '5000-6000元',
-    distance: 2.5,
-    time: '1小时前',
-    userName: '摄影师王',
-    verified: false,
-    active: true
-  },
-  {
-    id: 4,
-    title: '求换 PS5 游戏机',
-    description: '用我的Nintendo Switch + 现金换',
-    category: '游戏',
-    budget: '差价500-800',
-    distance: 3.1,
-    time: '3小时前',
-    userName: '游戏玩家',
-    verified: true,
-    active: true
-  },
-  {
-    id: 5,
-    title: '求购 自行车',
-    description: '山地车或公路车，要求成色好',
-    category: '运动户外',
-    budget: '1000-2000元',
-    distance: 0.5,
-    time: '5分钟前',
-    userName: '骑行爱好者',
-    verified: true,
-    active: true
-  },
-  {
-    id: 6,
-    title: '求换 iPad Pro',
-    description: '用我的MacBook Air + 现金差价换',
-    category: '数码3C',
-    budget: '差价2000-3000',
-    distance: 1.8,
-    time: '45分钟前',
-    userName: '科技爱好者',
-    verified: true,
-    active: true
-  },
-  {
-    id: 7,
-    title: '求购 Canon 单反相机',
-    description: '全画幅相机，预算8000-10000',
-    category: '摄影器材',
-    budget: '8000-10000元',
-    distance: 2.2,
-    time: '1.5小时前',
-    userName: '摄影初学者',
-    verified: false,
-    active: false
-  },
-  {
-    id: 8,
-    title: '求换 Nintendo Switch',
-    description: '用我的PS4 + 差价换',
-    category: '游戏',
-    budget: '差价800-1200',
-    distance: 0.3,
-    time: '20分钟前',
-    userName: '游戏迷',
-    verified: true,
-    active: true
-  },
-  {
-    id: 9,
-    title: '求购 Airpods Pro',
-    description: '最新款，预算1500元以内',
-    category: '数码3C',
-    budget: '1500元以内',
-    distance: 1.5,
-    time: '1小时前',
-    userName: '上班族',
-    verified: true,
-    active: true
-  },
-  {
-    id: 10,
-    title: '求换 Rolex 手表',
-    description: '用我的Omega + 差价换',
-    category: '奢侈品',
-    budget: '差价5000-8000',
-    distance: 4.2,
-    time: '2小时前',
-    userName: '表迷',
-    verified: true,
-    active: false
-  }
-];
+const { wishWallAPI } = require('../../utils/api.js')
+const { formatRelativeTime, formatDistance } = require('../../utils/format.js')
 
 Page({
   data: {
     sortBy: 'latest',
     wishes: [],
-    sortedWishes: []
+    sortedWishes: [],
+    pageNo: 1,
+    pageSize: 10,
+    hasMore: true,
+    loading: false,
+    latitude: null,
+    longitude: null
   },
 
   onLoad: function() {
-    // Initialize wishes
-    this.setData({
-      wishes: mockWishes
-    });
-    
-    // Compute sorted wishes
-    this.computeSortedWishes();
+    this.getLocationAndLoadWishes();
   },
 
-  /**
-   * Set sort by
-   */
+  getLocationAndLoadWishes: function() {
+    wx.getLocation({
+      type: 'gcj02',
+      success: (res) => {
+        this.setData({
+          latitude: res.latitude,
+          longitude: res.longitude
+        });
+        this.loadWishes();
+      },
+      fail: () => {
+        this.loadWishes();
+      }
+    });
+  },
+
+  loadWishes: function() {
+    if (this.data.loading) return Promise.resolve();
+    
+    this.setData({ loading: true });
+    
+    const params = {
+      pageNo: this.data.pageNo,
+      pageSize: this.data.pageSize,
+      sortBy: this.data.sortBy
+    };
+    
+    if (this.data.latitude && this.data.longitude) {
+      params.latitude = this.data.latitude;
+      params.longitude = this.data.longitude;
+    }
+    
+    return wishWallAPI.getWishes(params).then(data => {
+        if (data && data.length > 0) {
+          const formattedWishes = data.map(wish => this.transformWishData(wish));
+          const newWishes = this.data.pageNo === 1 ? formattedWishes : [...this.data.wishes, ...formattedWishes];
+          this.setData({
+            wishes: newWishes,
+            sortedWishes: newWishes,
+            pageNo: this.data.pageNo + 1,
+            hasMore: data.length >= this.data.pageSize,
+            loading: false
+          });
+        } else {
+          this.setData({ 
+            hasMore: false,
+            loading: false
+          });
+        }
+      }).catch(() => {
+        wx.showToast({
+          title: '加载失败',
+          icon: 'error'
+        });
+        this.setData({ loading: false });
+      });
+  },
+
+  transformWishData: function(data) {
+    const distanceResult = formatDistance(data.distance);
+    
+    return {
+      id: data.id,
+      title: data.title,
+      description: data.description,
+      category: data.category,
+      budget: data.budget,
+      distance: data.distance,
+      formattedDistance: distanceResult.text,
+      distanceType: distanceResult.type,
+      formattedTime: formatRelativeTime(data.time),
+      userName: data.userName,
+      verified: data.verified,
+      active: data.active
+    };
+  },
+
   setSortBy: function(e) {
     const sortBy = e.currentTarget.dataset.sort;
-    this.setData({ sortBy: sortBy });
-    this.computeSortedWishes();
-  },
-
-  /**
-   * Compute sorted wishes
-   */
-  computeSortedWishes: function() {
-    const wishes = this.data.wishes;
-    const sortBy = this.data.sortBy;
-
-    let sorted = [...wishes];
-
-    if (sortBy === 'distance') {
-      sorted.sort((a, b) => a.distance - b.distance);
-    }
-    // 'latest' is the default order
-
-    this.setData({
-      sortedWishes: sorted
+    this.setData({ 
+      sortBy: sortBy,
+      pageNo: 1,
+      wishes: [],
+      hasMore: true
     });
+    this.loadWishes();
   },
 
-  /**
-   * Navigate to publish page
-   */
   navigateToPublish: function() {
     wx.navigateTo({
       url: '/pages/publish/publish?type=wish'
     });
   },
 
-  /**
-   * Navigate to wish detail
-   */
   navigateToWishDetail: function(e) {
     const wishId = e.currentTarget.dataset.id;
     wx.navigateTo({
       url: `/pages/wish-detail/wish-detail?id=${wishId}`
     });
+  },
+
+  onPullDownRefresh: function() {
+    this.setData({
+      wishes: [],
+      sortedWishes: [],
+      pageNo: 1,
+      hasMore: true
+    });
+    this.loadWishes().then(() => {
+      wx.stopPullDownRefresh();
+    }).catch(() => {
+      wx.stopPullDownRefresh();
+    });
+  },
+
+  onReachBottom: function() {
+    if (this.data.hasMore && !this.data.loading) {
+      this.loadWishes();
+    }
   }
 });

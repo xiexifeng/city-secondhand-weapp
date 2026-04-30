@@ -39,16 +39,17 @@ Page({
         wx.hideLoading();
         
         // 检查后端返回的响应格式
-        if (res && res.success && res.data) {
+        if (res) {
+          const data = res;
           // Update profile data
           this.setData({
             profile: {
-              nickname: res.data.nickname || '用户昵称',
-              bio: res.data.bio || '',
-              location: res.data.location || '广东省深圳市',
-              phone: res.data.phone || '',
-              email: res.data.email || '',
-              wechat: res.data.wechat || ''
+              nickname: data.nickname || '用户昵称',
+              bio: data.bio || '',
+              location: data.location || '广东省深圳市',
+              phone: data.phone || '',
+              email: data.email || '',
+              wechat: data.wechat || ''
             }
           });
           

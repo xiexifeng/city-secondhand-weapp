@@ -43,7 +43,7 @@ Page({
     
     itemAPI.getItemDetail(itemId, latitude, longitude)
       .then(res => {
-        const data = res.data;
+        const data = res;
         const item = that.transformItemData(data);
         that.setData({ 
           item, 

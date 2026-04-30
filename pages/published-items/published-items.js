@@ -120,9 +120,9 @@ Page({
         wx.hideLoading();
         
         // 检查后端返回的响应格式
-        if (res && res.success && res.data) {
+        if (res ) {
           // 转换数据格式
-          const items = res.data.map(item => {
+          const items = res.map(item => {
             // 解析位置信息
             let location = '';
             try {

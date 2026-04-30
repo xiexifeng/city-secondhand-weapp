@@ -33,68 +33,75 @@
   </view>
 
   <!-- Wishes List -->
-  <scroll-view scroll-y class="wishes-scroll">
-    <!-- Empty State -->
-    <view wx:if="{{sortedWishes.length === 0}}" class="empty-state">
-      <text class="empty-icon">📭</text>
-      <text class="empty-title">暂无心愿</text>
-      <text class="empty-text">发布你的第一个心愿吧</text>
-    </view>
+  <!-- Empty State -->
+  <view wx:if="{{sortedWishes.length === 0}}" class="empty-state">
+    <text class="empty-icon">📭</text>
+    <text class="empty-title">暂无心愿</text>
+    <text class="empty-text">发布你的第一个心愿吧</text>
+  </view>
 
-    <!-- Wishes List -->
-    <view wx:else class="wishes-list">
-      <view 
-        wx:for="{{sortedWishes}}" 
-        wx:key="id"
-        class="wish-card"
-        bindtap="navigateToWishDetail"
-        data-id="{{item.id}}"
-      >
-        <!-- Header -->
-        <view class="card-header">
-          <view class="title-section">
-            <text class="wish-title">{{item.title}}</text>
-            <view class="tags-row">
-              <view class="category-tag">{{item.category}}</view>
-              <view wx:if="{{item.verified}}" class="verified-tag">已实名</view>
-            </view>
-          </view>
-        </view>
-
-        <!-- Description -->
-        <text class="wish-description">{{item.description}}</text>
-
-        <!-- Budget and Meta -->
-        <view class="budget-meta-section">
-          <view class="budget-info">
-            <view wx:if="{{item.budget}}" class="budget-text">预期：{{item.budget}}</view>
-            <view class="meta-info">
-              <text class="meta-item">📍 {{item.distance}}km</text>
-              <text class="meta-item">🕐 {{item.time}}</text>
-            </view>
-          </view>
-        </view>
-
-        <!-- User and Action -->
-        <view class="user-action-section">
-          <view class="user-info">
-            <view class="user-avatar">{{item.userName[0]}}</view>
-            <view class="user-details">
-              <text class="user-name">{{item.userName}}</text>
-              <text class="user-status">{{item.active ? '活跃用户' : ''}}</text>
-            </view>
-          </view>
-          <view class="contact-btn">
-            <text class="contact-icon">💬</text>
-            <text class="contact-text">联系</text>
+  <!-- Wishes List -->
+  <view wx:else class="wishes-list">
+    <view 
+      wx:for="{{sortedWishes}}" 
+      wx:key="id"
+      class="wish-card"
+      bindtap="navigateToWishDetail"
+      data-id="{{item.id}}"
+    >
+      <!-- Header -->
+      <view class="card-header">
+        <view class="title-section">
+          <text class="wish-title">{{item.title}}</text>
+          <view class="tags-row">
+            <view class="category-tag">{{item.category}}</view>
+            <view wx:if="{{item.verified}}" class="verified-tag">已实名</view>
           </view>
         </view>
       </view>
-    </view>
 
-    <!-- Footer Spacing -->
-    <view class="footer-spacing"></view>
-  </scroll-view>
+      <!-- Description -->
+      <text class="wish-description">{{item.description}}</text>
+
+      <!-- Budget and Meta -->
+      <view class="budget-meta-section">
+        <view class="budget-info">
+          <view wx:if="{{item.budget}}" class="budget-text">预期：{{item.budget}}</view>
+          <view class="meta-info">
+            <text class="meta-item distance-tag {{item.distanceType}}">📍 {{item.formattedDistance}}</text>
+            <text class="meta-item">🕐 {{item.formattedTime}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- User and Action -->
+      <view class="user-action-section">
+        <view class="user-info">
+          <view class="user-avatar">{{item.userName[0]}}</view>
+          <view class="user-details">
+            <text class="user-name">{{item.userName}}</text>
+            <text class="user-status">{{item.active ? '活跃用户' : ''}}</text>
+          </view>
+        </view>
+        <view class="contact-btn">
+          <text class="contact-icon">💬</text>
+          <text class="contact-text">联系</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Load More -->
+  <view wx:if="{{!loading && sortedWishes.length > 0}}" class="load-more">
+    <view wx:if="{{hasMore}}" class="loading-more">
+      <view class="spinner"></view>
+      <text>加载中...</text>
+    </view>
+    <view wx:else class="no-more">已到底部，分享邀请更多朋友加入吧</view>
+  </view>
+
+  <!-- Bottom Spacing -->
+  <view class="bottom-spacing"></view>
 
   <!-- Tips -->
   <view class="tips-container">

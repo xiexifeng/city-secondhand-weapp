@@ -87,8 +87,8 @@ Page({
       const method = type === 'wish' ? 'getMyWishDetail' : 'getMyItemDetail';
       const result = await api[method](id);
       
-      if (result && result.success && result.data) {
-        const data = result.data;
+      if (result) {
+        const data = result;
         this.setEditData(data, type, id);
       } else {
         wx.showToast({ title: '获取信息失败', icon: 'none' });
@@ -357,8 +357,8 @@ Page({
       };
 
       const result = await this.submitData(publishType, editingId, formData, images, locationData);
-      
-      if (result && result.success) {
+      console.log(result)
+      if (result && result.id) {
         this.handlePublishSuccess(editingId);
       } else {
         throw new Error(result && result.desc || '发布失败');

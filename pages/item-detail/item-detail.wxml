@@ -200,7 +200,7 @@
         <view class="location-header">
           <text class="location-label">详细地址</text>
           <view class="distance-badge" bindtap="handleNavigate">
-            <text class="distance-text">距您{{item.formattedDistance }}</text>
+            <text class="distance-text">{{item.formattedDistance }}</text>
             <text class="distance-icon">📍</text>
           </view>
         </view>

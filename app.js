@@ -4,7 +4,7 @@ App({
     userInfo: null,
     token: null,
     userPhone: null,
-    baseUrl: 'http://localhost:80/tradex', // xtrade后端地址
+    baseUrl: 'http://192.168.152.84:80/tradex', // xtrade后端地址
     editItemId: null,
     editWishId: null
   },
@@ -62,7 +62,7 @@ App({
     }
 
     if (token) {
-      header['Authorization'] = `Bearer ${token}`
+      header['Authorization'] = `${token}`
     }
 
     return new Promise((resolve, reject) => {
@@ -73,7 +73,14 @@ App({
         header,
         success: (res) => {
           if (res.statusCode === 200) {
-            resolve(res.data)
+            const responseData = res.data
+            //如果有data就返回data
+            if (responseData && responseData.success === true && responseData.data) {
+              resolve(responseData.data)
+            } else {
+              //否则返回全部
+              resolve(responseData)
+            }
           } else if (res.statusCode === 401) {
             // 未授权，清除登录信息
             this.globalData.token = null
