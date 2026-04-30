@@ -5,11 +5,17 @@
 
 page {
   background-color: #ffffff;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .home-container {
   min-height: 100vh;
   background-color: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 /* ========== 登录提示横幅 ========== */
@@ -157,12 +163,17 @@ page {
 .items-container {
   padding: 12rpx 12rpx 24rpx;
   background-color: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 .items-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 12rpx;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* ========== 物品卡片 ========== */
