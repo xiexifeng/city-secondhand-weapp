@@ -1,5 +1,6 @@
 const { formatRelativeTime, formatDistance } = require('../../utils/format.js');
 const { itemAPI } = require('../../utils/api.js');
+const app = getApp()
 
 Page({
   data: {
@@ -29,11 +30,10 @@ Page({
     longitude: null
   },
 
-  onLoad() {
+  async onLoad() {
     this.checkLoginStatus();
-    this.getLocation(() => {
-      this.loadItems();
-    });
+    await this.getLocation();
+    this.loadItems();
     this.checkAuditStatus();
   },
 
@@ -63,22 +63,14 @@ Page({
     // Page hidden
   },
 
-  // 获取用户位置
-  getLocation(callback) {
-    wx.getLocation({
-      type: 'gcj02',
-      success: (res) => {
-        this.setData({
-          latitude: res.latitude,
-          longitude: res.longitude
-        });
-        callback && callback();
-      },
-      fail: (err) => {
-        console.error('获取位置失败:', err);
-        callback && callback();
-      }
-    });
+  // 获取用户位置（使用全局定位缓存）
+  async getLocation() {
+    try {
+      const { latitude, longitude } = await app.getLocation()
+      this.setData({ latitude, longitude })
+    } catch (err) {
+      console.error('获取位置失败:', err.message)
+    }
   },
 
   // 加载物品列表

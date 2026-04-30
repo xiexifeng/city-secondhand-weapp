@@ -1,5 +1,6 @@
 const { formatRelativeTime, formatDistance } = require('../../utils/format.js');
-const { itemAPI, request, socialAPI } = require('../../utils/api.js');
+const { itemAPI, socialAPI } = require('../../utils/api.js');
+const app = getApp()
 
 Page({
   data: {
@@ -25,17 +26,14 @@ Page({
     }
   },
 
-  loadItemDetail: function(itemId) {
-    const that = this;
-    wx.getLocation({
-      type: 'wgs84',
-      success: function(res) {
-        that.fetchItemDetail(itemId, res.latitude, res.longitude);
-      },
-      fail: function() {
-        that.fetchItemDetail(itemId, null, null);
-      }
-    });
+  async loadItemDetail(itemId) {
+    try {
+      const { latitude, longitude } = await app.getLocation()
+      this.fetchItemDetail(itemId, latitude, longitude)
+    } catch (err) {
+      console.log('获取定位失败:', err.message)
+      this.fetchItemDetail(itemId, null, null)
+    }
   },
 
   fetchItemDetail: function(itemId, latitude, longitude) {

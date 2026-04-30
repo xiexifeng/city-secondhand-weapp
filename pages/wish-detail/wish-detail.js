@@ -1,6 +1,7 @@
 // pages/wish-detail/wish-detail.js
 const { wishWallAPI } = require('../../utils/api.js')
 const { formatRelativeTime, formatDistance } = require('../../utils/format.js')
+const app = getApp()
 
 Page({
   data: {
@@ -20,20 +21,15 @@ Page({
     this.getLocationAndLoadWishDetail(wishId);
   },
 
-  getLocationAndLoadWishDetail: function(wishId) {
-    wx.getLocation({
-      type: 'gcj02',
-      success: (res) => {
-        this.setData({
-          latitude: res.latitude,
-          longitude: res.longitude
-        });
-        this.loadWishDetail(wishId);
-      },
-      fail: () => {
-        this.loadWishDetail(wishId);
-      }
-    });
+  async getLocationAndLoadWishDetail(wishId) {
+    try {
+      const { latitude, longitude } = await app.getLocation()
+      this.setData({ latitude, longitude })
+    } catch (err) {
+      console.log('获取定位失败:', err.message)
+    } finally {
+      this.loadWishDetail(wishId)
+    }
   },
 
   loadWishDetail: function(wishId) {

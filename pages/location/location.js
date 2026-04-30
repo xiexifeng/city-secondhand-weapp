@@ -1,5 +1,6 @@
 // pages/location/location.js
 import { TENCENT_MAP_KEY } from '../../config';
+const app = getApp()
 
 Page({
   data: {
@@ -31,27 +32,21 @@ Page({
   },
 
   /**
-   * 获取用户当前位置
+   * 获取用户当前位置（使用全局定位缓存）
    */
-  getLocation: function() {
-    wx.getLocation({
-      type: 'gcj02',
-      success: (res) => {
-        this.setData({
-          longitude: res.longitude,
-          latitude: res.latitude
-        });
-        // 根据经纬度获取地址信息
-        this.reverseGeocode(res.latitude, res.longitude);
-      },
-      fail: (err) => {
-        console.error('获取位置失败:', err);
-        wx.showToast({
-          title: '获取位置失败，请手动选择',
-          icon: 'none'
-        });
-      }
-    });
+  async getLocation() {
+    try {
+      const { latitude, longitude } = await app.getLocation()
+      this.setData({ longitude, latitude })
+      // 根据经纬度获取地址信息
+      this.reverseGeocode(latitude, longitude)
+    } catch (err) {
+      console.error('获取位置失败:', err.message)
+      wx.showToast({
+        title: '获取位置失败，请手动选择',
+        icon: 'none'
+      })
+    }
   },
 
   /**
