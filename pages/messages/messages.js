@@ -32,7 +32,8 @@ Page({
           read: msg.status === 2,
           createdAt: msg.createTime,
           type: this.mapNotificationType(msg.notificationType),
-          relatedId: msg.relatedId
+          relatedId: msg.relatedId,
+          originalType: msg.notificationType
         }));
         this.setData({ messages });
         this.updateStats();
@@ -45,22 +46,28 @@ Page({
   },
 
   mapNotificationType: function(type) {
+    if (!type) return 'system';
+    
+    const typeStr = String(type).toUpperCase();
     const typeMap = {
       '1': 'system',
       '2': 'activity',
       '3': 'item',
-      '4': 'report'
+      '4': 'report',
+      'SYSTEM': 'system',
+      'TRADE': 'activity',
+      'STUFF': 'item',
+      'REPORT': 'report',
+      'AUDIT': 'audit'
     };
-    return typeMap[type] || 'system';
+    return typeMap[typeStr] || 'system';
   },
 
   updateStats: function() {
     const { messages } = this.data;
     const unreadCount = messages.filter(m => !m.read).length;
     const reportCount = messages.filter(m => m.type === 'report').length;
-    const pendingReportCount = messages.filter(
-      m => m.type === 'report' && m.report && m.report.status === '待审核'
-    ).length;
+    const pendingReportCount = messages.filter(m => m.type === 'report').length;
 
     this.setData({ unreadCount, reportCount, pendingReportCount });
   },
@@ -85,30 +92,46 @@ Page({
   },
 
   handleMessageClick: function(e) {
-    const { id, type, relatedId } = e.currentTarget.dataset;
+    const { id, relatedId, originalType, type } = e.currentTarget.dataset;
     
+    console.log('handleMessageClick:', { id, relatedId, originalType, type });
+
     messageAPI.readMessage(id).then(() => {
       this.markAsRead(id);
+    }).catch(err => {
+      console.error('标记已读失败:', err);
     });
 
-    if (type === 'report' && relatedId) {
+    if (originalType && String(originalType).toUpperCase() === 'REPORT' && relatedId) {
+      console.log('加载举报详情:', relatedId);
+      this.loadReportDetail(relatedId);
+    } else if (type === 'report' && relatedId) {
+      console.log('通过type检测加载举报详情:', relatedId);
       this.loadReportDetail(relatedId);
     }
   },
 
   loadReportDetail: function(reportId) {
+    wx.showLoading({ title: '加载中...' });
     reportAPI.getReportDetail(reportId).then(res => {
-      if (res && res.success && res.data) {
-        this.setData({ selectedReport: res.data });
+      wx.hideLoading();
+      console.log('举报详情返回:', res);
+      if (res) {
+        this.setData({ selectedReport: res });
+        console.log('已设置selectedReport:', this.data.selectedReport);
+      } else {
+        wx.showToast({ title: '获取详情失败', icon: 'none' });
       }
     }).catch(err => {
+      wx.hideLoading();
       console.error('加载举报详情失败:', err);
+      wx.showToast({ title: '加载失败', icon: 'none' });
     });
   },
 
   markAsRead: function(id) {
     const { messages } = this.data;
-    const updated = messages.map(m => 
+    const updated = messages.map(m =>
       m.id === id ? { ...m, read: true } : m
     );
     this.setData({ messages: updated });
@@ -118,15 +141,14 @@ Page({
 
   deleteMessage: function(e) {
     const id = e.currentTarget.dataset.id;
-    
+
     wx.showLoading({ title: '删除中...' });
     messageAPI.deleteMessage(id).then(res => {
       wx.hideLoading();
-      console.log('删除消息响应:', res);
       if (res && res.success) {
         const { messages } = this.data;
         const filtered = messages.filter(m => m.id !== id);
-        
+
         this.setData({ messages: filtered });
         this.updateStats();
         this.filterMessages();
@@ -158,13 +180,15 @@ Page({
 
     const status = statusText === '已处理' ? 2 : 3;
 
+    wx.showLoading({ title: '处理中...' });
     reportAPI.handleReport(selectedReport.id, status, reviewNote).then(res => {
+      wx.hideLoading();
       if (res && res.success) {
         this.setData({
           selectedReport: { ...selectedReport, status: statusText, reviewerNote: reviewNote },
           reviewNote: ''
         });
-        
+
         const updatedMessages = this.data.messages.map(m => {
           if (m.type === 'report' && m.relatedId === selectedReport.id) {
             return { ...m, report: { ...selectedReport, status: statusText } };
@@ -175,9 +199,10 @@ Page({
         this.updateStats();
         this.filterMessages();
 
-        wx.showToast({ title: `举报已标记为"${statusText}"`, icon: 'success', duration: 1500 });
+        wx.showToast({ title: '处理成功', icon: 'success', duration: 1500 });
       }
     }).catch(err => {
+      wx.hideLoading();
       console.error('处理举报失败:', err);
       wx.showToast({ title: '处理失败', icon: 'none' });
     });

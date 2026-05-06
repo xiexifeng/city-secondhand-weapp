@@ -38,7 +38,7 @@
 
   <scroll-view class="messages-list" scroll-y>
     <view wx:if="{{filteredMessages.length > 0}}" class="messages-content">
-      <view wx:for="{{filteredMessages}}" wx:key="id" class="message-item {{item.read ? '' : 'unread'}}" bindtap="handleMessageClick" data-id="{{item.id}}" data-type="{{item.type}}" data-related-id="{{item.relatedId}}">
+      <view wx:for="{{filteredMessages}}" wx:key="id" class="message-item {{item.read ? '' : 'unread'}}" bindtap="handleMessageClick" data-id="{{item.id}}" data-type="{{item.type}}" data-related-id="{{item.relatedId}}" data-original-type="{{item.originalType}}">
         <view class="message-icon {{item.type}}">
           <text wx:if="{{item.type === 'report'}}">🚩</text>
           <text wx:if="{{item.type === 'alert'}}">⚠️</text>
