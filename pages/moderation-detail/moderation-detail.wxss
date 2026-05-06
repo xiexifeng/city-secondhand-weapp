@@ -672,6 +672,29 @@ page {
   margin-top: 4rpx;
 }
 
+.status-reason {
+  display: flex;
+  align-items: flex-start;
+  gap: 8rpx;
+  padding: 12rpx 16rpx;
+  background-color: #fffbeb;
+  border-radius: 8rpx;
+  margin-top: 8rpx;
+}
+
+.reason-label {
+  font-size: 22rpx;
+  color: #92400e;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.reason-value {
+  font-size: 22rpx;
+  color: #b45309;
+  word-break: break-all;
+}
+
 /* Footer Spacing */
 .footer-spacing {
   height: 40rpx;

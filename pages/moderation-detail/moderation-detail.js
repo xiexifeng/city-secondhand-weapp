@@ -91,9 +91,7 @@ Page({
   formatExchangeMethod: function(method) {
     const methodMap = {
       'sell': '出售',
-      'swap': '交换',
-      'give': '赠送',
-      'rent': '租赁'
+      'exchange': '以物换物'
     };
     return methodMap[method] || method;
   },
@@ -134,27 +132,32 @@ Page({
     this.setData({ isProcessing: true });
     wx.showLoading({ title: '处理中...' });
 
-    auditAPI.submitAuditResult(detail.id, reviewStatus === 'approve', rejectReason).then(res => {
+    auditAPI.submitAuditResult(detail.taskId, detail.relatedId, reviewStatus === 'approve', rejectReason).then(res => {
       wx.hideLoading();
-      this.setData({
-        isProcessing: false,
-        'detail.status': reviewStatus === 'approve' ? 'approved' : 'rejected',
-        'detail.reviewedAt': '刚刚'
-      });
+      this.setData({ isProcessing: false });
 
-      wx.showToast({
-        title: reviewStatus === 'approve' ? '已通过' : '已拒绝',
-        icon: 'success'
-      });
+      if (res && res.success === true) {
+        wx.showToast({
+          title: reviewStatus === 'approve' ? '已通过' : '已拒绝',
+          icon: 'success'
+        });
 
-      setTimeout(() => {
-        wx.navigateBack();
-      }, 1500);
+        setTimeout(() => {
+          wx.redirectTo({
+            url: '/pages/content-moderation/content-moderation'
+          });
+        }, 1500);
+      } else {
+        wx.showToast({
+          title: res?.desc || '审核失败',
+          icon: 'none'
+        });
+      }
     }).catch(err => {
       wx.hideLoading();
       this.setData({ isProcessing: false });
       wx.showToast({
-        title: err?.message || '审核失败',
+        title: err?.desc || err?.message || '审核失败',
         icon: 'none'
       });
     });

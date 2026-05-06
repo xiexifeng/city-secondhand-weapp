@@ -57,7 +57,11 @@
         data-id="{{item.id}}"
       >
         <view class="item-image-container">
-          <image class="item-image" src="{{item.image}}" mode="aspectFill" />
+          <view wx:if="{{!item.image}}" class="item-placeholder">
+            <text class="placeholder-icon">📷</text>
+            <text class="placeholder-text">暂无图片</text>
+          </view>
+          <image wx:else class="item-image" src="{{item.image}}" mode="aspectFill" />
           <view class="item-publisher">
             <view class="publisher-avatar">{{item.publisher && item.publisher.avatarText ? item.publisher.avatarText : '?'}}</view>
             <view class="publisher-info">

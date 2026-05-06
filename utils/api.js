@@ -287,7 +287,7 @@ const fileAPI = {
 const auditAPI = {
   getAuditList(params) {
     return app.request({
-      url: '/client/audit',
+      url: '/client/audit/list',
       method: 'GET',
       data: params
     })
@@ -300,12 +300,13 @@ const auditAPI = {
     })
   },
 
-  submitAuditResult(taskId, result, remark) {
+  submitAuditResult(taskId, relatedId, result, remark) {
     return app.request({
-      url: '/client/item-audit',
+      url: '/client/audit',
       method: 'POST',
       data: {
         taskId: taskId,
+        relatedId: relatedId,
         result: result,
         auditRemark: remark
       }
