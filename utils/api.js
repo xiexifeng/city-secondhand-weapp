@@ -166,24 +166,58 @@ const userAPI = {
 const messageAPI = {
   getMessages(params) {
     return app.request({
-      url: '/api/messages',
-      method: 'GET',
+      url: '/client/notification/list-mine',
+      method: 'POST',
       data: params
     })
   },
 
-  sendMessage(data) {
+  readMessage(messageId) {
     return app.request({
-      url: '/api/messages',
-      method: 'POST',
-      data: data
+      url: `/client/notification/read/${messageId}`,
+      method: 'GET'
     })
   },
 
-  getMessageDetail(messageId) {
+  deleteMessage(messageId) {
     return app.request({
-      url: `/api/messages/${messageId}`,
+      url: `/client/notification/${messageId}`,
+      method: 'DELETE'
+    })
+  }
+}
+
+// 举报相关 API
+const reportAPI = {
+  getReportDetail(reportId) {
+    return app.request({
+      url: `/client/report/${reportId}`,
       method: 'GET'
+    })
+  },
+
+  handleReport(reportId, status, remark) {
+    return app.request({
+      url: `/client/report/${reportId}/handle`,
+      method: 'POST',
+      data: {
+        status: status,
+        reviewerNote: remark
+      }
+    })
+  },
+
+  submitReport(reportType, relatedId, reason, description, images) {
+    return app.request({
+      url: '/client/report',
+      method: 'POST',
+      data: {
+        reportType: reportType,
+        relatedId: relatedId,
+        reportReason: reason,
+        description: description,
+        images: images || []
+      }
     })
   }
 }
@@ -248,13 +282,12 @@ const socialAPI = {
   }
 }
 
-  // 文件上传相关
+// 文件上传相关
 const fileAPI = {
-  // 上传图片
   uploadImage(filePath) {
     return new Promise((resolve, reject) => {
       const token = wx.getStorageSync('token')
-      
+
       wx.uploadFile({
         url: app.globalData.baseUrl + '/basic/oss/uploadFile',
         filePath,
@@ -264,7 +297,6 @@ const fileAPI = {
         },
         success: (res) => {
           if (res.statusCode === 200) {
-            // 后端返回JSON格式响应
             const data = JSON.parse(res.data);
             if (data.success) {
               resolve({ data: { fileUrl: data.data } });
@@ -323,5 +355,6 @@ module.exports = {
   wishWallAPI,
   socialAPI,
   fileAPI,
-  auditAPI
+  auditAPI,
+  reportAPI
 }

@@ -1,3 +1,5 @@
+const { reportAPI, fileAPI } = require('../../utils/api');
+
 Component({
   properties: {
     visible: {
@@ -7,9 +9,13 @@ Component({
     item: {
       type: Object,
       value: {}
+    },
+    reportType: {
+      type: Number,
+      value: 1
     }
   },
-  
+
   data: {
     reportReasons: [
       { id: 1, title: '虚假物品', description: '物品不存在或与描述严重不符' },
@@ -21,57 +27,76 @@ Component({
     ],
     selectedReason: null,
     reportDescription: '',
-    uploadedEvidence: []
+    uploadedEvidence: [],
+    uploadingImages: false
   },
-  
+
   methods: {
-    // 阻止触摸移动
     preventTouchMove: function() {
       return;
     },
 
-    // 允许触摸移动
     allowTouchMove: function() {
       return;
     },
 
-    // 关闭举报模态框
     closeReport: function() {
       this.setData({
         selectedReason: null,
         reportDescription: '',
-        uploadedEvidence: []
+        uploadedEvidence: [],
+        uploadingImages: false
       });
       this.triggerEvent('close');
     },
 
-    // 选择举报原因
     selectReason: function(e) {
       const reasonId = e.currentTarget.dataset.id;
       this.setData({ selectedReason: reasonId });
     },
 
-    // 输入详细描述
     onReportDescriptionInput: function(e) {
       this.setData({ reportDescription: e.detail.value });
     },
 
-    // 上传证据
     uploadEvidence: function() {
       const that = this;
+      const { uploadedEvidence } = that.data;
+      
+      if (uploadedEvidence.length >= 5) {
+        wx.showToast({ title: '最多上传5张图片', icon: 'none' });
+        return;
+      }
+
       wx.chooseImage({
-        count: 5 - that.data.uploadedEvidence.length,
-        sizeType: ['original', 'compressed'],
+        count: 5 - uploadedEvidence.length,
+        sizeType: ['compressed'],
         sourceType: ['album', 'camera'],
         success: function(res) {
-          const tempFilePaths = res.tempFilePaths;
-          const uploadedEvidence = that.data.uploadedEvidence.concat(tempFilePaths);
-          that.setData({ uploadedEvidence: uploadedEvidence.slice(0, 5) });
+          that.uploadImages(res.tempFilePaths);
         }
       });
     },
 
-    // 预览图片
+    uploadImages: async function(tempFilePaths) {
+      const { uploadedEvidence } = this.data;
+      const newEvidence = [...uploadedEvidence];
+
+      for (const tempFilePath of tempFilePaths) {
+        try {
+          wx.showLoading({ title: '上传中...', mask: true });
+          const uploadResult = await fileAPI.uploadImage(tempFilePath);
+          newEvidence.push(uploadResult.data.fileUrl);
+          this.setData({ uploadedEvidence: newEvidence });
+        } catch (error) {
+          console.error('图片上传失败:', error);
+          wx.showToast({ title: '图片上传失败，请重试', icon: 'none' });
+        } finally {
+          wx.hideLoading();
+        }
+      }
+    },
+
     previewImage: function(e) {
       const index = e.currentTarget.dataset.index;
       const { uploadedEvidence } = this.data;
@@ -81,7 +106,6 @@ Component({
       });
     },
 
-    // 移除图片
     removeImage: function(e) {
       const index = e.currentTarget.dataset.index;
       const { uploadedEvidence } = this.data;
@@ -89,11 +113,9 @@ Component({
       this.setData({ uploadedEvidence });
     },
 
-    // 提交举报
     submitReport: function() {
-      const { selectedReason, reportDescription, uploadedEvidence, item } = this.data;
-      
-      // 验证必填项
+      const { selectedReason, reportDescription, uploadedEvidence, item, reportType } = this.data;
+
       if (!selectedReason || !reportDescription) {
         wx.showToast({
           title: '请填写举报原因和详细描述',
@@ -101,24 +123,44 @@ Component({
         });
         return;
       }
-      
-      // 这里可以添加实际的举报逻辑，如调用API
-      console.log('提交举报:', {
-        itemId: item.id,
-        reasonId: selectedReason,
-        description: reportDescription,
-        evidence: uploadedEvidence
-      });
-      
-      // 模拟举报成功
-      wx.showToast({
-        title: '举报成功',
-        icon: 'success',
-        duration: 1500
-      });
-      
-      // 关闭模态框并重置表单
-      this.closeReport();
+
+      if (!item || !item.id) {
+        wx.showToast({
+          title: '举报对象不存在',
+          icon: 'none'
+        });
+        return;
+      }
+
+      wx.showLoading({ title: '提交中...' });
+
+      const reasonTitle = this.data.reportReasons.find(r => r.id === selectedReason)?.title || '其他原因';
+
+      reportAPI.submitReport(reportType, item.id, reasonTitle, reportDescription, uploadedEvidence)
+        .then(res => {
+          wx.hideLoading();
+          if (res && res.success) {
+            wx.showToast({
+              title: '举报成功',
+              icon: 'success',
+              duration: 1500
+            });
+            this.closeReport();
+          } else {
+            wx.showToast({
+              title: '举报失败',
+              icon: 'none'
+            });
+          }
+        })
+        .catch(err => {
+          wx.hideLoading();
+          console.error('提交举报失败:', err);
+          wx.showToast({
+            title: '举报失败',
+            icon: 'none'
+          });
+        });
     }
   }
 });

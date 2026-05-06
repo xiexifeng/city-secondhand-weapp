@@ -175,6 +175,7 @@
   <report-form 
     visible="{{showReportModal}}" 
     item="{{wish}}" 
+    report-type="2"
     bind:close="closeReportModal"
   />
 </view>

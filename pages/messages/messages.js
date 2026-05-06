@@ -1,3 +1,6 @@
+const { messageAPI, reportAPI } = require('../../utils/api');
+const { formatRelativeTime } = require('../../utils/helpers.js');
+
 Page({
   data: {
     messages: [],
@@ -7,129 +10,61 @@ Page({
     reviewNote: '',
     unreadCount: 0,
     reportCount: 0,
-    moderationCount: 0,
     pendingReportCount: 0
   },
 
   onLoad: function() {
-    // 检查登录状态
     const token = wx.getStorageSync('token');
     if (!token) {
-      wx.reLaunch({
-        url: '/pages/login/login'
-      });
+      wx.reLaunch({ url: '/pages/login/login' });
       return;
     }
-    this.initMessages();
+    this.loadMessages();
   },
 
-  /**
-   * 初始化消息数据
-   */
-  initMessages: function() {
-    // Mock数据 - 系统消息
-    const systemMessages = [
-      {
-        id: 'msg-1',
-        type: 'system',
-        title: '欢迎使用换换',
-        description: '感谢您的使用，如有问题请随时联系我们',
-        read: true,
-        createdAt: new Date(Date.now() - 86400000).toISOString()
-      },
-      {
-        id: 'msg-2',
-        type: 'activity',
-        title: '您有新的浏览者',
-        description: '您发布的 iPhone 14 Pro Max 被 5 人浏览',
-        read: true,
-        createdAt: new Date(Date.now() - 3600000).toISOString()
-      },
-      {
-        id: 'msg-3',
-        type: 'activity',
-        title: '您的物品被收藏',
-        description: 'MacBook Pro 13 被 2 人收藏',
-        read: false,
-        createdAt: new Date(Date.now() - 1800000).toISOString()
+  loadMessages: function() {
+    wx.showLoading({ title: '加载中...' });
+    messageAPI.getMessages({ pageNo: 1, pageSize: 100 }).then(res => {
+      wx.hideLoading();
+      if (res) {
+        const messages = res.map(msg => ({
+          ...msg,
+          read: msg.status === 2,
+          createdAt: msg.createTime,
+          type: this.mapNotificationType(msg.notificationType),
+          relatedId: msg.relatedId
+        }));
+        this.setData({ messages });
+        this.updateStats();
+        this.filterMessages();
       }
-    ];
-
-    // Mock数据 - 举报消息
-    const reportMessages = [
-      {
-        id: 'report-1',
-        type: 'report',
-        title: '物品举报：iPhone 14 Pro Max',
-        description: '用户举报该物品信息不符',
-        read: false,
-        createdAt: new Date(Date.now() - 7200000).toISOString(),
-        report: {
-          id: 'report-1',
-          type: 'item',
-          targetName: 'iPhone 14 Pro Max',
-          reason: '信息不符',
-          description: '物品实际成色与描述不符，卖家虚假宣传',
-          evidence: [],
-          status: '待审核',
-          createdAt: new Date(Date.now() - 7200000).toISOString(),
-          reviewerNote: ''
-        }
-      },
-      {
-        id: 'report-2',
-        type: 'report',
-        title: '用户投诉：李明',
-        description: '用户反映交易中存在欺诈行为',
-        read: true,
-        createdAt: new Date(Date.now() - 10800000).toISOString(),
-        report: {
-          id: 'report-2',
-          type: 'user',
-          targetName: '李明',
-          reason: '欺诈行为',
-          description: '卖家收款后未发货，已3天未回应',
-          evidence: [],
-          status: '有效',
-          createdAt: new Date(Date.now() - 10800000).toISOString(),
-          reviewerNote: '已确认欺诈，已禁用账号'
-        }
-      }
-    ];
-
-    const allMessages = [...reportMessages, ...systemMessages];
-    
-    this.setData({
-      messages: allMessages
+    }).catch(err => {
+      wx.hideLoading();
+      console.error('加载消息失败:', err);
     });
-
-    this.updateStats();
-    this.filterMessages();
   },
 
-  /**
-   * 更新统计数据
-   */
+  mapNotificationType: function(type) {
+    const typeMap = {
+      '1': 'system',
+      '2': 'activity',
+      '3': 'item',
+      '4': 'report'
+    };
+    return typeMap[type] || 'system';
+  },
+
   updateStats: function() {
     const { messages } = this.data;
     const unreadCount = messages.filter(m => !m.read).length;
     const reportCount = messages.filter(m => m.type === 'report').length;
-    const moderationCount = messages.filter(m => m.type === 'moderation').length;
     const pendingReportCount = messages.filter(
       m => m.type === 'report' && m.report && m.report.status === '待审核'
     ).length;
 
-    this.setData({
-      unreadCount,
-      reportCount,
-      moderationCount,
-      pendingReportCount
-    });
+    this.setData({ unreadCount, reportCount, pendingReportCount });
   },
 
-  /**
-   * 筛选消息
-   */
   filterMessages: function() {
     const { messages, activeFilter } = this.data;
     let filtered = messages;
@@ -138,44 +73,39 @@ Page({
       filtered = messages.filter(m => !m.read);
     } else if (activeFilter === 'report') {
       filtered = messages.filter(m => m.type === 'report');
-    } else if (activeFilter === 'moderation') {
-      filtered = messages.filter(m => m.type === 'moderation');
     }
 
     this.setData({ filteredMessages: filtered });
   },
 
-  /**
-   * 设置活跃筛选器
-   */
   setActiveFilter: function(e) {
     const filter = e.currentTarget.dataset.filter;
     this.setData({ activeFilter: filter });
     this.filterMessages();
   },
 
-  /**
-   * 处理消息点击
-   */
   handleMessageClick: function(e) {
-    const { id, type, reportId } = e.currentTarget.dataset;
+    const { id, type, relatedId } = e.currentTarget.dataset;
     
-    // 标记为已读
-    this.markAsRead(id);
+    messageAPI.readMessage(id).then(() => {
+      this.markAsRead(id);
+    });
 
-    // 如果是举报消息，打开详情弹窗
-    if (type === 'report' && reportId) {
-      const { messages } = this.data;
-      const message = messages.find(m => m.id === id);
-      if (message && message.report) {
-        this.setData({ selectedReport: message.report });
-      }
+    if (type === 'report' && relatedId) {
+      this.loadReportDetail(relatedId);
     }
   },
 
-  /**
-   * 标记消息为已读
-   */
+  loadReportDetail: function(reportId) {
+    reportAPI.getReportDetail(reportId).then(res => {
+      if (res && res.success && res.data) {
+        this.setData({ selectedReport: res.data });
+      }
+    }).catch(err => {
+      console.error('加载举报详情失败:', err);
+    });
+  },
+
   markAsRead: function(id) {
     const { messages } = this.data;
     const updated = messages.map(m => 
@@ -186,110 +116,86 @@ Page({
     this.filterMessages();
   },
 
-  /**
-   * 删除消息
-   */
   deleteMessage: function(e) {
     const id = e.currentTarget.dataset.id;
-    const { messages } = this.data;
-    const filtered = messages.filter(m => m.id !== id);
     
-    this.setData({ messages: filtered });
-    this.updateStats();
-    this.filterMessages();
+    wx.showLoading({ title: '删除中...' });
+    messageAPI.deleteMessage(id).then(res => {
+      wx.hideLoading();
+      console.log('删除消息响应:', res);
+      if (res && res.success) {
+        const { messages } = this.data;
+        const filtered = messages.filter(m => m.id !== id);
+        
+        this.setData({ messages: filtered });
+        this.updateStats();
+        this.filterMessages();
 
-    wx.showToast({
-      title: '消息已删除',
-      icon: 'success',
-      duration: 1500
+        wx.showToast({ title: '消息已删除', icon: 'success', duration: 1500 });
+      } else {
+        wx.showToast({ title: '删除失败', icon: 'none' });
+      }
+    }).catch(err => {
+      wx.hideLoading();
+      console.error('删除消息失败:', err);
+      wx.showToast({ title: '删除失败', icon: 'none' });
     });
   },
 
-  /**
-   * 关闭举报详情弹窗
-   */
   closeReportModal: function() {
-    this.setData({
-      selectedReport: null,
-      reviewNote: ''
-    });
+    this.setData({ selectedReport: null, reviewNote: '' });
   },
 
-  /**
-   * 更新审核备注
-   */
   updateReviewNote: function(e) {
     this.setData({ reviewNote: e.detail.value });
   },
 
-  /**
-   * 处理举报审核
-   */
   handleReviewReport: function(e) {
-    const status = e.currentTarget.dataset.status;
-    const { selectedReport, reviewNote, messages } = this.data;
+    const statusText = e.currentTarget.dataset.status;
+    const { selectedReport, reviewNote } = this.data;
 
     if (!selectedReport) return;
 
-    // 更新消息中的举报状态
-    const updated = messages.map(m => {
-      if (m.id === selectedReport.id) {
-        return {
-          ...m,
-          report: {
-            ...m.report,
-            status: status,
-            reviewerNote: reviewNote
+    const status = statusText === '已处理' ? 2 : 3;
+
+    reportAPI.handleReport(selectedReport.id, status, reviewNote).then(res => {
+      if (res && res.success) {
+        this.setData({
+          selectedReport: { ...selectedReport, status: statusText, reviewerNote: reviewNote },
+          reviewNote: ''
+        });
+        
+        const updatedMessages = this.data.messages.map(m => {
+          if (m.type === 'report' && m.relatedId === selectedReport.id) {
+            return { ...m, report: { ...selectedReport, status: statusText } };
           }
-        };
+          return m;
+        });
+        this.setData({ messages: updatedMessages });
+        this.updateStats();
+        this.filterMessages();
+
+        wx.showToast({ title: `举报已标记为"${statusText}"`, icon: 'success', duration: 1500 });
       }
-      return m;
-    });
-
-    this.setData({
-      messages: updated,
-      selectedReport: null,
-      reviewNote: ''
-    });
-
-    this.updateStats();
-    this.filterMessages();
-
-    wx.showToast({
-      title: `举报已标记为"${status}"`,
-      icon: 'success',
-      duration: 1500
+    }).catch(err => {
+      console.error('处理举报失败:', err);
+      wx.showToast({ title: '处理失败', icon: 'none' });
     });
   },
 
-  /**
-   * Get status class name for styling
-   */
   getStatusClass: function(status) {
     const statusMap = {
       '待审核': 'pending',
-      '有效': 'valid',
-      '无效': 'invalid',
-      '已处理': 'handled'
+      '已处理': 'handled',
+      '已忽略': 'invalid'
     };
     return statusMap[status] || 'pending';
   },
 
-  /**
-   * Format date
-   */
-  formatDate: function(dateString) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('zh-CN', {
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit'
-    });
+  formatDate: function(timestamp) {
+    return formatRelativeTime(timestamp);
   },
 
-  /**
-   * 返回首页
-   */
   handleBack: function() {
     wx.navigateBack();
   }
