@@ -101,7 +101,7 @@ Page({
       verified: data.verified,
       active: data.active,
       contact: { wechat: data.wechat || '', phone: data.phone || '' },
-      location: {address: locationInfo.location, latitude: data.latitude, longitude: data.longitude},
+      location: {address: locationInfo.address, latitude: data.latitude, longitude: data.longitude},
       stats: { views: data.views || 0, likes: data.likes || 0, favorites: data.favorites || 0 },
       liked: data.liked || false,
       collected: data.collected || false,

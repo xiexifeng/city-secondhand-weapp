@@ -4,7 +4,7 @@ App({
     userInfo: null,
     token: null,
     userPhone: null,
-    baseUrl: 'http://192.168.152.84:80/tradex', // xtrade后端地址
+    baseUrl: 'http://127.0.0.1:80/tradex', // xtrade后端地址
     editItemId: null,
     editWishId: null,
     latitude: null,   // 全局纬度

@@ -177,6 +177,25 @@ function requestPermission(permission) {
   })
 }
 
+/**
+ * 解析位置信息
+ * @param {string} location - JSON格式的位置字符串
+ * @returns {object} 格式化后JSON对象
+ */
+function parseLocation(location) {
+  if (!location) return '';
+  
+  let locationInfo = {};
+  try {
+    locationInfo = JSON.parse(location);
+  } catch (e) {
+    console.log('Raw location:', location);
+    console.error('Error parsing location:', e);
+  }
+  return locationInfo;
+}
+
+
 module.exports = {
   formatPrice,
   formatDate,
@@ -191,5 +210,6 @@ module.exports = {
   getQueryParam,
   generateUUID,
   checkPermission,
-  requestPermission
+  requestPermission,
+  parseLocation
 }

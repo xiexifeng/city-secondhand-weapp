@@ -1,88 +1,24 @@
+const { auditAPI } = require('../../utils/api');
+const format = require('../../utils/format.js');
+
 Page({
   data: {
     filterStatus: 'pending',
-    items: [
-      {
-        id: 1,
-        type: 'item',
-        title: 'iPhone 14 Pro Max',
-        description: '全新未开封，原厂包装，支持分期付款，可刀价',
-        image: 'https://images.unsplash.com/photo-1592286927505-1def25115558?w=300&h=300&fit=crop&q=80',
-        category: '数码3C',
-        publisher: {
-          name: '张三',
-          avatar: 'Z'
-        },
-        submittedAt: '2小时前',
-        reason: '包含联系方式',
-        status: 'pending'
-      },
-      {
-        id: 2,
-        type: 'wish',
-        title: '求购 MacBook Pro 2019',
-        description: '寻找成色好的MacBook Pro 2019款，预算5000-6000元',
-        image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=300&h=300&fit=crop&q=80',
-        category: '数码3C',
-        publisher: {
-          name: '李四',
-          avatar: 'L'
-        },
-        submittedAt: '1小时前',
-        reason: '描述不清晰',
-        status: 'pending'
-      },
-      {
-        id: 3,
-        type: 'item',
-        title: 'Sony A6400 相机',
-        description: '95新，带原厂镜头和配件，可议价',
-        image: 'https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=300&h=300&fit=crop&q=80',
-        category: '数码3C',
-        publisher: {
-          name: '王五',
-          avatar: 'W'
-        },
-        submittedAt: '30分钟前',
-        reason: '图片质量低',
-        status: 'pending'
-      },
-      {
-        id: 4,
-        type: 'wish',
-        title: '求换 iPad Air',
-        description: '有iPad Air吗？我可以用iPhone 12换',
-        image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=300&h=300&fit=crop&q=80',
-        category: '数码3C',
-        publisher: {
-          name: '赵六',
-          avatar: 'Z'
-        },
-        submittedAt: '15分钟前',
-        reason: null,
-        status: 'pending'
-      },
-      {
-        id: 5,
-        type: 'item',
-        title: 'Nike 跑鞋',
-        description: '全新未穿，官方正品，尺码42，可快递',
-        image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300&h=300&fit=crop&q=80',
-        category: '服饰鞋包',
-        publisher: {
-          name: '孙七',
-          avatar: 'S'
-        },
-        submittedAt: '10分钟前',
-        reason: null,
-        status: 'pending'
-      }
-    ],
-    filteredItems: []
+    items: [],
+    filteredItems: [],
+    stats: {
+      pending: 0,
+      approved: 0,
+      rejected: 0,
+      totalReviewed: 0
+    },
+    pageNo: 1,
+    pageSize: 10,
+    hasMore: true,
+    isLoading: false
   },
 
   onLoad: function() {
-    // 检查登录状态
     const token = wx.getStorageSync('token');
     if (!token) {
       wx.reLaunch({
@@ -90,49 +26,102 @@ Page({
       });
       return;
     }
-    this.computeStats();
+    this.loadAuditList();
   },
 
-  /**
-   * Set filter status
-   */
+  loadAuditList: function() {
+    if (this.data.isLoading) return;
+
+    this.setData({ isLoading: true });
+
+    auditAPI.getAuditList({
+      pageNo: this.data.pageNo,
+      pageSize: this.data.pageSize,
+      status: this.data.filterStatus
+    }).then(res => {
+      if (res && res.items) {
+        const formattedItems = res.items.map(item => {
+          const publisher = item.publisher || {};
+          let avatarText = 'U';
+          if (publisher.name && publisher.name.trim()) {
+            avatarText = publisher.name.trim().charAt(0).toUpperCase();
+          }
+          return {
+            ...item,
+            submittedAt: format.formatRelativeTime(item.submittedAt),
+            publisher: {
+              ...publisher,
+              avatarText: avatarText
+            }
+          };
+        });
+        const newItems = this.data.pageNo === 1 ? formattedItems : [...this.data.items, ...formattedItems];
+        this.setData({
+          items: newItems,
+          hasMore: res.items.length >= this.data.pageSize,
+          stats: res.stats || {
+            pending: 0,
+            approved: 0,
+            rejected: 0,
+            totalReviewed: 0
+          }
+        });
+        this.computeStats();
+      }
+    }).catch(err => {
+      console.error('加载审核列表失败:', err);
+      wx.showToast({
+        title: '加载失败',
+        icon: 'none'
+      });
+    }).finally(() => {
+      this.setData({ isLoading: false });
+    });
+  },
+
   setFilterStatus: function(e) {
     const status = e.currentTarget.dataset.status;
-    this.setData({ filterStatus: status });
-    this.computeStats();
+    this.setData({ 
+      filterStatus: status,
+      pageNo: 1,
+      hasMore: true,
+      items: []
+    });
+    this.loadAuditList();
   },
 
-  /**
-   * Compute stats and filter items
-   */
   computeStats: function() {
     const items = this.data.items;
-    const filterStatus = this.data.filterStatus;
 
-    const stats = {
-      pending: items.filter(i => i.status === 'pending').length,
-      approved: items.filter(i => i.status === 'approved').length,
-      rejected: items.filter(i => i.status === 'rejected').length,
-      totalReviewed: items.filter(i => i.status !== 'pending').length
-    };
-
-    const filteredItems = filterStatus === 'all' 
+    const filteredItems = this.data.filterStatus === 'all' 
       ? items 
-      : items.filter(i => i.status === 'pending');
+      : items.filter(i => i.status === this.data.filterStatus);
 
     this.setData({
-      stats: stats,
       filteredItems: filteredItems
     });
   },
 
-  /**
-   * Navigate to detail
-   */
   navigateToDetail: function(e) {
-    const itemId = e.currentTarget.dataset.id;
+    const id = e.currentTarget.dataset.id;
     wx.navigateTo({
-      url: `/pages/moderation-detail/moderation-detail?id=${itemId}`
+      url: `/pages/moderation-detail/moderation-detail?id=${id}`
     });
+  },
+
+  onPullDownRefresh: function() {
+    this.setData({
+      pageNo: 1,
+      hasMore: true,
+      items: []
+    });
+    this.loadAuditList();
+  },
+
+  onReachBottom: function() {
+    if (this.data.hasMore && !this.data.isLoading) {
+      this.setData({ pageNo: this.data.pageNo + 1 });
+      this.loadAuditList();
+    }
   }
 });

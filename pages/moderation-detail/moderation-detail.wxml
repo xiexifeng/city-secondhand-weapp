@@ -107,13 +107,18 @@
           <view wx:for="{{detail.tags}}" wx:key="index" class="tag">{{item}}</view>
         </view>
       </view>
+
+      <view class="info-item">
+        <text class="info-label">提交时间</text>
+        <text class="info-value">{{detail.submittedAt}}</text>
+      </view>
     </view>
 
     <!-- Publisher Section -->
     <view class="publisher-section">
       <text class="section-title">发布者信息</text>
       <view class="publisher-card">
-        <view class="publisher-avatar">{{detail.publisher.avatar}}</view>
+        <view class="publisher-avatar">{{detail.publisher.avatarText ? detail.publisher.avatarText : '?'}}</view>
         <view class="publisher-details">
           <view class="publisher-name">
             {{detail.publisher.name}}
@@ -140,7 +145,7 @@
             <text>📍</text>
           </view>
         </view>
-        <text class="location-value">{{detail.location}}</text>
+        <text class="location-value">{{detail.location.address}}</text>
       </view>
     </view>
 

@@ -1,40 +1,10 @@
+const { auditAPI } = require('../../utils/api');
+const format = require('../../utils/format.js');
+const { parseLocation } = require('../../utils/helpers.js');
+
 Page({
   data: {
-    detail: {
-      id: 1,
-      type: 'item',
-      title: 'iPhone 14 Pro Max',
-      description: '全新未开封，原厂包装，支持分期付款，可刀价',
-      images: [
-        'https://images.unsplash.com/photo-1592286927505-1def25115558?w=500&h=500&fit=crop&q=80',
-        'https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=500&h=500&fit=crop&q=80',
-        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&h=500&fit=crop&q=80'
-      ],
-      category: '数码3C',
-      tags: ['全新', '包邮', '可分期'],
-      price: '8999',
-      exchangeMethod: null,
-      publisher: {
-        name: '张三',
-        avatar: 'Z',
-        level: '活跃用户',
-        credit: 95,
-        verified: true,
-        items: 12,
-        transferRate: 95
-      },
-      submittedAt: '2小时前',
-      reason: '包含联系方式',
-      machineScore: 75,
-      issues: ['检测到电话号码', '包含微信号'],
-      status: 'pending',
-      location: '北京市朝阳区望京SOHO',
-      distance: 2.5,
-      contact: {
-        phone: '138****8888',
-        wechat: 'wechat123456'
-      }
-    },
+    detail: {},
     currentImageIndex: 0,
     reviewStatus: null,
     rejectReason: '',
@@ -42,7 +12,6 @@ Page({
   },
 
   onLoad: function(options) {
-    // 检查登录状态
     const token = wx.getStorageSync('token');
     if (!token) {
       wx.reLaunch({
@@ -56,52 +25,79 @@ Page({
     }
   },
 
-  /**
-   * Load detail data
-   */
-  loadDetail: function(itemId) {
-    // In real app, fetch from API using itemId
-    // For now, use mock data
+  loadDetail: function(taskId) {
+    wx.showLoading({ title: '加载中...' });
+
+    auditAPI.getAuditDetail(taskId).then(res => {
+      if (res) {
+        const publisher = res.publisher || {};
+        let avatarText = 'U';
+        if (publisher.name && publisher.name.trim()) {
+          avatarText = publisher.name.trim().charAt(0).toUpperCase();
+        }
+        
+        res.publisher = {
+          ...publisher,
+          avatarText: avatarText
+        };
+        res.submittedAt = format.formatRelativeTime(res.submittedAt);
+        res.reviewedAt = format.formatRelativeTime(res.reviewedAt);
+        res.exchangeMethod = this.formatExchangeMethod(res.exchangeMethod);
+        res.location = parseLocation(res.location);
+        res.publisher = res.publisher || {};
+        res.contact = res.contact || {};
+        res.images = res.images || [];
+        res.tags = res.tags || [];
+        
+        this.setData({
+          detail: res,
+          currentImageIndex: 0
+        });
+      }
+    }).catch(err => {
+      console.error('加载审核详情失败:', err);
+      wx.showToast({
+        title: '加载失败',
+        icon: 'none'
+      });
+    }).finally(() => {
+      wx.hideLoading();
+    });
   },
 
-  /**
-   * Handle previous image
-   */
   handlePrevImage: function() {
     const currentIndex = this.data.currentImageIndex;
-    const imagesLength = this.data.detail.images.length;
+    const imagesLength = this.data.detail.images?.length || 0;
     const newIndex = currentIndex === 0 ? imagesLength - 1 : currentIndex - 1;
     this.setData({ currentImageIndex: newIndex });
   },
 
-  /**
-   * Handle next image
-   */
   handleNextImage: function() {
     const currentIndex = this.data.currentImageIndex;
-    const imagesLength = this.data.detail.images.length;
+    const imagesLength = this.data.detail.images?.length || 0;
     const newIndex = (currentIndex + 1) % imagesLength;
     this.setData({ currentImageIndex: newIndex });
   },
 
-  /**
-   * Handle select image from thumbnail
-   */
   handleSelectImage: function(e) {
     const index = e.currentTarget.dataset.index;
     this.setData({ currentImageIndex: index });
   },
 
-  /**
-   * Go back
-   */
   goBack: function() {
     wx.navigateBack();
   },
 
-  /**
-   * Set review status
-   */
+  formatExchangeMethod: function(method) {
+    const methodMap = {
+      'sell': '出售',
+      'swap': '交换',
+      'give': '赠送',
+      'rent': '租赁'
+    };
+    return methodMap[method] || method;
+  },
+
   setReviewStatus: function(e) {
     const status = e.currentTarget.dataset.status;
     this.setData({ 
@@ -110,20 +106,14 @@ Page({
     });
   },
 
-  /**
-   * On reject reason change
-   */
   onRejectReasonChange: function(e) {
     this.setData({
       rejectReason: e.detail.value
     });
   },
 
-  /**
-   * Handle submit review
-   */
   handleSubmitReview: function() {
-    const { reviewStatus, rejectReason } = this.data;
+    const { reviewStatus, rejectReason, detail } = this.data;
 
     if (!reviewStatus) {
       wx.showToast({
@@ -142,13 +132,14 @@ Page({
     }
 
     this.setData({ isProcessing: true });
+    wx.showLoading({ title: '处理中...' });
 
-    // Simulate API call
-    setTimeout(() => {
+    auditAPI.submitAuditResult(detail.id, reviewStatus === 'approve', rejectReason).then(res => {
+      wx.hideLoading();
       this.setData({
         isProcessing: false,
         'detail.status': reviewStatus === 'approve' ? 'approved' : 'rejected',
-        'detail.reviewedAt': new Date().toLocaleString()
+        'detail.reviewedAt': '刚刚'
       });
 
       wx.showToast({
@@ -159,32 +150,37 @@ Page({
       setTimeout(() => {
         wx.navigateBack();
       }, 1500);
-    }, 1000);
+    }).catch(err => {
+      wx.hideLoading();
+      this.setData({ isProcessing: false });
+      wx.showToast({
+        title: err?.message || '审核失败',
+        icon: 'none'
+      });
+    });
   },
 
-  /**
-   * Navigate to map page
-   */
   navigateToMap: function() {
-    const { location } = this.data.detail;
-    // 模拟经纬度数据，实际应用中应该从接口获取
-    const latitude = 39.9042;
-    const longitude = 116.4074;
+    const { location, latitude, longitude } = this.data.detail;
     
     wx.openLocation({
       latitude: latitude,
       longitude: longitude,
       name: '交易地点',
-      address: location,
+      address: location.address,
       scale: 15
     });
   },
 
-  /**
-   * Copy phone number
-   */
   copyPhone: function() {
-    const { phone } = this.data.detail.contact;
+    const { phone } = this.data.detail.contact || {};
+    if (!phone) {
+      wx.showToast({
+        title: '暂无手机号',
+        icon: 'none'
+      });
+      return;
+    }
     wx.setClipboardData({
       data: phone,
       success: function() {
@@ -196,11 +192,15 @@ Page({
     });
   },
 
-  /**
-   * Copy wechat
-   */
   copyWechat: function() {
-    const { wechat } = this.data.detail.contact;
+    const { wechat } = this.data.detail.contact || {};
+    if (!wechat) {
+      wx.showToast({
+        title: '暂无微信号',
+        icon: 'none'
+      });
+      return;
+    }
     wx.setClipboardData({
       data: wechat,
       success: function() {

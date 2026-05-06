@@ -283,6 +283,36 @@ const fileAPI = {
   }
 }
 
+// 审核相关 API
+const auditAPI = {
+  getAuditList(params) {
+    return app.request({
+      url: '/client/audit',
+      method: 'GET',
+      data: params
+    })
+  },
+
+  getAuditDetail(taskId) {
+    return app.request({
+      url: `/client/audit/${taskId}`,
+      method: 'GET'
+    })
+  },
+
+  submitAuditResult(taskId, result, remark) {
+    return app.request({
+      url: '/client/item-audit',
+      method: 'POST',
+      data: {
+        taskId: taskId,
+        result: result,
+        auditRemark: remark
+      }
+    })
+  }
+}
+
 
 module.exports = {
   itemAPI,
@@ -291,5 +321,6 @@ module.exports = {
   wishAPI,
   wishWallAPI,
   socialAPI,
-  fileAPI
+  fileAPI,
+  auditAPI
 }

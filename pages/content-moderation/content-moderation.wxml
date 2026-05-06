@@ -39,7 +39,7 @@
   </view>
 
   <!-- Content Scroll -->
-  <scroll-view scroll-y class="content-scroll">
+  <scroll-view scroll-y class="content-scroll" bindscrolltolower="onReachBottom" bindrefresherrefresh="onPullDownRefresh" refresher-enabled="{{true}}" refresher-triggered="{{isLoading}}">
     <!-- Empty State -->
     <view wx:if="{{filteredItems.length === 0}}" class="empty-state">
       <text class="empty-icon">📋</text>
@@ -59,9 +59,9 @@
         <view class="item-image-container">
           <image class="item-image" src="{{item.image}}" mode="aspectFill" />
           <view class="item-publisher">
-            <view class="publisher-avatar">{{item.publisher.avatar}}</view>
+            <view class="publisher-avatar">{{item.publisher && item.publisher.avatarText ? item.publisher.avatarText : '?'}}</view>
             <view class="publisher-info">
-              <text class="publisher-name">{{item.publisher.name}}</text>
+              <text class="publisher-name">{{item.publisher ? item.publisher.name : ''}}</text>
               <text class="publisher-time">{{item.submittedAt}}</text>
             </view>
           </view>
@@ -78,7 +78,7 @@
           
           <view class="item-id-container">
             <text class="item-id-label">换换么号：</text>
-            <text class="item-id">WP202604220045600{{item.id}}</text>
+            <text class="item-id">WP{{item.id}}</text>
           </view>
         </view>
         

@@ -135,7 +135,7 @@ Page({
           city: parsed.city || '北京市',
           district: parsed.district || '朝阳区'
         };
-        locationStr = parsed.location || `${locationDetails.province}${locationDetails.city}${locationDetails.district}`;
+        locationStr = parsed.address;
       } catch (e) {
         locationStr = location;
       }
@@ -353,7 +353,7 @@ Page({
         province: this.data.locationDetails.province || '',
         city: this.data.locationDetails.city || '',
         district: this.data.locationDetails.district || '',
-        location: formData.location
+        address: formData.location
       };
 
       const result = await this.submitData(publishType, editingId, formData, images, locationData);

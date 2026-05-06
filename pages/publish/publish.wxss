@@ -136,13 +136,13 @@ page {
 }
 
 .switch-type-icon {
-  font-size: 24rpx;
+  font-size: 32rpx;
   color: #059669;
   font-weight: 700;
 }
 
 .switch-type-text {
-  font-size: 22rpx;
+  font-size: 26rpx;
   color: #059669;
   font-weight: 600;
 }
