@@ -2,6 +2,9 @@
 
 page {
   background-color: #ffffff;
+  overflow-x: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .messages-container {
