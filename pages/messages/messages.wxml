@@ -70,7 +70,7 @@
   <view wx:if="{{selectedReport}}" class="modal-overlay" bindtap="closeReportModal">
     <view class="modal-content" catch:tap>
       <view class="modal-header">
-        <text class="modal-title">{{selectedReport.type === 'item' ? '物品举报' : '用户投诉'}}详情</text>
+        <text class="modal-title">{{selectedReport.typeText}}详情</text>
         <view class="modal-close" bindtap="closeReportModal">✕</view>
       </view>
 
@@ -99,13 +99,13 @@
 
         <view class="modal-section">
           <text class="section-label">当前状态</text>
-          <text class="section-value {{getStatusClass(selectedReport.status)}}">{{selectedReport.status}}</text>
+          <text class="section-value {{selectedReport.statusClass}}">{{selectedReport.statusText}}</text>
         </view>
 
-        <view wx:if="{{selectedReport.status === '待审核'}}" class="review-section">
+        <view wx:if="{{selectedReport.status === 'pending' && selectedReport.canReview}}" class="review-section">
           <text class="review-title">审核处理</text>
-          
-          <textarea 
+
+          <textarea
             class="review-textarea"
             placeholder="输入审核备注（可选）..."
             value="{{reviewNote}}"
@@ -113,11 +113,11 @@
           />
 
           <view class="review-buttons">
-            <button class="review-btn handled" bindtap="handleReviewReport" data-status="已处理">
-              ✓ 已处理
+            <button class="review-btn handled" bindtap="handleReviewReport" data-status="举报有效">
+              ✓ 举报有效
             </button>
-            <button class="review-btn invalid" bindtap="handleReviewReport" data-status="已忽略">
-              ✕ 已忽略
+            <button class="review-btn invalid" bindtap="handleReviewReport" data-status="举报无效">
+              ✕ 举报无效
             </button>
           </view>
         </view>

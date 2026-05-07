@@ -47,13 +47,9 @@ Page({
 
   mapNotificationType: function(type) {
     if (!type) return 'system';
-    
+
     const typeStr = String(type).toUpperCase();
     const typeMap = {
-      '1': 'system',
-      '2': 'activity',
-      '3': 'item',
-      '4': 'report',
       'SYSTEM': 'system',
       'TRADE': 'activity',
       'STUFF': 'item',
@@ -93,7 +89,7 @@ Page({
 
   handleMessageClick: function(e) {
     const { id, relatedId, originalType, type } = e.currentTarget.dataset;
-    
+
     console.log('handleMessageClick:', { id, relatedId, originalType, type });
 
     messageAPI.readMessage(id).then(() => {
@@ -117,7 +113,11 @@ Page({
       wx.hideLoading();
       console.log('举报详情返回:', res);
       if (res) {
-        this.setData({ selectedReport: res });
+        const report = res;
+        report.statusText = this.getStatusText(report.status);
+        report.statusClass = this.getStatusClass(report.status);
+        report.typeText = this.getReportTypeText(report.type);
+        this.setData({ selectedReport: report });
         console.log('已设置selectedReport:', this.data.selectedReport);
       } else {
         wx.showToast({ title: '获取详情失败', icon: 'none' });
@@ -178,7 +178,7 @@ Page({
 
     if (!selectedReport) return;
 
-    const status = statusText === '已处理' ? 2 : 3;
+    const status = statusText === '举报有效' ? 2 : 3;
 
     wx.showLoading({ title: '处理中...' });
     reportAPI.handleReport(selectedReport.id, status, reviewNote).then(res => {
@@ -210,11 +210,29 @@ Page({
 
   getStatusClass: function(status) {
     const statusMap = {
-      '待审核': 'pending',
-      '已处理': 'handled',
-      '已忽略': 'invalid'
+      'pending': 'pending',
+      'valid': 'handled',
+      'ignored': 'invalid'
     };
     return statusMap[status] || 'pending';
+  },
+
+  getStatusText: function(status) {
+    const statusMap = {
+      'pending': '待审核',
+      'valid': '举报有效',
+      'ignored': '举报无效'
+    };
+    return statusMap[status] || status;
+  },
+
+  getReportTypeText: function(type) {
+    const typeMap = {
+      'item': '物品举报',
+      'wish': '心愿举报',
+      'user': '用户投诉'
+    };
+    return typeMap[type] || '举报详情';
   },
 
   formatDate: function(timestamp) {
