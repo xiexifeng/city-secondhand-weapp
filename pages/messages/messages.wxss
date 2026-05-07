@@ -5,9 +5,7 @@ page {
 }
 
 .messages-container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   background-color: #ffffff;
 }
 
@@ -49,67 +47,6 @@ page {
   color: #1f2937;
 }
 
-.header-subtitle {
-  display: block;
-  font-size: 22rpx;
-  color: #64748b;
-  margin-top: 2rpx;
-}
-
-/* Stats Cards */
-.stats-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12rpx;
-  padding: 16rpx;
-  background-color: #ffffff;
-}
-
-.stat-card {
-  background-color: white;
-  border: 1rpx solid #eef2f7;
-  border-radius: 12rpx;
-  padding: 16rpx 12rpx;
-  text-align: center;
-  transition: all 0.2s;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 1rpx 3rpx rgba(15, 23, 42, 0.05);
-}
-
-.stat-card:active {
-  transform: scale(1.05);
-  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
-}
-
-.stat-number {
-  display: block;
-  font-size: 32rpx;
-  font-weight: bold;
-  color: #0ea5e9;
-  margin-bottom: 4rpx;
-}
-
-.stat-number.warning {
-  color: #f59e0b;
-}
-
-.stat-number.danger {
-  color: #dc2626;
-}
-
-.stat-number.info {
-  color: #0ea5e9;
-}
-
-.stat-label {
-  display: block;
-  font-size: 22rpx;
-  color: #64748b;
-}
-
 /* Filter Tabs */
 .filter-tabs {
   display: flex;
@@ -149,8 +86,7 @@ page {
 
 /* Messages List */
 .messages-list {
-  flex: 1;
-  overflow-y: auto;
+  padding-bottom: 120rpx;
 }
 
 .messages-content {
@@ -330,6 +266,32 @@ page {
 
 .empty-text {
   font-size: 28rpx;
+  color: #9ca3af;
+}
+
+/* Loading More */
+.loading-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx;
+}
+
+.loading-more text {
+  font-size: 24rpx;
+  color: #9ca3af;
+}
+
+/* No More */
+.no-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx;
+}
+
+.no-more text {
+  font-size: 24rpx;
   color: #9ca3af;
 }
 

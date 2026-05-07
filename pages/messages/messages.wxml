@@ -4,24 +4,8 @@
     <view class="header-left"></view>
     <view class="header-content">
       <text class="header-title">消息中心</text>
-      <text wx:if="{{unreadCount > 0}}" class="header-subtitle">{{unreadCount}} 条未读消息</text>
     </view>
     <view class="header-right"></view>
-  </view>
-
-  <view class="stats-container">
-    <view class="stat-card" bindtap="setActiveFilter" data-filter="all">
-      <text class="stat-number">{{messages.length}}</text>
-      <text class="stat-label">全部消息</text>
-    </view>
-    <view class="stat-card" bindtap="setActiveFilter" data-filter="unread">
-      <text class="stat-number warning">{{unreadCount}}</text>
-      <text class="stat-label">未读消息</text>
-    </view>
-    <view class="stat-card" bindtap="setActiveFilter" data-filter="report">
-      <text class="stat-number danger">{{reportCount}}</text>
-      <text class="stat-label">举报投诉</text>
-    </view>
   </view>
 
   <scroll-view class="filter-tabs" scroll-x>
@@ -32,11 +16,11 @@
       未读
     </view>
     <view class="filter-tab {{activeFilter === 'report' ? 'active' : ''}}" bindtap="setActiveFilter" data-filter="report">
-      举报 ({{pendingReportCount}})
+      举报
     </view>
   </scroll-view>
 
-  <scroll-view class="messages-list" scroll-y>
+  <view class="messages-list">
     <view wx:if="{{filteredMessages.length > 0}}" class="messages-content">
       <view wx:for="{{filteredMessages}}" wx:key="id" class="message-item {{item.read ? '' : 'unread'}}" bindtap="handleMessageClick" data-id="{{item.id}}" data-type="{{item.type}}" data-related-id="{{item.relatedId}}" data-original-type="{{item.originalType}}">
         <view class="message-icon {{item.type}}">
@@ -62,10 +46,18 @@
       </view>
     </view>
 
+    <view wx:if="{{loading && filteredMessages.length > 0}}" class="loading-more">
+      <text>加载中...</text>
+    </view>
+
+    <view wx:if="{{!loading && !hasMore && filteredMessages.length > 0}}" class="no-more">
+      <text>暂无更多消息</text>
+    </view>
+
     <view wx:else class="empty-state">
       <text class="empty-text">暂无消息</text>
     </view>
-  </scroll-view>
+  </view>
 
   <view wx:if="{{selectedReport}}" class="modal-overlay" bindtap="closeReportModal">
     <view class="modal-content" catch:tap>

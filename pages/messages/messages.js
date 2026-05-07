@@ -8,9 +8,10 @@ Page({
     activeFilter: 'all',
     selectedReport: null,
     reviewNote: '',
-    unreadCount: 0,
-    reportCount: 0,
-    pendingReportCount: 0
+    page: 1,
+    pageSize: 10,
+    hasMore: true,
+    loading: false
   },
 
   onLoad: function() {
@@ -22,69 +23,78 @@ Page({
     this.loadMessages();
   },
 
-  loadMessages: function() {
-    wx.showLoading({ title: '加载中...' });
-    messageAPI.getMessages({ pageNo: 1, pageSize: 100 }).then(res => {
-      wx.hideLoading();
-      if (res) {
-        const messages = res.map(msg => ({
-          ...msg,
-          read: msg.status === 2,
-          createdAt: msg.createTime,
-          type: this.mapNotificationType(msg.notificationType),
-          relatedId: msg.relatedId,
-          originalType: msg.notificationType
-        }));
-        this.setData({ messages });
-        this.updateStats();
-        this.filterMessages();
+  loadMessages: function(isRefresh = false) {
+    const params = {
+      pageNo: isRefresh ? 1 : this.data.page,
+      pageSize: this.data.pageSize
+    };
+
+    if (this.data.activeFilter === 'report') {
+      params.type = 'report';
+      params.status = 'all';
+    }else{
+      params.status = this.data.activeFilter;
+    }
+    
+    return messageAPI.getMessages(params).then(res => {
+      if (!res || !Array.isArray(res)) {
+        if (isRefresh) {
+          this.setData({ messages: [], filteredMessages: [] });
+        }
+        return;
       }
+      
+      const newMessages = res.map(msg => ({
+        ...msg,
+        read: msg.status === 2,
+        createdAt: msg.createTime,
+        type: msg.notificationType ? (String(msg.notificationType).toUpperCase() === 'REPORT' ? 'report' : 
+              String(msg.notificationType).toUpperCase() === 'AUDIT' ? 'alert' :
+              String(msg.notificationType).toUpperCase() === 'TRADE' ? 'activity' :
+              String(msg.notificationType).toUpperCase() === 'STUFF' ? 'item' : 'system') : 'system',
+        relatedId: msg.relatedId,
+        originalType: msg.notificationType
+      }));
+      
+      const messages = isRefresh ? newMessages : [...this.data.messages, ...newMessages];
+      
+      this.setData({
+        messages,
+        page: isRefresh ? 2 : this.data.page + 1,
+        hasMore: newMessages.length >= this.data.pageSize,
+        filteredMessages: messages
+      });
     }).catch(err => {
-      wx.hideLoading();
       console.error('加载消息失败:', err);
+      throw err;
     });
   },
 
-  mapNotificationType: function(type) {
-    if (!type) return 'system';
-
-    const typeStr = String(type).toUpperCase();
-    const typeMap = {
-      'SYSTEM': 'system',
-      'TRADE': 'activity',
-      'STUFF': 'item',
-      'REPORT': 'report',
-      'AUDIT': 'audit'
-    };
-    return typeMap[typeStr] || 'system';
-  },
-
-  updateStats: function() {
-    const { messages } = this.data;
-    const unreadCount = messages.filter(m => !m.read).length;
-    const reportCount = messages.filter(m => m.type === 'report').length;
-    const pendingReportCount = messages.filter(m => m.type === 'report').length;
-
-    this.setData({ unreadCount, reportCount, pendingReportCount });
-  },
-
-  filterMessages: function() {
-    const { messages, activeFilter } = this.data;
-    let filtered = messages;
-
-    if (activeFilter === 'unread') {
-      filtered = messages.filter(m => !m.read);
-    } else if (activeFilter === 'report') {
-      filtered = messages.filter(m => m.type === 'report');
-    }
-
-    this.setData({ filteredMessages: filtered });
-  },
+  
 
   setActiveFilter: function(e) {
     const filter = e.currentTarget.dataset.filter;
-    this.setData({ activeFilter: filter });
-    this.filterMessages();
+    this.setData({ 
+      activeFilter: filter,
+      messages: [],
+      page: 1,
+      hasMore: true
+    });
+    this.loadMessages(true);
+  },
+
+  onPullDownRefresh: function() {
+    this.loadMessages(true).then(() => {
+      wx.stopPullDownRefresh();
+    }).catch(() => {
+      wx.stopPullDownRefresh();
+    });
+  },
+
+  onReachBottom: function() {
+    if (this.data.hasMore && !this.data.loading) {
+      this.loadMessages();
+    }
   },
 
   handleMessageClick: function(e) {
@@ -130,13 +140,20 @@ Page({
   },
 
   markAsRead: function(id) {
-    const { messages } = this.data;
-    const updated = messages.map(m =>
-      m.id === id ? { ...m, read: true } : m
+    if (!id) return;
+    
+    const { messages, filteredMessages } = this.data;
+    const targetId = String(id);
+    
+    const updatedMessages = messages.map(m =>
+      String(m.id) === targetId ? { ...m, read: true } : m
     );
-    this.setData({ messages: updated });
-    this.updateStats();
-    this.filterMessages();
+    
+    const updatedFiltered = filteredMessages.map(m =>
+      String(m.id) === targetId ? { ...m, read: true } : m
+    );
+    
+    this.setData({ messages: updatedMessages, filteredMessages: updatedFiltered });
   },
 
   deleteMessage: function(e) {
@@ -149,9 +166,7 @@ Page({
         const { messages } = this.data;
         const filtered = messages.filter(m => m.id !== id);
 
-        this.setData({ messages: filtered });
-        this.updateStats();
-        this.filterMessages();
+        this.setData({ messages: filtered, filteredMessages: filtered });
 
         wx.showToast({ title: '消息已删除', icon: 'success', duration: 1500 });
       } else {
@@ -195,9 +210,7 @@ Page({
           }
           return m;
         });
-        this.setData({ messages: updatedMessages });
-        this.updateStats();
-        this.filterMessages();
+        this.setData({ messages: updatedMessages, filteredMessages: updatedMessages });
 
         wx.showToast({ title: '处理成功', icon: 'success', duration: 1500 });
       }
