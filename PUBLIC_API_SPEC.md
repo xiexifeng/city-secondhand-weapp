@@ -11,6 +11,7 @@
 7. [公共组件](#公共组件)
 8. [分页请求规范](#分页请求规范)
 9. [地点处理](#地点处理)
+10. [WXML开发规范](#wxml开发规范)
 
 ---
 
@@ -133,7 +134,7 @@ const app = getApp()
 ### 导入方式
 
 ```javascript
-const { itemAPI, userAPI, wishAPI, wishWallAPI, socialAPI, fileAPI } = require('./utils/api')
+const { itemAPI, userAPI, wishAPI, wishWallAPI, socialAPI, fileAPI, messageAPI, reportAPI } = require('./utils/api')
 ```
 
 ### wishWallAPI - 心愿墙
@@ -195,6 +196,22 @@ const { itemAPI, userAPI, wishAPI, wishWallAPI, socialAPI, fileAPI } = require('
 |--------|------|------|
 | `uploadImage(filePath)` | filePath: String | 上传图片 |
 
+### messageAPI - 消息
+
+| 方法名 | 参数 | 说明 |
+|--------|------|------|
+| `getMessages(params)` | params: Object | 获取消息列表 |
+| `readMessage(messageId)` | messageId: String | 标记消息已读 |
+| `deleteMessage(messageId)` | messageId: String | 删除消息（逻辑删除） |
+
+### reportAPI - 举报
+
+| 方法名 | 参数 | 说明 |
+|--------|------|------|
+| `getReportDetail(reportId)` | reportId: String | 获取举报详情 |
+| `handleReport(reportId, status, remark)` | reportId: String, status: Number, remark: String | 处理举报 |
+| `submitReport(data)` | data: Object | 提交举报 |
+
 ---
 
 ## 枚举定义
@@ -227,6 +244,14 @@ const { itemAPI, userAPI, wishAPI, wishWallAPI, socialAPI, fileAPI } = require('
 | `TRANSFER_ACCEPTED` | 已接受 |
 | `TRANSFERRED` | 已转让 |
 | `TRANSFER_CANCELLED` | 已取消 |
+
+### REPORT_STATUS - 举报状态
+
+| 枚举值 | 说明 |
+|--------|------|
+| `pending` | 待审核 |
+| `valid` | 举报有效 |
+| `ignored` | 举报无效 |
 
 ### 状态标签映射
 
@@ -346,6 +371,7 @@ CONDITION_MAP = {
 |------|------|--------|------|
 | visible | Boolean | false | 是否显示 |
 | item | Object | {} | 被举报物品信息 |
+| reportType | Number | 1 | 举报类型（1-物品，2-心愿） |
 
 **事件**：
 
@@ -416,6 +442,81 @@ async loadItems() {
 |--------|------|------|
 | latitude | Number | 纬度 |
 | longitude | Number | 经度 |
+
+### 位置数据结构
+
+后端返回的数据结构如下：
+
+```javascript
+{ 
+  "location": "{\"province\": \"广东省\", \"city\": \"深圳市\", \"district\": \"福田区\", \"address\": \"详细地址\"}", 
+  "latitude": 22.5431, 
+  "longitude": 114.0579 
+}
+```
+
+**字段说明：**
+
+| 字段名 | 类型 | 说明 |
+|--------|------|------|
+| `location` | String | JSON 字符串，包含省市区信息 |
+| `latitude` | Number | 纬度 |
+| `longitude` | Number | 经度 |
+
+`location` 字段是 JSON 字符串，解析后结构如下：
+
+```javascript
+{
+  "province": "广东省",      // 省份
+  "city": "深圳市",          // 城市
+  "district": "福田区",      // 区县
+  "address": "详细地址"     // 详细地址
+}
+```
+
+### 位置信息处理规范
+
+#### 解析位置信息
+
+在页面中处理位置信息时，需要先解析 JSON 字符串：
+
+```javascript
+// item-detail.js 示例
+let locationInfo = {};
+try {
+  locationInfo = JSON.parse(data.location || '{}');
+} catch (e) {
+  locationInfo = { address: data.location };
+}
+
+// 构建统一的位置对象（供地图展示使用）
+location: {
+  address: locationInfo.address || '',
+  latitude: data.latitude || locationInfo.latitude || 0,
+  longitude: data.longitude || locationInfo.longitude || 0
+}
+```
+
+#### 工具函数
+
+在 `utils/helpers.js` 中提供以下位置处理工具函数：
+
+| 方法名 | 参数 | 返回值 | 说明 |
+|--------|------|--------|------|
+| `getLocationInfo(location)` | String/Object | Object | 获取原始位置对象 |
+| `formatLocation(location)` | String/Object | String | 格式化完整地址用于显示 |
+| `getLocationRegion(location)` | String/Object | String | 获取省市区部分 |
+
+```javascript
+// 使用示例
+const { getLocationInfo, formatLocation } = require('./utils/helpers.js');
+
+const locObj = getLocationInfo(locationStr);
+console.log(locObj.province);  // 广东省
+
+const displayAddr = formatLocation(locationStr);
+// 输出：广东省深圳市福田区详细地址
+```
 
 ### 全局定位管理
 
@@ -523,6 +624,54 @@ onLaunch() 调用 silentRefreshLocation()
 - 用户关闭小程序去其他城市，重新打开时会自动静默刷新获取新定位（如果已授权）
 - 未授权时，首次调用 `getLocation()` 会请求授权
 
+### 地图展示规范
+
+#### WXML 结构
+
+```xml
+<view class="location-section">
+  <text class="section-title">交易地点</text>
+  <view class="location-info">
+    <view class="location-header">
+      <text class="location-label">详细地址</text>
+      <view class="distance-badge" bindtap="handleNavigate">
+        <text class="distance-text">{{item.formattedDistance}}</text>
+        <text class="distance-icon">📍</text>
+      </view>
+    </view>
+    <text class="location-value">{{item.location.address}}</text>
+  </view>
+  <view class="map-container-wrapper">
+    <map 
+      id="detail-map"
+      class="map-container"
+      latitude="{{item.location.latitude}}"
+      longitude="{{item.location.longitude}}"
+      scale="15"
+      markers="{{markers}}"
+      show-location="true"
+    ></map>
+  </view>
+</view>
+```
+
+#### 导航功能
+
+点击位置信息时，调用 `wx.openLocation` 打开地图导航：
+
+```javascript
+handleNavigate: function() {
+  const { item } = this.data;
+  wx.openLocation({
+    latitude: item.location.latitude,
+    longitude: item.location.longitude,
+    name: '交易地点',
+    address: item.location.address,
+    scale: 15
+  });
+}
+```
+
 ### 距离计算
 
 使用 `formatDistance` 工具函数：
@@ -535,6 +684,132 @@ formatDistance(1500)   // "1.5km"
 // format.js - 输入千米
 formatDistance(0.5)    // { text: "500m", type: "near" }
 formatDistance(100)    // { text: "非同城", type: "remote" }
+```
+
+---
+
+## WXML开发规范
+
+### 数据绑定规则
+
+**重要警告**：WXML 中 **不能直接调用 JS 方法**，只能绑定 data 中的属性。
+
+**错误写法**：
+```wxml
+<!-- ❌ 错误：WXML 不支持直接调用方法 -->
+<text>{{getReportTypeText(selectedReport.type)}}详情</text>
+```
+
+**正确写法**：
+```wxml
+<!-- ✅ 正确：绑定预先计算好的属性 -->
+<text>{{selectedReport.typeText}}详情</text>
+```
+
+**对应 JS 处理**：
+```javascript
+loadReportDetail: function(reportId) {
+  reportAPI.getReportDetail(reportId).then(res => {
+    if (res) {
+      const report = res;
+      // 预先计算所有需要在 WXML 中显示的值
+      report.statusText = this.getStatusText(report.status);
+      report.statusClass = this.getStatusClass(report.status);
+      report.typeText = this.getReportTypeText(report.type);
+      this.setData({ selectedReport: report });
+    }
+  });
+},
+
+getReportTypeText: function(type) {
+  const typeMap = {
+    'item': '物品举报',
+    'wish': '心愿举报',
+    'user': '用户投诉'
+  };
+  return typeMap[type] || '举报详情';
+}
+```
+
+### 条件渲染
+
+使用 `wx:if` 进行条件渲染时，优先使用数据绑定而非方法调用：
+
+```wxml
+<!-- ✅ 正确：使用数据属性 -->
+<view wx:if="{{selectedReport.canReview}}">审核按钮</view>
+
+<!-- ❌ 错误：不要在条件中调用方法 -->
+<view wx:if="{{canReview(selectedReport)}}">审核按钮</view>
+```
+
+### 事件绑定
+
+事件处理函数中可以调用方法，但模板中不能：
+
+```wxml
+<!-- ✅ 正确：事件绑定调用方法 -->
+<view bindtap="handleClick">点击</view>
+
+<!-- ❌ 错误：不能在文本绑定中调用方法 -->
+<text>{{handleClick()}}</text>
+```
+
+### 类型转换规范
+
+在WXML中展示枚举值或编码值时，必须在JS中预先转换为可读文本：
+
+**推荐的类型映射方法模式**：
+
+```javascript
+// 在 Page 或 Component 中定义类型映射
+typeMaps: {
+  reportType: {
+    'item': '物品举报',
+    'wish': '心愿举报',
+    'user': '用户投诉'
+  },
+  auditType: {
+    'ITEM': '物品',
+    'WISH': '心愿'
+  },
+  exchangeMethod: {
+    'SELL': '出售',
+    'EXCHANGE': '交换',
+    'BOTH': '出售/交换'
+  }
+},
+
+// 统一的类型转换方法
+getTypeText: function(type, mapName) {
+  const map = this.typeMaps[mapName];
+  return map ? map[type] || type : type;
+}
+```
+
+**在数据加载时进行转换**：
+
+```javascript
+loadReportDetail: function(reportId) {
+  reportAPI.getReportDetail(reportId).then(res => {
+    if (res) {
+      const report = res;
+      // 预先转换所有类型值
+      report.typeText = this.typeMaps.reportType[report.type] || '举报';
+      this.setData({ selectedReport: report });
+    }
+  });
+}
+```
+
+**正确的WXML使用方式**：
+
+```wxml
+<!-- ✅ 正确：使用预先转换好的属性 -->
+<text>{{selectedReport.typeText}}详情</text>
+
+<!-- ✅ 正确：使用数据绑定进行条件判断 -->
+<view wx:if="{{selectedReport.type === 'item'}}">物品相关</view>
 ```
 
 ---
@@ -595,6 +870,6 @@ wx.removeStorageSync('userInfo')
 
 ---
 
-**文档版本**: v1.0  
-**生成时间**: 2026-04-30  
+**文档版本**: v1.1  
+**生成时间**: 2026-05-07  
 **适用项目**: city-secondhand-weapp

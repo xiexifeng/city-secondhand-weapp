@@ -125,9 +125,24 @@ const userAPI = {
     })
   },
 
-  loginOrRegister(phoneNumbers, verifyCode) {
+  loginOrRegister(phoneNumbers, verifyCode, inviterId) {
+    let url = '/client/auth/login-or-register?phoneNumbers=' + phoneNumbers + '&verifyCode=' + verifyCode;
+    if (inviterId) {
+      url += '&inviterId=' + inviterId;
+    }
     return app.request({
-      url: '/client/auth/login-or-register?phoneNumbers=' + phoneNumbers + '&verifyCode=' + verifyCode,
+      url: url,
+      method: 'POST'
+    })
+  },
+
+  wechatLogin(code, encryptedData, iv, inviterId) {
+    let url = '/client/auth/wechat-login?code=' + code + '&encryptedData=' + encodeURIComponent(encryptedData) + '&iv=' + encodeURIComponent(iv);
+    if (inviterId) {
+      url += '&inviterId=' + inviterId;
+    }
+    return app.request({
+      url: url,
       method: 'POST'
     })
   },

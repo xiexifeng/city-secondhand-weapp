@@ -9,16 +9,25 @@ Page({
     showAgreementModal: false,
     agreementTitle: '',
     agreementContent: '',
-    agreementChecked: false
+    agreementChecked: false,
+    inviterId: ''  // 邀请者ID
   },
 
-  onLoad: function() {
+  onLoad: function(options) {
     // Check if already logged in
     const token = wx.getStorageSync('token');
     if (token) {
       wx.redirectTo({
         url: '/pages/home/home'
       });
+      return;
+    }
+
+    // 解析分享参数中的邀请者ID
+    if (options && options.inviterId) {
+      this.setData({ inviterId: options.inviterId });
+      wx.setStorageSync('inviterId', options.inviterId);
+      console.log('邀请者ID:', options.inviterId);
     }
   },
 
@@ -66,32 +75,51 @@ Page({
    * Get phone number from WeChat
    */
   getPhoneNumber: function(code, phoneDetail) {
-    // In real app, call backend API to get encrypted phone number
-    // For demo, show success message
+    const { inviterId } = this.data;
+    
     wx.showLoading({
       title: '登录中...'
     });
 
-    // Simulate successful login (to be replaced with actual API call)
-    setTimeout(() => {
-      wx.hideLoading();
-      
-      // Simulate successful login
-      wx.setStorageSync('token', 'wechat_token_' + Date.now());
-      wx.setStorageSync('userPhone', '138****0000');
-      
-      wx.showToast({
-        title: '登录成功',
-        icon: 'success',
-        duration: 1500
-      });
+    const api = require('../../utils/api');
+    const app = getApp();
+    
+    api.userAPI.wechatLogin(code, phoneDetail.encryptedData, phoneDetail.iv, inviterId)
+      .then(res => {
+        wx.hideLoading();
 
-      setTimeout(() => {
-        wx.switchTab({
-          url: '/pages/home/home'
+        // Save token and user info
+        wx.setStorageSync('token', res.token);
+        wx.setStorageSync('userPhone', res.phone);
+        wx.setStorageSync('userInfo', res.userContext);
+        
+        // Update global data
+        app.globalData.token = res.token;
+        app.globalData.userInfo = res.userContext;
+        app.globalData.userPhone = res.phone;
+
+        // 清除临时保存的邀请者ID
+        wx.removeStorageSync('inviterId');
+
+        wx.showToast({
+          title: '登录成功',
+          icon: 'success',
+          duration: 1500
         });
-      }, 1500);
-    }, 1500);
+
+        setTimeout(() => {
+          wx.switchTab({
+            url: '/pages/home/home'
+          });
+        }, 1500);
+      })
+      .catch(err => {
+        wx.hideLoading();
+        wx.showToast({
+          title: '登录失败',
+          icon: 'none'
+        });
+      });
   },
 
   /**
@@ -213,7 +241,7 @@ Page({
    * Handle SMS login
    */
   handleSmsLogin: function() {
-    const { phoneNumber, verificationCode, isLoggingIn } = this.data;
+    const { phoneNumber, verificationCode, isLoggingIn, inviterId } = this.data;
 
     if (isLoggingIn) {
       return;
@@ -240,7 +268,8 @@ Page({
     // Call real API
     const api = require('../../utils/api');
     const app = getApp();
-    api.userAPI.loginOrRegister(phoneNumber, verificationCode)
+    // 传递邀请者ID
+    api.userAPI.loginOrRegister(phoneNumber, verificationCode, inviterId)
       .then(res => {
         this.setData({ isLoggingIn: false });
 
@@ -253,6 +282,9 @@ Page({
         app.globalData.token = res.token;
         app.globalData.userInfo = res.userContext;
         app.globalData.userPhone = res.phone;
+
+        // 清除临时保存的邀请者ID
+        wx.removeStorageSync('inviterId');
 
         wx.showToast({
           title: '登录成功',

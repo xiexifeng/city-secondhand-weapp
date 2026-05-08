@@ -6,6 +6,7 @@ Page({
       following: 12,
       avatar: ''
     },
+    userId: '',  // 当前用户ID（用于邀请分享）
     userStats: {
       published: 12,
       wishes: 3,
@@ -133,6 +134,7 @@ Page({
         
         // Update user info
         this.setData({
+          userId: res.userId || '',
           user: {
             nickname: res.nickname || '用户昵称',
             followers: res.followers || 0,
@@ -297,6 +299,65 @@ Page({
   navigateToFollowing: function() {
     wx.navigateTo({
       url: '/pages/follow-list/follow-list?tab=following'
+    });
+  },
+
+  /**
+   * 分享到微信好友
+   */
+  onShareAppMessage: function() {
+    const { userId, user } = this.data;
+    const nickname = user.nickname || '用户';
+    
+    return {
+      title: `🎉 ${nickname}邀请你加入换换么！`,
+      desc: '闲置物品交换，环保又省钱',
+      path: `/pages/login/login?inviterId=${userId}`,
+      success: (res) => {
+        console.log('分享成功', res);
+      },
+      fail: (err) => {
+        console.log('分享失败', err);
+      }
+    };
+  },
+
+  /**
+   * 分享到朋友圈
+   */
+  onShareTimeline: function() {
+    const { userId, user } = this.data;
+    const nickname = user.nickname || '用户';
+    
+    return {
+      title: `🎉 ${nickname}邀请你加入换换么！闲置物品交换，环保又省钱`,
+      query: `inviterId=${userId}`
+    };
+  },
+
+  /**
+   * 主动触发分享（按钮点击）
+   */
+  handleInviteShare: function() {
+    wx.showShareMenu({
+      withShareTicket: true,
+      menus: ['shareAppMessage', 'shareTimeline']
+    });
+    
+    wx.showActionSheet({
+      itemList: ['分享给好友', '分享到朋友圈'],
+      success: (res) => {
+        if (res.tapIndex === 0) {
+          // 分享给好友
+          this.onShareAppMessage();
+        } else if (res.tapIndex === 1) {
+          // 分享到朋友圈
+          this.onShareTimeline();
+        }
+      },
+      fail: (err) => {
+        console.log('取消分享', err);
+      }
     });
   }
 
