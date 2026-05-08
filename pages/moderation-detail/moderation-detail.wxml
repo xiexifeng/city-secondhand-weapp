@@ -161,7 +161,7 @@
         <view class="contact-icon">📱</view>
         <view class="contact-info">
           <text class="contact-label">手机号码</text>
-          <text class="contact-value">{{detail.contact.phone}}</text>
+          <text class="contact-value">{{detail.contact.phone && detail.contact.phone !== '' ? detail.contact.phone : '未提供'}}</text>
         </view>
         <view class="contact-action" bindtap="copyPhone">复制</view>
       </view>
@@ -169,7 +169,7 @@
         <view class="contact-icon">💬</view>
         <view class="contact-info">
           <text class="contact-label">微信</text>
-          <text class="contact-value">{{detail.contact.wechat}}</text>
+          <text class="contact-value">{{detail.contact.wechat && detail.contact.wechat !== '' ? detail.contact.wechat : '未提供'}}</text>
         </view>
         <view class="contact-action" bindtap="copyWechat">复制</view>
       </view>

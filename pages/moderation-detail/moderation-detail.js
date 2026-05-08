@@ -142,9 +142,11 @@ Page({
           icon: 'success'
         });
 
+        wx.setStorageSync('refreshAuditList', true);
+
         setTimeout(() => {
-          wx.redirectTo({
-            url: '/pages/content-moderation/content-moderation'
+          wx.navigateBack({
+            delta: 1
           });
         }, 1500);
       } else {

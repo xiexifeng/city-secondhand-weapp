@@ -123,5 +123,18 @@ Page({
       this.setData({ pageNo: this.data.pageNo + 1 });
       this.loadAuditList();
     }
+  },
+
+  onShow: function() {
+    const needRefresh = wx.getStorageSync('refreshAuditList');
+    if (needRefresh) {
+      wx.removeStorageSync('refreshAuditList');
+      this.setData({
+        pageNo: 1,
+        hasMore: true,
+        items: []
+      });
+      this.loadAuditList();
+    }
   }
 });
