@@ -312,6 +312,32 @@ const socialAPI = {
   }
 }
 
+// 收藏相关 API
+const collectionAPI = {
+  listMyItemCollection(params) {
+    return app.request({
+      url: '/client/user/collection/list-items',
+      method: 'POST',
+      data: params
+    })
+  },
+
+  listMyWishCollection(params) {
+    return app.request({
+      url: '/client/user/collection/list-wishes',
+      method: 'POST',
+      data: params
+    })
+  },
+
+  removeCollection(targetId, targetType) {
+    return app.request({
+      url: `/client/user/collection/remove?targetId=${targetId}&targetType=${targetType}`,
+      method: 'POST'
+    })
+  }
+}
+
 // 文件上传相关
 const fileAPI = {
   uploadImage(filePath) {
@@ -386,5 +412,6 @@ module.exports = {
   socialAPI,
   fileAPI,
   auditAPI,
-  reportAPI
+  reportAPI,
+  collectionAPI
 }
