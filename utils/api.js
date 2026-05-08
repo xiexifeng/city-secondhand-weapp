@@ -174,6 +174,21 @@ const userAPI = {
       url: `/client/item/my-list`,
       method: 'GET'
     })
+  },
+
+  getPointsAccount() {
+    return app.request({
+      url: '/client/user/points-account',
+      method: 'GET'
+    })
+  },
+
+  listPointsTransaction(params) {
+    return app.request({
+      url: '/client/user/points-account/list-transaction',
+      method: 'POST',
+      data: params
+    })
   }
 }
 
