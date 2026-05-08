@@ -9,7 +9,11 @@ Page({
     activeWishes: [],
     archivedWishes: [],
     activeMenu: null,
-    wishes: []
+    wishes: [],
+    pageNo: 1,
+    pageSize: 10,
+    hasMore: true,
+    isLoading: false
   },
 
   onLoad: function() {
@@ -23,13 +27,16 @@ Page({
     this.loadWishes();
   },
 
-  loadWishes: async function() {
-    wx.showLoading({
-      title: '加载中...'
-    });
+  loadWishes: async function(isRefresh = false) {
+    if (this.data.isLoading) return;
+    
+    this.setData({ isLoading: true });
     
     try {
-      const result = await wishAPI.getMyWishes({ pageNo: 1, pageSize: 100 });
+      const result = await wishAPI.getMyWishes({ 
+        pageNo: isRefresh ? 1 : this.data.pageNo, 
+        pageSize: this.data.pageSize 
+      });
       
       if (result) {
         const wishes = result.map(wish => {
@@ -56,10 +63,16 @@ Page({
           };
         });
         
-        this.setData({ wishes });
+        const newWishes = isRefresh ? wishes : [...this.data.wishes, ...wishes];
+        this.setData({ 
+          wishes: newWishes,
+          hasMore: wishes.length >= this.data.pageSize
+        });
         this.computeStats();
       } else {
-        this.setData({ wishes: [] });
+        if (isRefresh) {
+          this.setData({ wishes: [], hasMore: true });
+        }
         this.computeStats();
       }
     } catch (error) {
@@ -69,7 +82,7 @@ Page({
         icon: 'none'
       });
     } finally {
-      wx.hideLoading();
+      this.setData({ isLoading: false });
     }
   },
 
@@ -277,5 +290,28 @@ Page({
     });
   },
 
+  /**
+   * Pull down refresh
+   */
+  onPullDownRefresh: function() {
+    this.setData({
+      pageNo: 1,
+      hasMore: true,
+      wishes: []
+    });
+    this.loadWishes(true).then(() => {
+      wx.stopPullDownRefresh();
+    });
+  },
+
+  /**
+   * Scroll to bottom load more
+   */
+  onReachBottom: function() {
+    if (this.data.hasMore && !this.data.isLoading) {
+      this.setData({ pageNo: this.data.pageNo + 1 });
+      this.loadWishes();
+    }
+  }
 
 });

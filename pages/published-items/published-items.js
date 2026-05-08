@@ -5,91 +5,16 @@ const { TRANSFER_STATUS } = require('../../utils/enums');
 
 Page({
   data: {
-    items: [
-      {
-        id: 1,
-        title: 'iPhone 14 Pro Max',
-        price: 5800,
-        image: 'https://images.unsplash.com/photo-1592286927505-1def25115558?w=400&h=400&fit=crop',
-        category: '数码3C',
-        description: '9成新，无划痕，原装配件齐全',
-        status: '在售',
-        views: 245,
-        likes: 18,
-        favorites: 12,
-        publishDate: '2024-03-20',
-        transactionType: '人民币',
-        reviewStatus: '已通过',
-        location: '北京市朝阳区',
-        statusClass: 'status-on-sale',
-        reviewStatusClass: 'review-approved',
-        reviewStatusLabel: '✓ 已通过'
-      },
-      {
-        id: 2,
-        title: 'MacBook Pro 2019',
-        price: 8500,
-        image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop',
-        category: '数码3C',
-        description: '13寸，i5处理器，8GB内存，256GB SSD',
-        status: '已成交',
-        views: 312,
-        likes: 42,
-        favorites: 28,
-        publishDate: '2024-03-15',
-        transactionType: '人民币',
-        reviewStatus: '已通过',
-        location: '北京市朝阳区',
-        statusClass: 'status-completed',
-        reviewStatusClass: 'review-approved',
-        reviewStatusLabel: '✓ 已通过'
-      },
-      {
-        id: 3,
-        title: 'Sony A6400 相机',
-        price: 3200,
-        image: 'https://images.unsplash.com/photo-1612198188060-c7c2a3b66eae?w=400&h=400&fit=crop',
-        category: '数码3C',
-        description: '微单相机，配16-50mm镜头，完美状态',
-        status: '成交中',
-        views: 156,
-        likes: 12,
-        favorites: 8,
-        publishDate: '2024-03-18',
-        transactionType: '都可以',
-        reviewStatus: '待审核',
-        location: '北京市朝阳区',
-        statusClass: 'status-trading',
-        reviewStatusClass: 'review-pending',
-        reviewStatusLabel: '⏳ 待审核'
-      },
-      {
-        id: 4,
-        title: 'Nike 跑鞋',
-        price: 599,
-        image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop',
-        category: '服装鞋帽',
-        description: '全新未穿，官方正品，尺码42',
-        status: '已下架',
-        views: 89,
-        likes: 5,
-        favorites: 3,
-        publishDate: '2024-03-19',
-        transactionType: '人民币',
-        reviewStatus: '审核不通过',
-        rejectionReason: '图片质量低',
-        location: '北京市朝阳区',
-        statusClass: 'status-offline',
-        reviewStatusClass: 'review-rejected',
-        reviewStatusLabel: '✕ 审核不通过'
-      }
-    ],
+    items: [],
     statusCounts: {
-      
       transferring: 0,
       transfer_accepted: 0,
       transferred: 0
-    }
+    },
+    pageNo: 1,
+    pageSize: 10,
+    hasMore: true,
+    isLoading: false
   },
 
   onLoad: function() {
@@ -109,18 +34,19 @@ Page({
   /**
    * 获取我的物品列表
    */
-  getMyItems: function() {
-    wx.showLoading({
-      title: '加载中...'
-    });
+  getMyItems: function(isRefresh = false) {
+    if (this.data.isLoading) return;
+    
+    this.setData({ isLoading: true });
     
     const api = require('../../utils/api');
-    api.itemAPI.getMyItems({})
+    api.itemAPI.getMyItems({
+      pageNo: isRefresh ? 1 : this.data.pageNo,
+      pageSize: this.data.pageSize
+    })
       .then(res => {
-        wx.hideLoading();
-        
         // 检查后端返回的响应格式
-        if (res ) {
+        if (res) {
           // 转换数据格式
           const items = res.map(item => {
             // 解析位置信息
@@ -131,7 +57,6 @@ Page({
             } catch (e) {
               location = item.location || '';
             }
-            
             
             return {
               id: item.id,
@@ -152,27 +77,27 @@ Page({
               publishDate: item.createTime ? formatDate(item.createTime) : formatDate(Date.now()),
               transactionType: item.tradeType,             
               location: location
-              
             };
           });
-          console.log(items);
           
-          this.setData({ items });
+          const newItems = isRefresh ? items : [...this.data.items, ...items];
+          this.setData({ 
+            items: newItems,
+            hasMore: items.length >= this.data.pageSize
+          });
           this.calculateStatusCounts();
         } else {
-          wx.showToast({
-            title: '获取物品列表失败',
-            icon: 'none'
-          });
+          if (isRefresh) {
+            this.setData({ items: [], hasMore: true });
+          }
+          this.calculateStatusCounts();
         }
       })
       .catch(err => {
-        wx.hideLoading();
-        wx.showToast({
-          title: '获取物品列表失败',
-          icon: 'none'
-        });
         console.log('获取物品列表失败:', err);
+      })
+      .finally(() => {
+        this.setData({ isLoading: false });
       });
   },
 
@@ -363,5 +288,28 @@ Page({
     });
   },
 
+  /**
+   * Pull down refresh
+   */
+  onPullDownRefresh: function() {
+    this.setData({
+      pageNo: 1,
+      hasMore: true,
+      items: []
+    });
+    this.getMyItems(true).then(() => {
+      wx.stopPullDownRefresh();
+    });
+  },
+
+  /**
+   * Scroll to bottom load more
+   */
+  onReachBottom: function() {
+    if (this.data.hasMore && !this.data.isLoading) {
+      this.setData({ pageNo: this.data.pageNo + 1 });
+      this.getMyItems();
+    }
+  }
 
 });
