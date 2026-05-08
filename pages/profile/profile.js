@@ -115,24 +115,19 @@ Page({
       'userStats.levelLabel': levelLabel
     });
     
-    // Get user info from API
     this.getUserInfo();
+    this.getUserStatistics();
+    this.getCollectionCount();
+    this.getPointsAccount();
   },
   
   /**
    * Get user info from API
    */
   getUserInfo: function() {
-    wx.showLoading({
-      title: '加载中...'
-    });
-    
     const api = require('../../utils/api');
     api.userAPI.getUserInfo()
       .then(res => {
-        wx.hideLoading();
-        
-        // Update user info
         this.setData({
           userId: res.userId || '',
           user: {
@@ -144,11 +139,74 @@ Page({
         });
       })
       .catch(err => {
-        wx.hideLoading();
-        wx.showToast({
-          title: '获取用户信息失败',
-          icon: 'none'
+        console.error('获取用户信息失败', err);
+      });
+  },
+
+  /**
+   * Get user statistics (publish and wish stats)
+   */
+  getUserStatistics: function() {
+    const api = require('../../utils/api');
+    api.userAPI.getUserStatistics()
+      .then(res => {
+        if (res.publish) {
+          this.setData({
+            'publishData.items': {
+              count: res.publish.total || 0,
+              views: res.publish.views || 0,
+              interested: res.publish.interested || 0,
+              collected: res.publish.collected || 0
+            }
+          });
+        }
+        if (res.wish) {
+          this.setData({
+            'publishData.wishes': {
+              count: res.wish.total || 0,
+              views: res.wish.views || 0,
+              interested: res.wish.interested || 0,
+              collected: res.wish.collected || 0
+            }
+          });
+        }
+      })
+      .catch(err => {
+        console.error('获取统计数据失败', err);
+      });
+  },
+
+  /**
+   * Get collection count
+   */
+  getCollectionCount: function() {
+    const api = require('../../utils/api');
+    api.collectionAPI.getCollectionCount()
+      .then(res => {
+        this.setData({
+          'userStats.favorites': res.total || 0,
+          'userStats.recent7DaysFavorites': res.recent7DaysCount || 0
         });
+      })
+      .catch(err => {
+        console.error('获取收藏数量失败', err);
+      });
+  },
+
+  /**
+   * Get points account
+   */
+  getPointsAccount: function() {
+    const api = require('../../utils/api');
+    api.userAPI.getPointsAccount()
+      .then(res => {
+        this.setData({
+          'userStats.points': res.pointsBalance ? Number(res.pointsBalance) : 0,
+          'userStats.monthEarnDesc': res.monthEarnDesc || ''
+        });
+      })
+      .catch(err => {
+        console.error('获取积分失败', err);
       });
   },
 
@@ -358,6 +416,23 @@ Page({
       fail: (err) => {
         console.log('取消分享', err);
       }
+    });
+  },
+
+  /**
+   * 下拉刷新
+   */
+  onPullDownRefresh: function() {
+    Promise.all([
+      this.getUserInfo(),
+      this.getUserStatistics(),
+      this.getCollectionCount(),
+      this.getPointsAccount()
+    ]).then(() => {
+      wx.stopPullDownRefresh();
+    }).catch((err) => {
+      console.error('刷新失败', err);
+      wx.stopPullDownRefresh();
     });
   }
 

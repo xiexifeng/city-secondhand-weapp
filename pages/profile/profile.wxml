@@ -136,7 +136,7 @@
         <text class="stat-number">{{userStats.points}}</text>
         <text class="stat-unit">积分</text>
       </view>
-      <text class="stat-card-desc">本月获得 +45 积分</text>
+      <text class="stat-card-desc">{{userStats.monthEarnDesc}}</text>
     </view>
 
     <view class="stat-card favorites-card" bindtap="navigateToFavorites">
@@ -148,7 +148,7 @@
         <text class="stat-number">{{userStats.favorites}}</text>
         <text class="stat-unit">个</text>
       </view>
-      <text class="stat-card-desc">最近收藏 3 个</text>
+      <text class="stat-card-desc">最近收藏 {{userStats.recent7DaysFavorites}} 个</text>
     </view>
   </view>
 

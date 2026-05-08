@@ -189,6 +189,13 @@ const userAPI = {
       method: 'POST',
       data: params
     })
+  },
+
+  getUserStatistics() {
+    return app.request({
+      url: '/client/user/statistics',
+      method: 'GET'
+    })
   }
 }
 
@@ -334,6 +341,13 @@ const collectionAPI = {
     return app.request({
       url: `/client/user/collection/remove?targetId=${targetId}&targetType=${targetType}`,
       method: 'POST'
+    })
+  },
+
+  getCollectionCount() {
+    return app.request({
+      url: '/client/user/collection/count',
+      method: 'GET'
     })
   }
 }
