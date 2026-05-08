@@ -181,7 +181,19 @@
   flex: 1;
 }
 
-
+.urgent-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rpx 12rpx;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1rpx solid #fbbf24;
+  border-radius: 4rpx;
+  font-size: 20rpx;
+  font-weight: 600;
+  color: #b45309;
+  flex-shrink: 0;
+}
 
 .item-date {
   display: block;
@@ -376,6 +388,15 @@
   background: linear-gradient(135deg, #bfdbfe 0%, #60a5fa 100%);
 }
 
+.action-item.urgent {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1rpx solid #fbbf24;
+}
+
+.action-item.urgent:active {
+  background: linear-gradient(135deg, #fde68a 0%, #fbbf24 100%);
+}
+
 .action-text {
   font-size: 22rpx;
   font-weight: 600;
@@ -400,6 +421,23 @@
 
 .action-item.accepted .action-text {
   color: #2563eb;
+}
+
+.action-item.urgent .action-text {
+  color: #b45309;
+}
+
+.action-item.more {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+  border: 1rpx solid #d1d5db;
+}
+
+.action-item.more:active {
+  background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+}
+
+.action-item.more .action-text {
+  color: #4b5563;
 }
 
 .action-hint {

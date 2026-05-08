@@ -43,10 +43,11 @@
           <view class="item-info">
             <view class="item-title-row">
               <text class="item-title">{{item.title}}</text>
+              <view wx:if="{{item.urgent}}" class="urgent-badge">急出</view>
             </view>
 
             <view class="item-badges">
-              <text wx:if="{{item.transactionType === '以物换物' || !item.price}}" class="item-price exchange">以物换物</text>
+              <text wx:if="{{item.transactionType === 'exchange'}}" class="item-price exchange">以物换物</text>
               <text wx:else class="item-price">¥{{item.price}}</text>
               <view wx:if="{{item.transferStatus}}" class="status-badge {{item.transferStatusClass}}">{{item.transferStatusLabel}}</view>
               <view wx:if="{{item.status}}" class="review-status {{item.reviewStatusClass}}">
@@ -84,21 +85,18 @@
                 <view wx:if="{{item.status === 'active'}}">
                   <!-- 待发布 -->
                   <view wx:if="{{item.transferStatus === 'own'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
-                    <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
-                      <text class="action-text">删除</text>
-                    </view>
                     <view class="action-item on-sale" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="transferring">
-                      <text class="action-text">发起转让</text>
+                      <text class="action-text">发布</text>
+                    </view>
+                    <view class="action-item more" bindtap="handleMoreActions" data-id="{{item.id}}" data-transferstatus="{{item.transferStatus}}">
+                      <text class="action-text">更多</text>
                     </view>
                   </view>
                   
                   <!-- 发布中 -->
                   <view wx:if="{{item.transferStatus === 'transferring'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
-                    <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
-                      <text class="action-text">删除</text>
-                    </view>
-                    <view class="action-item offline" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="transfer_cancelled">
-                      <text class="action-text">取消发布</text>
+                    <view class="action-item urgent" bindtap="handleUrgent" data-id="{{item.id}}">
+                      <text class="action-text">{{item.urgent ? '取消加急' : '加急'}}</text>
                     </view>
                     <view class="action-item accepted" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="transfer_accepted">
                       <text class="action-text">已接受</text>
@@ -106,38 +104,38 @@
                     <view class="action-item completed" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="transferred">
                       <text class="action-text">已转让</text>
                     </view>
+                    <view class="action-item more" bindtap="handleMoreActions" data-id="{{item.id}}" data-transferstatus="{{item.transferStatus}}">
+                      <text class="action-text">更多</text>
+                    </view>
                   </view>
                   
                   <!-- 已接受 -->
                   <view wx:if="{{item.transferStatus === 'transfer_accepted'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
-                    <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
-                      <text class="action-text">删除</text>
-                    </view>
-                    <view class="action-item offline" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="transfer_cancelled">
-                      <text class="action-text">取消发布</text>
-                    </view>
                     <view class="action-item on-sale" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="transferring">
                       <text class="action-text">退回发布</text>
                     </view>
                     <view class="action-item completed" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="transferred">
                       <text class="action-text">已转让</text>
                     </view>
+                    <view class="action-item more" bindtap="handleMoreActions" data-id="{{item.id}}" data-transferstatus="{{item.transferStatus}}">
+                      <text class="action-text">更多</text>
+                    </view>
                   </view>
                   
                   <!-- 已转让 -->
                   <view wx:if="{{item.transferStatus === 'transferred'}}">
-                    <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
-                      <text class="action-text">删除</text>
+                    <view class="action-item more" bindtap="handleMoreActions" data-id="{{item.id}}" data-transferstatus="{{item.transferStatus}}">
+                      <text class="action-text">更多</text>
                     </view>
                   </view>
                   
                   <!-- 已取消 -->
                   <view wx:if="{{item.transferStatus === 'transfer_cancelled'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
-                    <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
-                      <text class="action-text">删除</text>
-                    </view>
                     <view class="action-item on-sale" bindtap="handleStatusChange" data-id="{{item.id}}" data-status="transferring">
                       <text class="action-text">重新发布</text>
+                    </view>
+                    <view class="action-item more" bindtap="handleMoreActions" data-id="{{item.id}}" data-transferstatus="{{item.transferStatus}}">
+                      <text class="action-text">更多</text>
                     </view>
                   </view>
                 </view>

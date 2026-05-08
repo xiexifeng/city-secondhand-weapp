@@ -76,7 +76,8 @@ Page({
               favorites: item.favorites || 0,
               publishDate: item.createTime ? formatDate(item.createTime) : formatDate(Date.now()),
               transactionType: item.tradeType,             
-              location: location
+              location: location,
+              urgent: item.urgent || false
             };
           });
           
@@ -235,6 +236,145 @@ Page({
               console.log('更新状态失败:', err);
             });
         }
+      }
+    });
+  },
+
+  /**
+   * Handle urgent
+   */
+  handleUrgent: function(e) {
+    const id = e.currentTarget.dataset.id;
+    const { items } = this.data;
+    const item = items.find(i => i.id === id);
+    const newUrgent = item.urgent ? false : true;
+    const actionText = newUrgent ? '加急' : '取消加急';
+    
+    wx.showModal({
+      title: '确认操作',
+      content: `确定要${actionText}这件物品吗？`,
+      confirmText: '确定',
+      cancelText: '取消',
+      success: (res) => {
+        if (res.confirm) {
+          wx.showLoading({
+            title: '更新中...'
+          });
+          
+          const api = require('../../utils/api');
+          api.itemAPI.updateUrgent(id, newUrgent)
+            .then(res => {
+              wx.hideLoading();
+              
+              const updatedItems = items.map(i => {
+                if (i.id === id) {
+                  return {
+                    ...i, 
+                    urgent: newUrgent
+                  };
+                }
+                return i;
+              });
+              
+              this.setData({
+                items: updatedItems
+              });
+              
+              wx.showToast({
+                title: actionText + '成功',
+                icon: 'success',
+                duration: 2000
+              });
+            })
+            .catch(err => {
+              wx.hideLoading();
+              wx.showToast({
+                title: '操作失败',
+                icon: 'none'
+              });
+              console.log('加急操作失败:', err);
+            });
+        }
+      }
+    });
+  },
+
+  /**
+   * Handle more actions
+   */
+  handleMoreActions: function(e) {
+    const id = e.currentTarget.dataset.id;
+    const transferStatus = e.currentTarget.dataset.transferstatus;
+    
+    let menuItems = [];
+    
+    switch (transferStatus) {
+      case 'own':
+        menuItems = [
+          { label: '删除', action: 'delete' },
+          { label: '编辑', action: 'edit' }
+        ];
+        break;
+      case 'transferring':
+        menuItems = [
+          { label: '删除', action: 'delete' },
+          { label: '取消发布', action: 'status', status: 'transfer_cancelled' }
+        ];
+        break;
+      case 'transfer_accepted':
+        menuItems = [
+          { label: '删除', action: 'delete' },
+          { label: '取消发布', action: 'status', status: 'transfer_cancelled' }
+        ];
+        break;
+      case 'transferred':
+        menuItems = [
+          { label: '删除', action: 'delete' }
+        ];
+        break;
+      case 'transfer_cancelled':
+        menuItems = [
+          { label: '删除', action: 'delete' }
+        ];
+        break;
+      default:
+        menuItems = [
+          { label: '删除', action: 'delete' }
+        ];
+    }
+    
+    const itemList = menuItems.map(item => item.label);
+    
+    wx.showActionSheet({
+      itemList: itemList,
+      success: (res) => {
+        const selected = menuItems[res.tapIndex];
+        
+        if (selected.action === 'delete') {
+          this.handleDelete({
+            currentTarget: {
+              dataset: { id: id }
+            }
+          });
+        } else if (selected.action === 'edit') {
+          this.handleEdit({
+            currentTarget: {
+              dataset: { id: id }
+            }
+          });
+        } else if (selected.action === 'status') {
+          this.handleStatusChange({
+            currentTarget: {
+              dataset: {
+                id: id,
+                status: selected.status
+              }
+            }
+          });
+        }
+      },
+      fail: () => {
+        console.log('取消操作');
       }
     });
   },

@@ -113,6 +113,13 @@ const itemAPI = {
       url: `/client/item/detail/${itemId}`,
       method: 'POST'
     })
+  },
+
+  updateUrgent(itemId, urgent) {
+    return app.request({
+      url: `/client/item/urgent/${itemId}?urgent=${urgent}`,
+      method: 'POST'
+    })
   }
 }
 
