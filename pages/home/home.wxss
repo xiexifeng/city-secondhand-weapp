@@ -449,10 +449,10 @@ page {
 /* ========== 审核Icon ========== */
 .audit-icon-wrapper {
   position: fixed;
-  bottom: calc(110rpx + env(safe-area-inset-bottom));
-  right: 20rpx;
-  width: 86rpx;
-  height: 86rpx;
+  bottom: calc(140rpx + env(safe-area-inset-bottom));
+  right: 24rpx;
+  width: 90rpx;
+  height: 90rpx;
   background-color: #F97316;
   border-radius: 50%;
   display: flex;
@@ -461,8 +461,9 @@ page {
   color: white;
   font-size: 36rpx;
   font-weight: bold;
-  box-shadow: 0 6rpx 16rpx rgba(249, 115, 22, 0.3);
-  z-index: 5;
+  box-shadow: 0 8rpx 20rpx rgba(249, 115, 22, 0.4);
+  z-index: 100;
+  border: 4rpx solid rgba(255, 255, 255, 0.8);
 }
 
 .audit-icon-text {

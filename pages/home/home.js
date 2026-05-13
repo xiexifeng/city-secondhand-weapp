@@ -1,5 +1,5 @@
 const { formatRelativeTime, formatDistance } = require('../../utils/format.js');
-const { itemAPI } = require('../../utils/api.js');
+const { itemAPI, auditAPI } = require('../../utils/api.js');
 const app = getApp()
 
 Page({
@@ -34,7 +34,7 @@ Page({
     this.checkLoginStatus();
     await this.getLocation();
     this.loadItems();
-    this.checkAuditStatus();
+    await this.checkAuditStatus();
   },
 
   onShow() {
@@ -188,14 +188,56 @@ Page({
   },
 
   /**
-   * Check audit status
+   * Check audit status - call backend API to get auditor info
    */
-  checkAuditStatus() {
-    const auditCount = wx.getStorageSync('auditCount') || 5;
-    this.setData({ 
-      showAuditIcon: auditCount > 0,
-      auditCount: auditCount
-    });
+  async checkAuditStatus() {
+    console.log('=== checkAuditStatus start ===');
+    
+    const token = wx.getStorageSync('token');
+    console.log('Token exists:', !!token);
+    
+    if (!token) {
+      console.log('No token, setting showAuditIcon to false');
+      this.setData({ showAuditIcon: false, auditCount: 0 });
+      return;
+    }
+    
+    try {
+      console.log('Calling auditAPI.getAuditorInfo()');
+      const auditorInfo = await auditAPI.getAuditorInfo();
+      console.log('Auditor info received:', auditorInfo);
+      console.log('Auditor info type:', typeof auditorInfo);
+      
+      if (!auditorInfo) {
+        console.log('auditorInfo is null/undefined');
+        this.setData({ showAuditIcon: false, auditCount: 0 });
+        return;
+      }
+      
+      console.log('isAuditor field:', auditorInfo.isAuditor);
+      console.log('isAuditor type:', typeof auditorInfo.isAuditor);
+      console.log('pendingCount field:', auditorInfo.pendingCount);
+      console.log('pendingCount type:', typeof auditorInfo.pendingCount);
+      
+      const isAuditor = auditorInfo.isAuditor === true || auditorInfo.isAuditor === 'true';
+      const pendingCount = parseInt(auditorInfo.pendingCount) || 0;
+      
+      console.log('Parsed - isAuditor:', isAuditor, 'pendingCount:', pendingCount);
+      
+      this.setData({
+        showAuditIcon: isAuditor,
+        auditCount: pendingCount
+      });
+      
+      console.log('Data set successfully');
+      console.log('Current data:', this.data);
+    } catch (error) {
+      console.error('获取审核员信息失败:', error);
+      console.error('Error stack:', error.stack);
+      this.setData({ showAuditIcon: false, auditCount: 0 });
+    }
+    
+    console.log('=== checkAuditStatus end ===');
   },
 
   // 导航到审核页面

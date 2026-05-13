@@ -420,6 +420,13 @@ const auditAPI = {
         auditRemark: remark
       }
     })
+  },
+
+  getAuditorInfo() {
+    return app.request({
+      url: '/client/audit/auditor-info',
+      method: 'GET'
+    })
   }
 }
 
