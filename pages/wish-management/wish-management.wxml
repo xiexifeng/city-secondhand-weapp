@@ -20,11 +20,11 @@
 
   <!-- Wishes List -->
   <view class="wishes-list">
-    <!-- Active Wishes Section -->
-    <view wx:if="{{activeWishes.length > 0}}" class="section">
-      <text class="section-title">活跃心愿</text>
+    <!-- All Wishes Section -->
+    <view wx:if="{{wishes.length > 0}}" class="section">
+      <text class="section-title">我的心愿</text>
       <view class="wishes-section">
-        <view wx:for="{{activeWishes}}" wx:key="id" class="wish-card">
+        <view wx:for="{{wishes}}" wx:key="id" class="wish-card">
           <view class="wish-view">
             <view class="wish-header">
               <text class="wish-icon">❤️</text>
@@ -75,53 +75,9 @@
                   <text class="action-text">撤回心愿</text>
                 </view>
               </view>
-            </view>
-          </view>
-        </view>
-      </view>
-    </view>
-
-    <!-- Archived Wishes Section -->
-    <view wx:if="{{archivedWishes.length > 0}}" class="section">
-      <text class="section-title">已结束心愿</text>
-      <view class="wishes-section archived">
-        <view wx:for="{{archivedWishes}}" wx:key="id" class="wish-card archived-card">
-          <view class="wish-view">
-            <view class="wish-header">
-              <text class="wish-icon">❤️</text>
-              <view class="wish-content">
-                <text class="wish-title">{{item.title}}</text>
-                <text class="wish-description">{{item.description}}</text>
-              </view>
-            </view>
-
-            <view class="wish-tags">
-              <view wx:if="{{item.budget}}" class="tag tag-budget">预算: {{item.budget}}</view>
-              <view class="tag {{item.statusClass}}">{{item.statusLabel}}</view>
-            </view>
-
-            <view class="wish-footer">
-              <text class="wish-date">{{item.createdAt}}</text>
-              <view class="wish-stats">
-                <text class="stat-item">👁️ {{item.views}}</text>
-                <text class="stat-item">❤️ {{item.interests}}</text>
-                <text class="stat-item">⭐ {{item.favorites}}</text>
-              </view>
-            </view>
-
-            <!-- Actions -->
-            <view class="wish-actions">
-              <view wx:if="{{item.status === 'cancelled'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
+              <view wx:if="{{item.status === 'cancelled' || item.status === 'achieved'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
                 <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
                   <text class="action-text">删除</text>
-                </view>
-              </view>
-              <view wx:if="{{item.status === 'inactive'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
-                <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
-                  <text class="action-text">删除</text>
-                </view>
-                <view class="action-item" bindtap="handleEdit" data-id="{{item.id}}">
-                  <text class="action-text">编辑</text>
                 </view>
               </view>
             </view>

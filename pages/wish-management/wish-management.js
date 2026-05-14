@@ -161,7 +161,8 @@ Page({
           try {
             const result = await wishAPI.updateWishStatus(id, WISH_STATUS.CANCELLED);
             if (result && result.success) {
-              this.loadWishes();
+              this.setData({ pageNo: 1, hasMore: true, wishes: [] });
+              await this.loadWishes(true);
               wx.showToast({
                 title: '心愿已撤回',
                 icon: 'success'
@@ -202,7 +203,8 @@ Page({
           try {
             const result = await wishAPI.updateWishStatus(id, WISH_STATUS.ACHIEVED);
             if (result && result.success) {
-              this.loadWishes();
+              this.setData({ pageNo: 1, hasMore: true, wishes: [] });
+              await this.loadWishes(true);
               wx.showToast({
                 title: '心愿已达成',
                 icon: 'success'
