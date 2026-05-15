@@ -4,7 +4,7 @@ App({
     userInfo: null,
     token: null,
     userPhone: null,
-    baseUrl: 'http://127.0.0.1:80/tradex', // xtrade后端地址
+    baseUrl: 'http://192.168.152.16:80/tradex', // xtrade后端地址
     editItemId: null,
     editWishId: null,
     latitude: null,   // 全局纬度
@@ -178,10 +178,14 @@ App({
   checkLocationPermission({ onGranted, onDenied, onError }) {
     wx.getSetting({
       success: (res) => {
-        if (res.authSetting['scope.userLocation']) {
+        const status = res.authSetting['scope.userLocation']
+        if (status === true) {
           onGranted()
+        } else if (status === false) {
+          onDenied()  // 已拒绝，显示"去设置"弹窗
         } else {
-          onDenied()
+          // 从未请求过，直接调用 wx.getLocation() 触发系统授权
+          this.fetchLocation({ onSuccess: onGranted, onFail: onDenied })
         }
       },
       fail: () => {
