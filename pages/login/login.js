@@ -31,25 +31,6 @@ Page({
     }
   },
 
-  /**
-   * Handle WeChat phone number login
-   */
-  handleWechatPhoneLogin: function(e) {
-    if (e.detail.errMsg === 'getPhoneNumber:ok') {
-      wx.login({
-        success: (res) => {
-          if (res.code) {
-            this.getPhoneNumber(res.code, e.detail);
-          }
-        }
-      });
-    } else {
-      wx.showToast({
-        title: '获取手机号失败',
-        icon: 'none'
-      });
-    }
-  },
   onGetPhoneNumber(e) {
     // Check agreement
     if (!this.checkAgreement()) {
