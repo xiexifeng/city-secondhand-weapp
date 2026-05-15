@@ -14,20 +14,29 @@ Page({
   },
 
   onLoad: function(options) {
-    // Check if already logged in
-    const token = wx.getStorageSync('token');
-    if (token) {
-      wx.redirectTo({
-        url: '/pages/home/home'
-      });
-      return;
-    }
-
-    // 解析分享参数中的邀请者ID
+    // 先解析分享参数中的邀请者ID（无论是否登录都需要处理）
     if (options && options.inviterId) {
       this.setData({ inviterId: options.inviterId });
       wx.setStorageSync('inviterId', options.inviterId);
       console.log('邀请者ID:', options.inviterId);
+    }
+
+    // Check if already logged in
+    this.checkLoginStatus();
+  },
+
+  onShow: function() {
+    // 每次页面显示时检查登录状态
+    this.checkLoginStatus();
+  },
+
+  checkLoginStatus: function() {
+    const token = wx.getStorageSync('token');
+    if (token) {
+      console.log('已登录，跳转到首页');
+      wx.switchTab({
+        url: '/pages/home/home'
+      });
     }
   },
 
