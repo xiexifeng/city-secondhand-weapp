@@ -40,6 +40,9 @@ Page({
   onShow() {
     this.checkLoginStatus();
     this.checkAuditStatus();
+    if(this.data.latitude == null){
+      this.getLocation();
+    }
   },
 
   /**
