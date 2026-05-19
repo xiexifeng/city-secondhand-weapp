@@ -23,13 +23,14 @@ Page({
 
   async getLocationAndLoadWishDetail(wishId) {
     try {
-      const { latitude, longitude } = await app.getLocation()
-      this.setData({ latitude, longitude })
-    } catch (err) {
-      console.log('获取定位失败:', err.message)
-    } finally {
-      this.loadWishDetail(wishId)
+      const cachedLocation = app.getCachedLocation();
+      if (cachedLocation.latitude !== null) {
+        this.setData({ latitude: cachedLocation.latitude, longitude: cachedLocation.longitude });
+      }
+    } catch (e) {
+      console.log('无缓存位置');
     }
+    this.loadWishDetail(wishId);
   },
 
   loadWishDetail: function(wishId) {

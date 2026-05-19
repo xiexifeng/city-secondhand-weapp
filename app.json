@@ -74,7 +74,7 @@
   },
   "debug": false,
   "requiredPrivateInfos": [
-    "getLocation"
+    "chooseLocation"
   ],
   "permission": {
     "scope.userLocation": {

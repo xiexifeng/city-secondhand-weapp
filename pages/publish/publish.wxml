@@ -216,7 +216,7 @@
         <!-- 位置选择 -->
         <view class="form-section">
           <view class="section-header">
-            <text class="section-title">📍 预期交易地点</text>
+            <text class="section-title">📍 预期交换地点</text>
           </view>
           <view class="location-picker" bindtap="openLocationPicker">
             <view class="location-main">

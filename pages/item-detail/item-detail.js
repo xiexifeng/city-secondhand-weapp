@@ -28,12 +28,15 @@ Page({
 
   async loadItemDetail(itemId) {
     try {
-      const { latitude, longitude } = await app.getLocation()
-      this.fetchItemDetail(itemId, latitude, longitude)
-    } catch (err) {
-      console.log('获取定位失败:', err.message)
-      this.fetchItemDetail(itemId, null, null)
+      const cachedLocation = app.getCachedLocation();
+      if (cachedLocation.latitude !== null) {
+        this.fetchItemDetail(itemId, cachedLocation.latitude, cachedLocation.longitude);
+        return;
+      }
+    } catch (e) {
+      console.log('无缓存位置');
     }
+    this.fetchItemDetail(itemId, null, null);
   },
 
   fetchItemDetail: function(itemId, latitude, longitude) {
@@ -307,7 +310,7 @@ Page({
     wx.openLocation({
       latitude: item.location.latitude,
       longitude: item.location.longitude,
-      name: '交易地点',
+      name: '交换地点',
       address: item.location.address,
       scale: 15
     });

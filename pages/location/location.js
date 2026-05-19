@@ -19,7 +19,6 @@ Page({
   },
 
   onLoad: function(options) {
-    // 检查登录状态
     const token = wx.getStorageSync('token');
     if (!token) {
       wx.reLaunch({
@@ -27,25 +26,20 @@ Page({
       });
       return;
     }
-    // 页面加载时获取用户当前位置
-    this.getLocation();
+    this.loadCachedLocation();
   },
 
   /**
-   * 获取用户当前位置（使用全局定位缓存）
+   * 加载缓存的定位
    */
-  async getLocation() {
-    try {
-      const { latitude, longitude } = await app.getLocation()
-      this.setData({ longitude, latitude })
-      // 根据经纬度获取地址信息
-      this.reverseGeocode(latitude, longitude)
-    } catch (err) {
-      console.error('获取位置失败:', err.message)
-      wx.showToast({
-        title: '获取位置失败，请手动选择',
-        icon: 'none'
-      })
+  loadCachedLocation() {
+    const cachedLocation = app.getCachedLocation();
+    if (cachedLocation.latitude !== null) {
+      this.setData({ 
+        longitude: cachedLocation.longitude, 
+        latitude: cachedLocation.latitude 
+      });
+      this.reverseGeocode(cachedLocation.latitude, cachedLocation.longitude);
     }
   },
 
@@ -103,10 +97,20 @@ Page({
   },
 
   /**
-   * 定位到当前位置
+   * 定位到当前位置（使用 chooseLocation）
    */
-  locateToCurrent: function() {
-    this.getLocation();
+  locateToCurrent: async function() {
+    try {
+      wx.showLoading({ title: '获取位置...', mask: true })
+      const { latitude, longitude } = await app.getLocation()
+      wx.hideLoading()
+      this.setData({ longitude, latitude })
+      this.reverseGeocode(latitude, longitude)
+    } catch (err) {
+      wx.hideLoading()
+      console.error('获取位置失败:', err.message)
+      wx.showToast({ title: '获取位置失败', icon: 'none' })
+    }
   },
 
   /**

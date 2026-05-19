@@ -27,22 +27,19 @@ Page({
       { value: 'price-high', label: '价格最高' }
     ],
     latitude: null,
-    longitude: null
+    longitude: null,
+    locationLoaded: false
   },
 
   async onLoad() {
     this.checkLoginStatus();
     await this.getLocation();
-    this.loadItems();
     await this.checkAuditStatus();
   },
 
   onShow() {
     this.checkLoginStatus();
     this.checkAuditStatus();
-    if(this.data.latitude == null){
-      this.getLocation();
-    }
   },
 
   /**
@@ -66,13 +63,46 @@ Page({
     // Page hidden
   },
 
-  // 获取用户位置（使用全局定位缓存）
+  // 获取用户位置（强制获取，没有缓存则弹出选择）
   async getLocation() {
     try {
+      const cachedLocation = app.getCachedLocation();
+      if (cachedLocation.latitude !== null) {
+        this.setData({ 
+          latitude: cachedLocation.latitude, 
+          longitude: cachedLocation.longitude,
+          locationLoaded: true
+        })
+        this.loadItems();
+        return;
+      }
+    } catch (e) {
+      console.log('无缓存位置')
+    }
+    
+    this.setData({ locationLoaded: false });
+  },
+
+  // 获取位置（强制弹出选择）
+  async handleGetLocation() {
+    try {
+      wx.showLoading({ title: '选择位置...', mask: true })
       const { latitude, longitude } = await app.getLocation()
-      this.setData({ latitude, longitude })
+      wx.hideLoading()
+      this.setData({ 
+        latitude, 
+        longitude,
+        locationLoaded: true,
+        items: [], 
+        page: 1, 
+        hasMore: true 
+      })
+      this.loadItems()
+      wx.showToast({ title: '位置获取成功', icon: 'success' })
     } catch (err) {
+      wx.hideLoading()
       console.error('获取位置失败:', err.message)
+      this.setData({ locationLoaded: false })
     }
   },
 

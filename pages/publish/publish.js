@@ -6,6 +6,10 @@ function getDefaultData() {
   const userPhone = userInfo.phone || wx.getStorageSync('userPhone');
   const wechat = userInfo.wechat || '';
   
+  const app = getApp();
+  const cachedLocation = app.getCachedLocation();
+  const cachedLocationDetails = app.globalData.locationDetails || {};
+  
   return {
     publishType: null,
     images: [],
@@ -16,18 +20,18 @@ function getDefaultData() {
       category: '数码3C',
       wechat: wechat,
       phone: userPhone || '',
-      location: '北京市朝阳区',
-      latitude: null,
-      longitude: null,
+      location: cachedLocationDetails.address || '请选择交易地点',
+      latitude: cachedLocation.latitude || null,
+      longitude: cachedLocation.longitude || null,
       wantItem: '',
       budget: '',
       condition: '9成新',
       contactVisibility: 'both'
     },
     locationDetails: {
-      province: '北京市',
-      city: '北京市',
-      district: '朝阳区'
+      province: cachedLocationDetails.province || '请选择',
+      city: cachedLocationDetails.city || '请选择',
+      district: cachedLocationDetails.district || '请选择'
     },
     agreed: false,
     categoryIndex: 0,
@@ -55,7 +59,44 @@ Page({
       wx.reLaunch({ url: '/pages/login/login' });
       return;
     }
+    this.loadCachedLocation();
     this.checkEditMode();
+  },
+
+  loadCachedLocation() {
+    const app = getApp();
+    const cachedLocation = app.getCachedLocation();
+    if (cachedLocation.latitude !== null) {
+      this.setData({
+        'formData.latitude': cachedLocation.latitude,
+        'formData.longitude': cachedLocation.longitude
+      });
+      this.reverseGeocode(cachedLocation.latitude, cachedLocation.longitude);
+    }
+  },
+
+  reverseGeocode(latitude, longitude) {
+    const { TENCENT_MAP_KEY } = require('../../config.js');
+    wx.request({
+      url: `https://apis.map.qq.com/ws/geocoder/v1/?location=${latitude},${longitude}&key=${TENCENT_MAP_KEY}`,
+      success: (res) => {
+        if (res.data.status === 0 && res.data.result) {
+          const address = res.data.result;
+          const adInfo = address.ad_info || {};
+          this.setData({
+            'formData.location': address.address || this.data.formData.location,
+            locationDetails: {
+              province: adInfo.province || this.data.locationDetails.province,
+              city: adInfo.city || this.data.locationDetails.city,
+              district: adInfo.district || this.data.locationDetails.district
+            }
+          });
+        }
+      },
+      fail: () => {
+        console.log('逆地理编码失败');
+      }
+    });
   },
 
   onShow: function() {

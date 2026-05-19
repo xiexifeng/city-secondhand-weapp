@@ -163,7 +163,6 @@
           longitude="{{wish.location.longitude}}"
           scale="15"
           markers="{{markers}}"
-          show-location="true"
         ></map>
       </view>
     </view>

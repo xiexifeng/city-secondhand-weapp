@@ -4,11 +4,12 @@ App({
     userInfo: null,
     token: null,
     userPhone: null,
-    baseUrl: 'http://192.168.152.16:80/tradex', // xtrade后端地址
+    baseUrl: 'https://139.196.178.113/tradex', // xtrade后端地址
     editItemId: null,
     editWishId: null,
     latitude: null,   // 全局纬度
-    longitude: null   // 全局经度
+    longitude: null,  // 全局经度
+    locationDetails: null  // 位置详情（省市区和地址）
   },
 
   onLaunch() {
@@ -155,46 +156,30 @@ App({
     }
   },
 
-  // 请求定位（统一处理权限检查和定位获取）
+  // 请求定位（使用 chooseLocation，无需权限）
   requestLocation({ onSuccess, onFail, showAuthModal = true }) {
-    this.checkLocationPermission({
-      onGranted: () => {
-        this.fetchLocation({ onSuccess, onFail })
-      },
-      onDenied: () => {
-        if (showAuthModal) {
-          this.showLocationAuthModal({ onGranted: onSuccess, onDenied: onFail })
-        } else {
-          onFail(new Error('未获取定位权限'))
-        }
-      },
-      onError: (err) => {
-        onFail(err)
-      }
-    })
-  },
-
-  // 检查定位权限
-  checkLocationPermission({ onGranted, onDenied, onError }) {
-    wx.getSetting({
+    const that = this
+    wx.chooseLocation({
       success: (res) => {
-        const status = res.authSetting['scope.userLocation']
-        if (status === true) {
-          onGranted()
-        } else if (status === false) {
-          onDenied()  // 已拒绝，显示"去设置"弹窗
-        } else {
-          // 从未请求过，直接调用 wx.getLocation() 触发系统授权
-          this.fetchLocation({ onSuccess: onGranted, onFail: onDenied })
-        }
+        const location = { latitude: res.latitude, longitude: res.longitude }
+        that.reverseGeocodeAndSave(res.latitude, res.longitude, (locationDetails) => {
+          that.saveLocationToCache({ ...location, locationDetails })
+          onSuccess({ ...location, locationDetails })
+        })
       },
-      fail: () => {
-        onError(new Error('获取设置失败'))
+      fail: (err) => {
+        const error = err instanceof Error ? err : new Error(err.message || err.errMsg || '获取位置失败')
+        onFail(error)
       }
     })
   },
 
-  // 显示定位授权弹窗
+  // 检查定位权限（简化，因为 chooseLocation 不需要权限）
+  checkLocationPermission({ onGranted, onDenied, onError }) {
+    onGranted()
+  },
+
+  // 显示定位授权弹窗（保留但不再使用）
   showLocationAuthModal({ onGranted, onDenied }) {
     wx.showModal({
       title: '需要定位权限',
@@ -222,48 +207,68 @@ App({
     })
   },
 
-  // 获取定位（底层方法）
+  // 获取定位（底层方法，使用 chooseLocation）
   fetchLocation({ onSuccess, onFail }) {
-    wx.getLocation({
-      type: 'gcj02',
+    const that = this
+    wx.chooseLocation({
       success: (res) => {
         const location = { latitude: res.latitude, longitude: res.longitude }
-        this.saveLocationToCache(location)
-        onSuccess(location)
+        that.reverseGeocodeAndSave(res.latitude, res.longitude, (locationDetails) => {
+          that.saveLocationToCache({ ...location, locationDetails })
+          onSuccess({ ...location, locationDetails })
+        })
       },
       fail: (err) => {
-        onFail(err)
+        const error = err instanceof Error ? err : new Error(err.message || err.errMsg || '获取位置失败')
+        onFail(error)
+      }
+    })
+  },
+
+  // 逆地理编码并保存位置详情
+  reverseGeocodeAndSave(latitude, longitude, callback) {
+    const { TENCENT_MAP_KEY } = require('./config.js')
+    wx.request({
+      url: `https://apis.map.qq.com/ws/geocoder/v1/?location=${latitude},${longitude}&key=${TENCENT_MAP_KEY}`,
+      success: (res) => {
+        if (res.data.status === 0 && res.data.result) {
+          const address = res.data.result
+          const adInfo = address.ad_info || {}
+          const locationDetails = {
+            province: adInfo.province || '',
+            city: adInfo.city || '',
+            district: adInfo.district || '',
+            address: address.address || ''
+          }
+          callback(locationDetails)
+        } else {
+          callback({})
+        }
+      },
+      fail: () => {
+        callback({})
       }
     })
   },
 
   // 保存定位到缓存
-  saveLocationToCache({ latitude, longitude }) {
+  saveLocationToCache({ latitude, longitude, locationDetails }) {
     this.globalData.latitude = latitude
     this.globalData.longitude = longitude
+    if (locationDetails) {
+      this.globalData.locationDetails = locationDetails
+    }
   },
 
-  // 静默刷新定位（小程序启动时调用）
+  // 清除定位缓存
+  clearLocation() {
+    this.globalData.latitude = null
+    this.globalData.longitude = null
+    this.globalData.locationDetails = null
+  },
+
+  // 静默刷新定位（小程序启动时调用，改为不自动获取）
   silentRefreshLocation() {
-    this.checkLocationPermission({
-      onGranted: () => {
-        wx.getLocation({
-          type: 'gcj02',
-          success: (res) => {
-            this.saveLocationToCache({ latitude: res.latitude, longitude: res.longitude })
-            console.log('定位静默刷新成功:', res.latitude, res.longitude)
-          },
-          fail: (err) => {
-            console.log('定位静默刷新失败:', err.message)
-          }
-        })
-      },
-      onDenied: () => {
-        // 未授权，不做任何操作
-      },
-      onError: () => {
-        console.log('获取定位权限设置失败')
-      }
-    })
+    console.log('静默刷新已禁用，定位将在需要时由用户手动选择')
   }
 })

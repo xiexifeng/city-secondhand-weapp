@@ -22,13 +22,14 @@ Page({
 
   async getLocationAndLoadWishes() {
     try {
-      const { latitude, longitude } = await app.getLocation()
-      this.setData({ latitude, longitude })
-    } catch (err) {
-      console.log('获取定位失败:', err.message)
-    } finally {
-      this.loadWishes()
+      const cachedLocation = app.getCachedLocation();
+      if (cachedLocation.latitude !== null) {
+        this.setData({ latitude: cachedLocation.latitude, longitude: cachedLocation.longitude });
+      }
+    } catch (e) {
+      console.log('无缓存位置');
     }
+    this.loadWishes();
   },
 
   loadWishes: function() {

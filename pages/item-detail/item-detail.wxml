@@ -195,7 +195,7 @@
 
     <!-- 交易地点 - 使用原生map组件 -->
     <view class="location-section">
-      <text class="section-title">交易地点</text>
+      <text class="section-title">交换地点</text>
       <view class="location-info">
         <view class="location-header">
           <text class="location-label">详细地址</text>
@@ -214,7 +214,6 @@
           longitude="{{item.location.longitude}}"
           scale="15"
           markers="{{markers}}"
-          show-location="true"
         ></map>
       </view>
     </view>
