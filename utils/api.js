@@ -370,7 +370,7 @@ const fileAPI = {
         filePath,
         name: 'file',
         header: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `${token}`
         },
         success: (res) => {
           if (res.statusCode === 200) {
