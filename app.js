@@ -4,7 +4,7 @@ App({
     userInfo: null,
     token: null,
     userPhone: null,
-    baseUrl: 'https://139.196.178.113/tradex', // xtrade后端地址
+    baseUrl: 'http://127.0.0.1/tradex', // xtrade后端地址
     editItemId: null,
     editWishId: null,
     latitude: null,   // 全局纬度
@@ -14,7 +14,17 @@ App({
 
   onLaunch() {
     this.checkLogin()
-    this.silentRefreshLocation()
+    this.initLocationCache()
+  },
+
+  // 初始化位置缓存（从 Storage 读取到 globalData）
+  initLocationCache() {
+    const cachedLocation = wx.getStorageSync('locationCache')
+    if (cachedLocation) {
+      this.globalData.latitude = cachedLocation.latitude
+      this.globalData.longitude = cachedLocation.longitude
+      this.globalData.locationDetails = cachedLocation.locationDetails || null
+    }
   },
 
   checkLogin() {
@@ -26,24 +36,6 @@ App({
       this.globalData.token = token
       this.globalData.userInfo = userInfo
       this.globalData.userPhone = userPhone
-    }
-  },
-
-  getUserInfo(callback) {
-    if (this.globalData.userInfo) {
-      callback(this.globalData.userInfo)
-    } else {
-      wx.getUserProfile({
-        desc: '获取你的昵称、头像等信息',
-        success: (res) => {
-          this.globalData.userInfo = res.userInfo
-          wx.setStorageSync('userInfo', res.userInfo)
-          callback(res.userInfo)
-        },
-        fail: () => {
-          wx.showToast({ title: '需要授权才能继续', icon: 'none' })
-        }
-      })
     }
   },
 
@@ -116,31 +108,12 @@ App({
         return
       }
 
-      // 请求定位（自动处理权限）
+      // 请求定位
       this.requestLocation({
         onSuccess: (location) => resolve(location),
-        onFail: (err) => reject(err),
-        showAuthModal: true
+        onFail: (err) => reject(err)
       })
     })
-  },
-
-  // 更新定位（强制刷新，清除缓存后重新获取）
-  updateLocation() {
-    this.clearLocation()
-    return new Promise((resolve, reject) => {
-      this.requestLocation({
-        onSuccess: (location) => resolve(location),
-        onFail: (err) => reject(err),
-        showAuthModal: false
-      })
-    })
-  },
-
-  // 清除定位缓存
-  clearLocation() {
-    this.globalData.latitude = null
-    this.globalData.longitude = null
   },
 
   // 检查是否有缓存的定位
@@ -158,57 +131,6 @@ App({
 
   // 请求定位（使用 chooseLocation，无需权限）
   requestLocation({ onSuccess, onFail, showAuthModal = true }) {
-    const that = this
-    wx.chooseLocation({
-      success: (res) => {
-        const location = { latitude: res.latitude, longitude: res.longitude }
-        that.reverseGeocodeAndSave(res.latitude, res.longitude, (locationDetails) => {
-          that.saveLocationToCache({ ...location, locationDetails })
-          onSuccess({ ...location, locationDetails })
-        })
-      },
-      fail: (err) => {
-        const error = err instanceof Error ? err : new Error(err.message || err.errMsg || '获取位置失败')
-        onFail(error)
-      }
-    })
-  },
-
-  // 检查定位权限（简化，因为 chooseLocation 不需要权限）
-  checkLocationPermission({ onGranted, onDenied, onError }) {
-    onGranted()
-  },
-
-  // 显示定位授权弹窗（保留但不再使用）
-  showLocationAuthModal({ onGranted, onDenied }) {
-    wx.showModal({
-      title: '需要定位权限',
-      content: '为了给您提供更精准的服务，请允许获取您的位置信息',
-      confirmText: '去设置',
-      confirmColor: '#52c41a',
-      success: (modalRes) => {
-        if (modalRes.confirm) {
-          wx.openSetting({
-            success: (settingRes) => {
-              if (settingRes.authSetting['scope.userLocation']) {
-                this.fetchLocation({ onSuccess: onGranted, onFail: onDenied })
-              } else {
-                onDenied(new Error('用户拒绝定位授权'))
-              }
-            },
-            fail: () => {
-              onDenied(new Error('打开设置失败'))
-            }
-          })
-        } else {
-          onDenied(new Error('用户拒绝定位授权'))
-        }
-      }
-    })
-  },
-
-  // 获取定位（底层方法，使用 chooseLocation）
-  fetchLocation({ onSuccess, onFail }) {
     const that = this
     wx.chooseLocation({
       success: (res) => {
@@ -251,24 +173,26 @@ App({
     })
   },
 
-  // 保存定位到缓存
+  // 保存定位到缓存（同时保存到 globalData 和 Storage）
   saveLocationToCache({ latitude, longitude, locationDetails }) {
     this.globalData.latitude = latitude
     this.globalData.longitude = longitude
     if (locationDetails) {
       this.globalData.locationDetails = locationDetails
     }
+    // 同步保存到 Storage，实现持久化
+    wx.setStorageSync('locationCache', {
+      latitude,
+      longitude,
+      locationDetails: locationDetails || null
+    })
   },
 
-  // 清除定位缓存
+  // 清除定位缓存（同时清除 globalData 和 Storage）
   clearLocation() {
     this.globalData.latitude = null
     this.globalData.longitude = null
     this.globalData.locationDetails = null
-  },
-
-  // 静默刷新定位（小程序启动时调用，改为不自动获取）
-  silentRefreshLocation() {
-    console.log('静默刷新已禁用，定位将在需要时由用户手动选择')
+    wx.removeStorageSync('locationCache')
   }
 })
