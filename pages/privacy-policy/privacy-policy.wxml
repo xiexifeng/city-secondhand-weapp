@@ -5,11 +5,11 @@
     <view class="section">
       <text class="section-title">隐私政策</text>
       <text class="section-content">
-        <text style="font-weight: bold;">生效日期</text>：2026年[月][日]
+        <text style="font-weight: bold;">生效日期</text>：2026年06月01日
         
       </text>
       <text class="section-content">
-        <text style="font-weight: bold;">最近更新</text>：2026年[月][日]
+        <text style="font-weight: bold;">最近更新</text>：2026年06月01日
       </text>
     </view>
 
@@ -83,7 +83,7 @@
         <text style="font-weight: bold;">2.3 位置信息特别说明</text>
       </text>
       <text class="section-content">
-        <text style="font-weight: bold;">您的地理位置信息属于敏感个人信息。</text> 我们仅在您<text style="font-weight: bold;">单独同意</text>后收集，用于同城信息展示与匹配功能。您可随时在设备设置中关闭位置权限，关闭后不影响浏览功能，但无法使用基于位置的同城推荐服务。
+        <text style="font-weight: bold;">您的地理位置信息属于敏感个人信息。</text> 我们仅在您<text style="font-weight: bold;">单独同意</text>后收集，用于同城信息展示与匹配功能。您可随时在设备设置中关闭位置权限，但关闭后影响浏览功能，无法使用基于位置的相关功能。
       </text>
     </view>
 
@@ -226,9 +226,8 @@
       <text class="section-title">14. 联系我们</text>
       <text class="section-content">
         如对本隐私政策有任何疑问、意见或投诉，请通过以下方式联系我们：
-        - <text style="font-weight: bold;">邮箱</text>：privacy@huanhuanme.com
-        - <text style="font-weight: bold;">电话</text>：400-888-8888
-        - <text style="font-weight: bold;">地址</text>：北京市海淀区科技园
+        - <text style="font-weight: bold;">邮箱</text>：schelling.xie@foxmail.com        <!-- - <text style="font-weight: bold;">电话</text>：400-888-8888 -->
+        - <text style="font-weight: bold;">地址</text>：深圳市龙岗区宝龙街道宝龙社区宝龙三路4号欧帝光学工业厂区办公楼110
         我们将在收到您的请求后<text style="font-weight: bold;">15个工作日内</text>予以回复。
       </text>
     </view>

@@ -20,7 +20,7 @@
     <view class="section">
       <text class="section-title">我们是谁</text>
       <text class="section-content">
-        换换么是一个专注于<text style="font-weight: bold;">同城信息匹配</text>的纯信息服务平台。我们不介入交易、不处理支付、不提供即时通讯——我们只做好一件事：<text style="font-weight: bold;">让有交换意愿的人，找到彼此</text>。
+        换换么是一个专注于<text style="font-weight: bold;">同城物品交换信息发布</text>的纯信息服务平台。我们不介入交易、不处理支付、不提供即时通讯——我们只做好一件事：<text style="font-weight: bold;">让有交换意愿的人，找到彼此</text>。
       </text>
     </view>
 
@@ -94,16 +94,18 @@
       <view class="contact-list">
         <view class="contact-item">
           <text class="contact-label">邮箱</text>
-          <text class="contact-value">support@huanhuanme.com</text>
-        </view>
+          <text class="contact-value">schelling.xie@foxmail.com</text>
+        </view><!--
         <view class="contact-item">
           <text class="contact-label">电话</text>
           <text class="contact-value">400-888-8888</text>
-        </view>
+        </view>-->
         <view class="contact-item">
           <text class="contact-label">地址</text>
-          <text class="contact-value">北京市海淀区科技园</text>
+          <text class="contact-value">深圳市龙岗区宝龙街道宝龙社区宝龙三路4号欧帝光学
+          工业厂区办公楼110</text>
         </view>
+        
       </view>
     </view>
 
