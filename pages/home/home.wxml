@@ -1,46 +1,44 @@
-<!--pages/home/home.wxml-->
 <view class="home-container">
-  <!-- 未登录提示 -->
-  <view wx:if="{{!isLoggedIn}}" class="login-banner">
-    <view class="login-banner-content">
-      <text class="login-banner-title">欢迎来到换换么</text>
-      <text class="login-banner-desc">登录后可以发布物品、参与交易</text>
+  
+  <view class="header-combined-zone">
+    <view class="search-row">
+      <view class="location-box-mini" bindtap="handleGetLocation">
+        <view class="mock-location-icon-mini"></view>
+        <text class="location-text-mini">{{locationLoaded ? (currentLocation === '请选择位置' ? '请选择位置' : currentLocation) : '请选择位置'}}</text>
+        <view class="mock-arrow-mini"></view>
+      </view>
+      
+      <view class="search-input-wrapper-inline">
+        <text class="search-icon-inline">🔍</text>
+        <input 
+          class="search-input-inline" 
+          type="text" 
+          placeholder="搜索物品..." 
+          placeholder-style="color: #94A3B8;"
+          bindinput="onSearchInput"
+          value="{{searchKeyword}}"
+          confirm-type="search"
+          bindconfirm="onSearch"
+        />
+        <view class="filter-btn-inline" bindtap="onSearch">
+          <text>搜索</text>
+        </view>
+      </view>
     </view>
-    <view class="login-banner-btn" bindtap="navigateToLogin">登录</view>
   </view>
 
-  <!-- 搜索栏 -->
-  <view class="search-bar">
-    <view class="search-input-wrapper">
-      <text class="search-icon">🔍</text>
-      <input 
-        class="search-placeholder" 
-        type="text" 
-        placeholder="搜索物品..." 
-        bindinput="onSearchInput"
-        value="{{searchKeyword}}"
-        confirm-type="search"
-        bindconfirm="onSearch"
-      />
+  <view wx:if="{{!isLoggedIn}}" class="login-card-modern">
+    <view class="login-card-left">
+      <view class="login-waving-hand">👋</view>
+      <view class="login-text-content">
+        <text class="login-title-new">欢迎来到换换么</text>
+        <text class="login-desc-new">登录后可以发布物品、参与交易</text>
+      </view>
     </view>
-    <view class="filter-btn" bindtap="onSearch">
-      <text>搜索</text>
-    </view>
+    <view class="login-btn-mini" bindtap="navigateToLogin">立即登录</view>
   </view>
 
-  <!-- 定位提示条（强制） -->
-  <view wx:if="{{!locationLoaded}}" class="location-tip-required">
-    <view class="location-tip-content" bindtap="handleGetLocation">
-      <text class="tip-icon">📍</text>
-      <text class="tip-text">请先选择位置</text>
-      <text class="tip-arrow">›</text>
-    </view>
-    <text class="tip-hint">选择位置后才能查看附近物品</text>
-  </view>
-
-  <!-- 已获取位置后显示的内容 -->
-  <view wx:else>
-    <!-- 交易方式筛选 -->
+  <view wx:if="{{locationLoaded}}">
     <view class="filter-tags">
       <scroll-view class="tags-scroll" scroll-x>
         <view 
@@ -110,14 +108,10 @@
               binderror="onImageError"
               data-index="{{index}}"
             />
-            <!-- 急出标签 -->
             <view wx:if="{{item.urgent}}" class="item-badge">急出</view>
-
           </view>
 
-          <!-- 信息 -->
           <view class="item-info">
-            <!-- 标题 -->
             <text class="item-title">{{item.title}}</text>
             
             <!-- 价格/想换和时间 -->
@@ -150,6 +144,11 @@
       </view>
     </view>
   </view>
-
+  <view wx:else class="location-empty-holder">
+    <view class="empty-compass-icon">📍</view>
+    <text class="empty-holder-title">开启位置探索换换之旅</text>
+    <text class="empty-holder-desc">请点击左上角选择您所在的位置，即可为您精准推荐附近的超值物品</text>
+    <button class="empty-location-btn" bindtap="handleGetLocation">立即选择位置</button>
+  </view>
 
 </view>

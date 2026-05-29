@@ -28,7 +28,8 @@ Page({
     ],
     latitude: null,
     longitude: null,
-    locationLoaded: false
+    locationLoaded: false,
+    currentLocation: ''
   },
 
   async onLoad() {
@@ -67,11 +68,15 @@ Page({
   async getLocation() {
     try {
       const cachedLocation = app.getCachedLocation();
+      const locationDetails = app.globalData.locationDetails;
       if (cachedLocation.latitude !== null) {
+        const cachedAddress = locationDetails?.address || '';
+        const shortName = this.getShortLocationName('', cachedAddress);
         this.setData({ 
           latitude: cachedLocation.latitude, 
           longitude: cachedLocation.longitude,
-          locationLoaded: true
+          locationLoaded: true,
+          currentLocation: shortName
         })
         this.loadItems();
         return;
@@ -83,27 +88,65 @@ Page({
     this.setData({ locationLoaded: false });
   },
 
-  // 获取位置（强制弹出选择）
+  // 获取位置（强制弹出选择弹窗）
   async handleGetLocation() {
     try {
-      wx.showLoading({ title: '选择位置...', mask: true })
-      const { latitude, longitude } = await app.getLocation()
-      wx.hideLoading()
-      this.setData({ 
-        latitude, 
-        longitude,
-        locationLoaded: true,
-        items: [], 
-        page: 1, 
-        hasMore: true 
-      })
-      this.loadItems()
-      wx.showToast({ title: '位置获取成功', icon: 'success' })
+      const that = this;
+      wx.chooseLocation({
+        success: (res) => {
+          const { latitude, longitude, name, address } = res;
+          const shortName = that.getShortLocationName(name, address);
+          const locationDetails = { address: address || name || '请选择位置' };
+          app.saveLocationToCache({ latitude, longitude, locationDetails });
+          that.setData({ 
+            latitude, 
+            longitude,
+            locationLoaded: true,
+            currentLocation: shortName,
+            items: [], 
+            page: 1, 
+            hasMore: true 
+          });
+          that.loadItems();
+          wx.showToast({ title: '位置选择成功', icon: 'success' });
+        },
+        fail: (err) => {
+          console.error('选择位置失败:', err.message);
+          if (err.errMsg && err.errMsg.includes('cancel')) {
+            wx.showToast({ title: '已取消选择', icon: 'none' });
+          }
+        }
+      });
     } catch (err) {
-      wx.hideLoading()
-      console.error('获取位置失败:', err.message)
-      this.setData({ locationLoaded: false })
+      console.error('获取位置失败:', err.message);
     }
+  },
+
+  // 获取简短的位置名称
+  getShortLocationName(name, address) {
+    if (name && name.length <= 10) {
+      return name;
+    }
+    if (name && name.length > 10) {
+      return name.substring(0, 10) + '...';
+    }
+    if (address) {
+      const parts = address.split('省');
+      if (parts.length > 1) {
+        let result = parts[1];
+        if (result.includes('市')) {
+          result = result.split('市')[1] || result;
+        }
+        if (result.includes('区')) {
+          result = result.split('区')[1] || result;
+        }
+        if (result && result.length > 0) {
+          return result.substring(0, 10) + '...';
+        }
+      }
+      return address.substring(0, 10) + '...';
+    }
+    return '请选择位置';
   },
 
   // 加载物品列表
