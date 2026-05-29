@@ -70,8 +70,9 @@ Page({
       const cachedLocation = app.getCachedLocation();
       const locationDetails = app.globalData.locationDetails;
       if (cachedLocation.latitude !== null) {
+        const cachedName = locationDetails?.name || '';
         const cachedAddress = locationDetails?.address || '';
-        const shortName = this.getShortLocationName('', cachedAddress);
+        const shortName = this.getShortLocationName(cachedName, cachedAddress);
         this.setData({ 
           latitude: cachedLocation.latitude, 
           longitude: cachedLocation.longitude,
@@ -96,7 +97,10 @@ Page({
         success: (res) => {
           const { latitude, longitude, name, address } = res;
           const shortName = that.getShortLocationName(name, address);
-          const locationDetails = { address: address || name || '请选择位置' };
+          const locationDetails = {
+            name: name || '',
+            address: address || ''
+          };
           app.saveLocationToCache({ latitude, longitude, locationDetails });
           that.setData({ 
             latitude, 

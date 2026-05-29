@@ -220,8 +220,8 @@
           </view>
           <view class="location-picker" bindtap="openLocationPicker">
             <view class="location-main">
-              <text class="location-text">{{formData.location}}</text>
-              <text class="location-sub">{{locationDetails.province}} / {{locationDetails.city}} / {{locationDetails.district}}</text>
+              <text class="location-text">{{locationDetails.name || formData.location}}</text>
+              <text class="location-sub">{{locationDetails.address || formData.location}}</text>
             </view>
             <text class="location-arrow">›</text>
           </view>

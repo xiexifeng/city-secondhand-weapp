@@ -98,6 +98,7 @@ Page({
         transferRate: data.userExt ? Math.round((data.userExt.transferRate || 0) * 100) : 0
       },
       location: {
+        name: locationInfo.name || '',
         address: locationInfo.address || '',
         latitude: data.latitude || 0,
         longitude: data.longitude || 0

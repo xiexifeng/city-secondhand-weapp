@@ -6,15 +6,14 @@ Page({
   data: {
     longitude: 116.397428,
     latitude: 39.90923,
+    currentName: '',
     currentAddress: '北京市朝阳区',
     locationDetails: {
       province: '北京市',
       city: '北京市',
       district: '朝阳区'
     },
-    // 省市区选择器默认值
     region: ['北京市', '北京市', '朝阳区'],
-    // 周边 POI
     nearbyPOIs: []
   },
 
@@ -34,10 +33,12 @@ Page({
    */
   loadCachedLocation() {
     const cachedLocation = app.getCachedLocation();
+    const cachedDetails = app.globalData.locationDetails || {};
     if (cachedLocation.latitude !== null) {
       this.setData({ 
         longitude: cachedLocation.longitude, 
-        latitude: cachedLocation.latitude 
+        latitude: cachedLocation.latitude,
+        currentName: cachedDetails.name || ''
       });
       this.reverseGeocode(cachedLocation.latitude, cachedLocation.longitude);
     }
@@ -173,6 +174,7 @@ Page({
     const poi = e.currentTarget.dataset.poi;
     if (poi) {
       this.setData({
+        currentName: poi.title || '',
         currentAddress: poi.address || '',
         locationDetails: {
           province: poi.province || this.data.locationDetails.province,
@@ -194,13 +196,27 @@ Page({
    * 确认选择位置
    */
   confirmLocation: function() {
-    const { currentAddress, locationDetails, latitude, longitude } = this.data;
-    // 返回上一页并传递位置信息
+    const { currentName, currentAddress, locationDetails, latitude, longitude } = this.data;
+    const app = getApp();
+    const cacheDetails = {
+      province: locationDetails.province || '',
+      city: locationDetails.city || '',
+      district: locationDetails.district || '',
+      name: currentName || '',
+      address: currentAddress || ''
+    };
+    app.saveLocationToCache({ latitude, longitude, locationDetails: cacheDetails });
     const pages = getCurrentPages();
     const prevPage = pages[pages.length - 2];
     prevPage.setData({
       'formData.location': currentAddress,
-      locationDetails: locationDetails,
+      locationDetails: {
+        province: locationDetails.province || '',
+        city: locationDetails.city || '',
+        district: locationDetails.district || '',
+        name: currentName || '',
+        address: currentAddress || ''
+      },
       'formData.latitude': latitude,
       'formData.longitude': longitude
     });

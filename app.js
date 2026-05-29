@@ -135,7 +135,11 @@ App({
     wx.chooseLocation({
       success: (res) => {
         const location = { latitude: res.latitude, longitude: res.longitude }
+        const chooseName = res.name || ''
+        const chooseAddress = res.address || ''
         that.reverseGeocodeAndSave(res.latitude, res.longitude, (locationDetails) => {
+          locationDetails.name = chooseName
+          locationDetails.address = chooseAddress || locationDetails.address || ''
           that.saveLocationToCache({ ...location, locationDetails })
           onSuccess({ ...location, locationDetails })
         })

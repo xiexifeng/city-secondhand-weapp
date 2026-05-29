@@ -142,7 +142,7 @@
 
     <!-- Location Section -->
     <view class="location-section">
-      <text class="section-title">交易地点</text>
+      <text class="section-title">交换地点</text>
       <view class="location-info">
         <view class="location-header">
           <text class="location-label">位置信息</text>
@@ -150,6 +150,7 @@
             <text>📍</text>
           </view>
         </view>
+        <text wx:if="{{detail.location.name}}" class="location-name">{{detail.location.name}}</text>
         <text class="location-value">{{detail.location.address}}</text>
       </view>
     </view>

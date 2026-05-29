@@ -31,7 +31,9 @@ function getDefaultData() {
     locationDetails: {
       province: cachedLocationDetails.province || '请选择',
       city: cachedLocationDetails.city || '请选择',
-      district: cachedLocationDetails.district || '请选择'
+      district: cachedLocationDetails.district || '请选择',
+      name: cachedLocationDetails.name || '',
+      address: cachedLocationDetails.address || ''
     },
     agreed: false,
     categoryIndex: 0,
@@ -77,6 +79,8 @@ Page({
 
   reverseGeocode(latitude, longitude) {
     const { TENCENT_MAP_KEY } = require('../../config.js');
+    const app = getApp();
+    const cachedName = app.globalData.locationDetails?.name || '';
     wx.request({
       url: `https://apis.map.qq.com/ws/geocoder/v1/?location=${latitude},${longitude}&key=${TENCENT_MAP_KEY}`,
       success: (res) => {
@@ -88,7 +92,8 @@ Page({
             locationDetails: {
               province: adInfo.province || this.data.locationDetails.province,
               city: adInfo.city || this.data.locationDetails.city,
-              district: adInfo.district || this.data.locationDetails.district
+              district: adInfo.district || this.data.locationDetails.district,
+              name: cachedName || this.data.locationDetails.name || ''
             }
           });
         }
@@ -165,7 +170,7 @@ Page({
   },
 
   parseLocation: function(location) {
-    let locationDetails = { province: '北京市', city: '北京市', district: '朝阳区' };
+    let locationDetails = { province: '北京市', city: '北京市', district: '朝阳区', name: '' };
     let locationStr = '北京市朝阳区';
     
     if (location) {
@@ -174,7 +179,8 @@ Page({
         locationDetails = {
           province: parsed.province || '北京市',
           city: parsed.city || '北京市',
-          district: parsed.district || '朝阳区'
+          district: parsed.district || '朝阳区',
+          name: parsed.name || ''
         };
         locationStr = parsed.address;
       } catch (e) {
@@ -394,6 +400,7 @@ Page({
         province: this.data.locationDetails.province || '',
         city: this.data.locationDetails.city || '',
         district: this.data.locationDetails.district || '',
+        name: this.data.locationDetails.name || '',
         address: formData.location
       };
 
@@ -464,6 +471,22 @@ Page({
 
   handlePublishSuccess: function(editingId) {
     this.setData({ isSubmitting: false });
+    
+    const app = getApp();
+    const { formData, locationDetails } = this.data;
+    if (formData.latitude && formData.longitude) {
+      app.saveLocationToCache({
+        latitude: formData.latitude,
+        longitude: formData.longitude,
+        locationDetails: {
+          province: locationDetails.province || '',
+          city: locationDetails.city || '',
+          district: locationDetails.district || '',
+          name: locationDetails.name || '',
+          address: formData.location || ''
+        }
+      });
+    }
     
     wx.showToast({ title: editingId ? '编辑成功！' : '发布成功！', icon: 'success', duration: 1500 });
     

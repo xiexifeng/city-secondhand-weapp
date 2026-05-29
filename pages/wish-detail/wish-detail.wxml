@@ -142,18 +142,19 @@
       </view>
     </view>
 
-    <!-- 交易地点 - 使用原生map组件 -->
+    <!-- 交换地点 - 使用原生map组件 -->
     <view class="location-section">
-      <text class="section-title">交易地点</text>
+      <text class="section-title">交换地点</text>
       <view class="location-info">
         <view class="location-header">
-          <text class="location-label">详细地址</text>
+          <text class="location-label">距您</text>
           <view class="distance-badge" bindtap="handleNavigate">
             <text class="distance-text">{{wish.formattedDistance}}</text>
             <text class="distance-icon">📍</text>
           </view>
         </view>
-        <text class="location-value">{{wish.location.address}}</text>
+        <text wx:if="{{wish.location.name}}" class="location-name">{{wish.location.name}}</text>
+        <text class="location-value">详细地址：{{wish.location.address}}</text>
       </view>
       <view class="map-container-wrapper">
         <map 
