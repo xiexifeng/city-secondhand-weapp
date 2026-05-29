@@ -2,16 +2,16 @@ Page({
   data: {
     user: {
       nickname: '用户昵称',
-      followers: 24,
-      following: 12,
+      followers: 0,
+      following: 0,
       avatar: ''
     },
     userId: '',  // 当前用户ID（用于邀请分享）
     userStats: {
-      published: 12,
-      wishes: 3,
-      favorites: 24,
-      points: 185,
+      published: 0,
+      wishes: 0,
+      favorites: 0,
+      points: 0,
       level: 'active',
       levelIcon: '',
       levelLabel: '',
@@ -19,22 +19,22 @@ Page({
     },
     publishData: {
       items: {
-        count: 12,
-        views: 284,
-        viewsTrend: 45,
-        interested: 23,
-        interestedTrend: 8,
-        collected: 15,
-        collectedTrend: 3
+        count: 0,
+        views: 0,
+        viewsTrend: 0,
+        interested: 0,
+        interestedTrend: 0,
+        collected: 0,
+        collectedTrend: 0
       },
       wishes: {
-        count: 3,
-        views: 156,
-        viewsTrend: 25,
-        interested: 18,
-        interestedTrend: 5,
-        collected: 10,
-        collectedTrend: 2
+        count: 0,
+        views: 0,
+        viewsTrend: 0,
+        interested: 0,
+        interestedTrend: 0,
+        collected: 0,
+        collectedTrend: 0
       }
     },
     weeklyTasks: [
@@ -346,18 +346,26 @@ Page({
    * Navigate to followers list
    */
   navigateToFollowers: function() {
-    wx.navigateTo({
-      url: '/pages/follow-list/follow-list?tab=followers'
+    wx.showToast({
+      title: '粉丝功能（敬请期待）',
+      icon: 'none'
     });
+    // wx.navigateTo({
+    //   url: '/pages/follow-list/follow-list?tab=followers'
+    // });
   },
 
   /**
    * Navigate to following list
    */
   navigateToFollowing: function() {
-    wx.navigateTo({
-      url: '/pages/follow-list/follow-list?tab=following'
+    wx.showToast({
+      title: '粉丝功能（敬请期待）',
+      icon: 'none'
     });
+    // wx.navigateTo({
+    //   url: '/pages/follow-list/follow-list?tab=following'
+    // });
   },
 
   /**

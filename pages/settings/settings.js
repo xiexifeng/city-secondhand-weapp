@@ -127,7 +127,7 @@ Page({
         if (res.confirm) {
           wx.clearStorage();
           wx.redirectTo({
-            url: '/pages/home/home'
+            url: '/pages/login/login'
           });
         }
       }

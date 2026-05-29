@@ -248,7 +248,7 @@ Page({
   // Seller
   handleViewSeller: function() {
     wx.showToast({
-      title: '查看卖家详情',
+      title: '查看换友详情（敬请期待）',
       icon: 'none'
     });
   },

@@ -109,7 +109,7 @@ page {
 
 .item-title.logout {
   color: #dc2626;
-  font-size: 24rpx;
+  font-size: 28rpx;
   text-align: center;
 }
 

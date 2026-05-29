@@ -27,7 +27,7 @@
           </view>
           <text class="item-arrow">›</text>
         </view> -->
-
+        <!--
         <view class="settings-item" bindtap="navigateToPrivacy">
           <view class="item-left">
             <text class="item-icon">🔒</text>
@@ -38,6 +38,7 @@
           </view>
           <text class="item-arrow">›</text>
         </view>
+        -->
 
         <!-- <view class="settings-item" bindtap="navigateToSecurity">
           <view class="item-left">

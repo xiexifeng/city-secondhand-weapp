@@ -24,7 +24,7 @@
             {{userStats.levelLabel}}
           </view>
         </view>
-        <text class="user-status">已实名认证 • 活跃用户</text>
+        <text class="user-status">活跃用户</text>
         <view class="user-stats">
           <text class="stat-item" bindtap="navigateToFollowers">👥 粉丝 {{user.followers}}</text>
           <text class="stat-separator">•</text>
@@ -90,15 +90,15 @@
   </view>
 
   <!-- Weekly Tasks -->
+  <!--
   <view class="tasks-section">
     <view class="section-header">
       <view class="section-title">
         <text class="section-icon">⚡</text>
         <text class="section-label">本周任务</text>
       </view>
-      <!-- <text class="view-all" bindtap="navigateToTasks">查看全部 →</text> -->
+      <text class="view-all" bindtap="navigateToTasks">查看全部 →</text>
     </view>
-
     <view class="tasks-list">
       <view wx:for="{{weeklyTasks}}" wx:key="id" class="task-item {{item.completed ? 'completed' : ''}}">
         <view class="task-header">
@@ -124,6 +124,8 @@
       </view>
     </view>
   </view>
+-->  
+
 
   <!-- Points & Favorites -->
   <view class="stats-grid">
@@ -153,6 +155,7 @@
   </view>
 
   <!-- Discover -->
+  <!--
   <view class="discover-section">
     <view class="discover-header">
       <text class="discover-icon">🔥</text>
@@ -167,6 +170,7 @@
       </view>
     </view>
   </view>
+  -->
 
   <!-- Settings Section -->
   <view class="settings-section">
