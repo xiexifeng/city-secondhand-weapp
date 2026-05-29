@@ -10,7 +10,8 @@ Page({
       pending: 0,
       approved: 0,
       rejected: 0,
-      totalReviewed: 0
+      totalReviewed: 0,
+      totalPoints: 0
     },
     pageNo: 1,
     pageSize: 10,
@@ -63,7 +64,8 @@ Page({
             pending: 0,
             approved: 0,
             rejected: 0,
-            totalReviewed: 0
+            totalReviewed: 0,
+            totalPoints: 0
           }
         });
         this.computeStats();

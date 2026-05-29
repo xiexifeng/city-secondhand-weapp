@@ -15,7 +15,7 @@
       <text class="stat-label">已拒绝</text>
     </view>
     <view class="stat-card points">
-      <text class="stat-number">{{stats.totalReviewed * 5}}</text>
+      <text class="stat-number">{{stats.totalPoints}}</text>
       <text class="stat-label">已获积分</text>
     </view>
   </view>
