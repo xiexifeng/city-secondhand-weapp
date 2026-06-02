@@ -142,8 +142,6 @@ Page({
           icon: 'success'
         });
 
-        wx.setStorageSync('refreshAuditList', true);
-
         setTimeout(() => {
           wx.navigateBack({
             delta: 1

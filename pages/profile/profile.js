@@ -91,7 +91,17 @@ Page({
   },
 
   onLoad: function() {
-    // 检查登录状态
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.reLaunch({
+        url: '/pages/login/login'
+      });
+      return;
+    }
+    this.initData();
+  },
+
+  onShow: function() {
     const token = wx.getStorageSync('token');
     if (!token) {
       wx.reLaunch({
@@ -322,7 +332,7 @@ Page({
           app.globalData.userInfo = null;
           app.globalData.userPhone = null;
           wx.clearStorage();
-          wx.redirectTo({
+          wx.reLaunch({
             url: '/pages/login/login'
           });
         }

@@ -18,7 +18,6 @@ Page({
   },
 
   onLoad: function() {
-    // 检查登录状态
     const token = wx.getStorageSync('token');
     if (!token) {
       wx.reLaunch({
@@ -26,9 +25,19 @@ Page({
       });
       return;
     }
-    
-    // 从后端API获取我的物品列表
     this.getMyItems();
+  },
+
+  onShow: function() {
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.reLaunch({
+        url: '/pages/login/login'
+      });
+      return;
+    }
+    this.setData({ pageNo: 1, hasMore: true, items: [] });
+    this.getMyItems(true);
   },
   
   /**

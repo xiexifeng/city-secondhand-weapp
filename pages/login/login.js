@@ -434,15 +434,10 @@ Page({
    * Handle page unload (including back button)
    */
   onUnload: function() {
-    // Check if user is not logged in
     const token = wx.getStorageSync('token');
     if (!token) {
-      // If not logged in, check if we need to redirect to home
-      const pages = getCurrentPages();
-      // If this is the only page or we came from a non-home page
-      // We need to use setTimeout to ensure the redirect happens after the page is unloaded
       setTimeout(() => {
-        wx.redirectTo({
+        wx.reLaunch({
           url: '/pages/home/home'
         });
       }, 0);

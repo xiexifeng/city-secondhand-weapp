@@ -41,8 +41,18 @@ Page({
       });
       return;
     }
-    
     this.initDatePicker();
+    this.loadPointsData();
+  },
+
+  onShow: function() {
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.reLaunch({
+        url: '/pages/login/login'
+      });
+      return;
+    }
     this.loadPointsData();
   },
 

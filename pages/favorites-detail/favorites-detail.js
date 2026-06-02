@@ -24,6 +24,25 @@ Page({
     this.loadItemsCollection()
   },
 
+  onShow: function() {
+    const token = wx.getStorageSync('token')
+    if (!token) {
+      wx.reLaunch({
+        url: '/pages/login/login'
+      })
+      return
+    }
+    this.setData({
+      itemsList: [],
+      wishesList: [],
+      itemsPageNo: 1,
+      wishesPageNo: 1,
+      itemsHasMore: true,
+      wishesHasMore: true
+    })
+    this.loadItemsCollection()
+  },
+
   loadItemsCollection: function() {
     if (this.data.loading || !this.data.itemsHasMore) return
     

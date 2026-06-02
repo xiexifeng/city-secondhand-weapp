@@ -132,7 +132,7 @@ Page({
           app.globalData.userInfo = null;
           app.globalData.userPhone = null;
           wx.clearStorage();
-          wx.redirectTo({
+          wx.reLaunch({
             url: '/pages/login/login'
           });
         }

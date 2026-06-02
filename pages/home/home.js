@@ -41,6 +41,13 @@ Page({
   onShow() {
     this.checkLoginStatus();
     this.checkAuditStatus();
+    // 刷新数据 先不需要，需要用户主动刷新
+    // this.setData({
+    //   items: [],
+    //   page: 1,
+    //   hasMore: true
+    // });
+    // this.loadItems();
   },
 
   /**

@@ -128,15 +128,18 @@ Page({
   },
 
   onShow: function() {
-    const needRefresh = wx.getStorageSync('refreshAuditList');
-    if (needRefresh) {
-      wx.removeStorageSync('refreshAuditList');
-      this.setData({
-        pageNo: 1,
-        hasMore: true,
-        items: []
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.reLaunch({
+        url: '/pages/login/login'
       });
-      this.loadAuditList();
+      return;
     }
+    this.setData({
+      pageNo: 1,
+      hasMore: true,
+      items: []
+    });
+    this.loadAuditList();
   }
 });

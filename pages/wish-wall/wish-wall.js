@@ -20,6 +20,17 @@ Page({
     this.getLocationAndLoadWishes();
   },
 
+  onShow: function() {
+    // 刷新数据 先不需要，需要用户主动刷新
+    // this.setData({
+    //   wishes: [],
+    //   sortedWishes: [],
+    //   pageNo: 1,
+    //   hasMore: true
+    // });
+    // this.loadWishes();
+  },
+
   async getLocationAndLoadWishes() {
     try {
       const cachedLocation = app.getCachedLocation();

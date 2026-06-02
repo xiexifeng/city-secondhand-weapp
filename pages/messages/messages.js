@@ -23,6 +23,16 @@ Page({
     this.loadMessages();
   },
 
+  onShow: function() {
+    const token = wx.getStorageSync('token');
+    if (!token) {
+      wx.reLaunch({ url: '/pages/login/login' });
+      return;
+    }
+    this.setData({ messages: [], filteredMessages: [], page: 1, hasMore: true });
+    this.loadMessages(true);
+  },
+
   loadMessages: function(isRefresh = false) {
     const params = {
       pageNo: isRefresh ? 1 : this.data.page,
