@@ -138,18 +138,16 @@ Page({
     const api = require('../../utils/api');
     api.userAPI.getUserInfo()
       .then(res => {
-        if (res && res.success) {
-          this.setData({
-            userId: res.userId || '',
-            user: {
-              nickname: res.nickname || '用户昵称',
-              followers: res.followers || 0,
-              following: res.following || 0,
-              avatar: res.avatarUrl || ''
-            }
-          });
-        }else{
-          
+        this.setData({
+          userId: res.userId || '',
+          user: {
+            nickname: res.nickname || '用户昵称',
+            followers: res.followers || 0,
+            following: res.following || 0,
+            avatar: res.avatarUrl || ''
+          }
+        });
+        if (res.code && !res.success) {
           if(res.code === '010001'){
             wx.showToast({
               title: '登录已过期，请重新登录',
@@ -170,9 +168,9 @@ Page({
             }, 1500);
           }else{
             wx.showToast({
-            title: '获取用户信息失败：' + res.msg,
-            icon: 'none'
-          });
+              title: '获取用户信息失败：' + res.desc,
+              icon: 'none'
+            });
           }
         }
       })
