@@ -5,17 +5,6 @@
     <!-- 发布方式选择 -->
     <view class="publish-content">
       <text class="publish-subtitle">选择发布方式</text>
-      
-      <!-- 人民币出售 -->
-      <view class="publish-option" bindtap="selectPublishType" data-type="sell">
-        <view class="option-icon sell">💰</view>
-        <view class="option-info">
-          <text class="option-title">出售</text>
-          <text class="option-desc">出售物品，标注价格，等待有意者联系</text>
-        </view>
-        <text class="option-arrow">›</text>
-      </view>
-
       <!-- 以物换物 -->
       <view class="publish-option" bindtap="selectPublishType" data-type="exchange">
         <view class="option-icon exchange">🔄</view>
@@ -25,7 +14,15 @@
         </view>
         <text class="option-arrow">›</text>
       </view>
-
+      <!-- 人民币出售 -->
+      <view class="publish-option" bindtap="selectPublishType" data-type="sell">
+        <view class="option-icon sell">💰</view>
+        <view class="option-info">
+          <text class="option-title">出售</text>
+          <text class="option-desc">出售物品，标注价格，等待有意者联系</text>
+        </view>
+        <text class="option-arrow">›</text>
+      </view>
       <!-- 心愿墙 -->
       <view class="publish-option" bindtap="selectPublishType" data-type="wish">
         <view class="option-icon wish">❤️</view>

@@ -161,6 +161,13 @@ const userAPI = {
     })
   },
 
+  logout() {
+    return app.request({
+      url: '/client/auth/logout',
+      method: 'POST'
+    })
+  },
+
   getUserInfo() {
     return app.request({
       url: '/client/user/get',

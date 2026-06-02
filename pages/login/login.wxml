@@ -30,7 +30,7 @@
       >
         <view class="option-icon">📱</view>
         <view class="option-text">
-          <text class="option-title">手机号快捷登录</text>
+          <text class="option-title">微信快捷登录</text>
           <text class="option-desc">一键登录，无需输入</text>
         </view>
         <view class="option-arrow">›</view>

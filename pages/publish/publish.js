@@ -1,5 +1,11 @@
 const { itemAPI, wishAPI, fileAPI } = require('../../utils/api');
-const { CATEGORIES, CONDITIONS, TAGS, MAX_LENGTHS, CONDITION_MAP } = require('../../config.js');
+const { CATEGORIES, CONDITIONS, SELL_TAGS, EXCHANGE_TAGS, MAX_LENGTHS, CONDITION_MAP } = require('../../config.js');
+
+function getTagsForType(type) {
+  if (type === 'sell') return SELL_TAGS.map(tag => ({ ...tag, selected: false }));
+  if (type === 'exchange') return EXCHANGE_TAGS.map(tag => ({ ...tag, selected: false }));
+  return [];
+}
 
 function getDefaultData() {
   const userInfo = wx.getStorageSync('userInfo');
@@ -38,7 +44,7 @@ function getDefaultData() {
     agreed: false,
     categoryIndex: 0,
     conditionIndex: 2,
-    tags: TAGS.map(tag => ({ ...tag, selected: false })),
+    tags: [],
     categories: CATEGORIES,
     conditions: CONDITIONS,
     contactSettingsExpanded: false,
@@ -157,12 +163,13 @@ Page({
     
     const { locationStr, locationDetails } = this.parseLocation(data.location);
     const images = this.getImages(data, type);
-    const updatedTags = this.getUpdatedTags(data.tags);
+    const publishType = type === 'wish' ? 'wish' : data.tradeType;
+    const updatedTags = this.getUpdatedTags(data.tags, publishType);
 
     const formData = this.buildFormData(data, type, locationStr);
     
     this.setData({
-      publishType: type === 'wish' ? 'wish' : data.tradeType,
+      publishType,
       images: images,
       tags: updatedTags,
       formData: formData,
@@ -199,9 +206,10 @@ Page({
     return data[imageKey] || (data.firstImage ? [data.firstImage] : []);
   },
 
-  getUpdatedTags: function(tagsStr) {
+  getUpdatedTags: function(tagsStr, publishType) {
     const savedTags = tagsStr ? tagsStr.split(',').filter(tag => tag.trim()) : [];
-    return this.data.tags.map(tag => ({
+    const tagList = getTagsForType(publishType);
+    return tagList.map(tag => ({
       ...tag,
       selected: savedTags.includes(tag.name)
     }));
@@ -238,11 +246,15 @@ Page({
   },
 
   selectPublishType: function(e) {
-    this.setData({ publishType: e.currentTarget.dataset.type });
+    const publishType = e.currentTarget.dataset.type;
+    this.setData({
+      publishType,
+      tags: getTagsForType(publishType)
+    });
   },
 
   backToTypeSelect: function() {
-    this.setData({ publishType: null });
+    this.setData({ publishType: null, tags: [] });
   },
 
   handleUploadImage: function() {

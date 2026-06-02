@@ -6,6 +6,7 @@ const app = getApp()
 Page({
   data: {
     wish: null,
+    wishId: null,
     showReportModal: false,
     showSafetyDetails: false,
     isLoggedIn: true,
@@ -18,6 +19,7 @@ Page({
 
   onLoad: function(options) {
     const wishId = options.id;
+    this.setData({ wishId: wishId });
     this.getLocationAndLoadWishDetail(wishId);
   },
 
@@ -60,6 +62,7 @@ Page({
             liked: wishData.liked || false,
             collected: wishData.collected || false
           });
+          this.recordView(wishId);
         } else {
           wx.showToast({
             title: '心愿不存在',
@@ -192,28 +195,26 @@ Page({
     });
   },
 
+  recordView: function(wishId) {
+    if (!this.data.isLoggedIn) return;
+    wishWallAPI.socialWish(wishId, 'VIEW', 'ADD').catch(err => {
+      console.error('记录浏览失败:', err);
+    });
+  },
+
   handleLike: function() {
     if (!this.data.isLoggedIn) {
       this.navigateToLogin();
       return;
     }
     
-    const wishId = this.data.wish.id;
-    const currentLiked = this.data.liked;
-    const api = currentLiked ? wishWallAPI.unlikeWish(wishId) : wishWallAPI.likeWish(wishId);
+    const { liked, wishId } = this.data;
+    const newLiked = !liked;
+    const operate = newLiked ? 'ADD' : 'CANCEL';
     
-    api.then(() => {
-        const newLiked = !currentLiked;
+    wishWallAPI.socialWish(wishId, 'LOVE', operate)
+      .then(() => {
         this.setData({ liked: newLiked });
-        
-        if (this.data.wish.stats) {
-          this.setData({
-            'wish.stats.likes': newLiked 
-              ? (this.data.wish.stats.likes || 0) + 1 
-              : Math.max(0, (this.data.wish.stats.likes || 0) - 1)
-          });
-        }
-        
         wx.showToast({
           title: newLiked ? '已标记感兴趣' : '已取消感兴趣',
           icon: 'success',
@@ -233,22 +234,13 @@ Page({
       return;
     }
     
-    const wishId = this.data.wish.id;
-    const currentCollected = this.data.collected;
-    const api = currentCollected ? wishWallAPI.uncollectWish(wishId) : wishWallAPI.collectWish(wishId);
+    const { collected, wishId } = this.data;
+    const newCollected = !collected;
+    const operate = newCollected ? 'ADD' : 'CANCEL';
     
-    api.then(() => {
-        const newCollected = !currentCollected;
+    wishWallAPI.socialWish(wishId, 'COLLECTION', operate)
+      .then(() => {
         this.setData({ collected: newCollected });
-        
-        if (this.data.wish.stats) {
-          this.setData({
-            'wish.stats.favorites': newCollected 
-              ? (this.data.wish.stats.favorites || 0) + 1 
-              : Math.max(0, (this.data.wish.stats.favorites || 0) - 1)
-          });
-        }
-        
         wx.showToast({
           title: newCollected ? '收藏成功' : '取消收藏',
           icon: 'success',

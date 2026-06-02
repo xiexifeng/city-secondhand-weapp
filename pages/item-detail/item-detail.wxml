@@ -151,7 +151,7 @@
       
       <!-- 登录状态 -->
       <view wx:if="{{isLoggedIn}}">
-        <view class="contact-item" bindtap="handleContactWechat">
+        <view wx:if="{{item.contact.wechat}}" class="contact-item" bindtap="handleContactWechat">
           <view class="contact-icon">💬</view>
           <view class="contact-info">
             <text class="contact-label">微信</text>
@@ -159,7 +159,7 @@
           </view>
           <view class="contact-action">复制</view>
         </view>
-        <view class="contact-item" bindtap="handleContactPhone">
+        <view wx:if="{{item.contact.phone}}" class="contact-item" bindtap="handleContactPhone">
           <view class="contact-icon">☎️</view>
           <view class="contact-info">
             <text class="contact-label">电话</text>
@@ -169,21 +169,20 @@
         </view>
       </view>
       
-      <!-- 未登录状态 -->
       <view wx:else>
-        <view class="contact-item">
+        <view wx:if="{{item.contact.wechat}}" class="contact-item" bindtap="navigateToLogin">
           <view class="contact-icon">💬</view>
           <view class="contact-info">
             <text class="contact-label">微信</text>
-            <text class="contact-value">*******123</text>
+            <text class="contact-value">{{item.contact.wechat}}</text>
           </view>
           <view class="contact-action">登录查看</view>
         </view>
-        <view class="contact-item">
+        <view wx:if="{{item.contact.phone}}" class="contact-item" bindtap="navigateToLogin">
           <view class="contact-icon">☎️</view>
           <view class="contact-info">
             <text class="contact-label">电话</text>
-            <text class="contact-value">138****8000</text>
+            <text class="contact-value">{{item.contact.phone}}</text>
           </view>
           <view class="contact-action">登录查看</view>
         </view>

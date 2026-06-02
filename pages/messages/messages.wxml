@@ -1,12 +1,12 @@
 <!--pages/messages/messages.wxml-->
 <view class="messages-container">
-  <view class="messages-header">
+  <!-- <view class="messages-header">
     <view class="header-left"></view>
     <view class="header-content">
       <text class="header-title">消息中心</text>
     </view>
     <view class="header-right"></view>
-  </view>
+  </view> -->
 
   <scroll-view class="filter-tabs" scroll-x>
     <view class="filter-tab {{activeFilter === 'all' ? 'active' : ''}}" bindtap="setActiveFilter" data-filter="all">

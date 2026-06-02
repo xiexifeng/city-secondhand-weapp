@@ -12,6 +12,8 @@ export const CATEGORIES = [
   '书籍文具',
   '美妆个护',
   '运动户外',
+  '玩具模型',
+  '游戏影音',
   '其他'
 ];
 
@@ -29,15 +31,26 @@ export const CONDITIONS = [
 ];
 
 // 物品标签
-export const TAGS = [
+export const SELL_TAGS = [
   { name: '全新未拆封', selected: false },
-  { name: '国行版本', selected: false },
   { name: '原装配件', selected: false },
   { name: '保修期内', selected: false },
   { name: '无划痕', selected: false },
-  { name: '当面交换', selected: false },
   { name: '可小刀', selected: false },
-  { name: '包邮', selected: false }
+  { name: '免费送', selected: false },
+  { name: '附近优先', selected: false },
+  { name: '先到先得', selected: false }
+];
+
+export const EXCHANGE_TAGS = [
+  { name: '全新未拆封', selected: false },
+  { name: '原装配件', selected: false },
+  { name: '保修期内', selected: false },
+  { name: '无划痕', selected: false },
+  { name: '可补差价', selected: false },
+  { name: '附近优先', selected: false },
+  { name: '开心就换', selected: false },
+  { name: '接受混合换', selected: false }
 ];
 
 // 表单字段字数限制

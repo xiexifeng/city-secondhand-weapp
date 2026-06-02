@@ -125,6 +125,12 @@ Page({
       cancelText: '取消',
       success: (res) => {
         if (res.confirm) {
+          const api = require('../../utils/api');
+          const app = getApp();
+          api.userAPI.logout().catch(() => {});
+          app.globalData.token = null;
+          app.globalData.userInfo = null;
+          app.globalData.userPhone = null;
           wx.clearStorage();
           wx.redirectTo({
             url: '/pages/login/login'
