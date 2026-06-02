@@ -138,18 +138,50 @@ Page({
     const api = require('../../utils/api');
     api.userAPI.getUserInfo()
       .then(res => {
-        this.setData({
-          userId: res.userId || '',
-          user: {
-            nickname: res.nickname || '用户昵称',
-            followers: res.followers || 0,
-            following: res.following || 0,
-            avatar: res.avatarUrl || ''
+        if (res && res.success) {
+          this.setData({
+            userId: res.userId || '',
+            user: {
+              nickname: res.nickname || '用户昵称',
+              followers: res.followers || 0,
+              following: res.following || 0,
+              avatar: res.avatarUrl || ''
+            }
+          });
+        }else{
+          
+          if(res.code === '010001'){
+            wx.showToast({
+              title: '登录已过期，请重新登录',
+              icon: 'none',
+              duration: 1500
+            });
+            const app = getApp();
+            app.globalData.token = null;
+            app.globalData.userInfo = null;
+            app.globalData.userPhone = null;
+            wx.removeStorageSync('token');
+            wx.removeStorageSync('userInfo');
+            wx.removeStorageSync('userPhone');
+            setTimeout(() => {
+              wx.reLaunch({
+                url: '/pages/login/login'
+              });
+            }, 1500);
+          }else{
+            wx.showToast({
+            title: '获取用户信息失败：' + res.msg,
+            icon: 'none'
+          });
           }
-        });
+        }
       })
       .catch(err => {
         console.error('获取用户信息失败', err);
+        wx.showToast({
+            title: '获取用户信息失败,请稍后重试',
+            icon: 'none'
+          });
       });
   },
 
@@ -331,7 +363,9 @@ Page({
           app.globalData.token = null;
           app.globalData.userInfo = null;
           app.globalData.userPhone = null;
-          wx.clearStorage();
+          wx.removeStorageSync('token');
+          wx.removeStorageSync('userInfo');
+          wx.removeStorageSync('userPhone');
           wx.reLaunch({
             url: '/pages/login/login'
           });

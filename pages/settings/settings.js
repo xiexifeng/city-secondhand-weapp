@@ -131,7 +131,9 @@ Page({
           app.globalData.token = null;
           app.globalData.userInfo = null;
           app.globalData.userPhone = null;
-          wx.clearStorage();
+          wx.removeStorageSync('token');
+          wx.removeStorageSync('userInfo');
+          wx.removeStorageSync('userPhone');
           wx.reLaunch({
             url: '/pages/login/login'
           });
