@@ -105,8 +105,9 @@ Page({
   },
 
   navigateToPublish: function() {
-    wx.navigateTo({
-      url: '/pages/publish/publish?type=wish'
+    app.globalData.publishType = 'wish';
+    wx.switchTab({
+      url: '/pages/publish/publish'
     });
   },
 

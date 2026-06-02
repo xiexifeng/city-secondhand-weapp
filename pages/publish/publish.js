@@ -122,6 +122,10 @@ Page({
       this.setData({ publishType: 'wish' }, () => {
         this.loadEditData(editWishId, 'wish');
       });
+    } else if (app.globalData.publishType) {
+      const publishType = app.globalData.publishType;
+      app.globalData.publishType = null;
+      this.setData({ publishType });
     }
   },
 
