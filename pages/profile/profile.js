@@ -239,7 +239,7 @@ Page({
    */
   toggleTheme: function() {
     wx.showToast({
-      title: '主题切换功能开发中',
+      title: '该功能即将上线',
       icon: 'none',
       duration: 1500
     });
@@ -280,7 +280,7 @@ Page({
   navigateDiscover: function(e) {
     const action = e.currentTarget.dataset.action;
     wx.showToast({
-      title: '功能开发中',
+      title: '该功能即将上线',
       icon: 'none',
       duration: 1500
     });
@@ -347,7 +347,7 @@ Page({
    */
   navigateToFollowers: function() {
     wx.showToast({
-      title: '粉丝功能（敬请期待）',
+      title: '该功能即将上线',
       icon: 'none'
     });
     // wx.navigateTo({
@@ -360,7 +360,7 @@ Page({
    */
   navigateToFollowing: function() {
     wx.showToast({
-      title: '粉丝功能（敬请期待）',
+      title: '该功能即将上线',
       icon: 'none'
     });
     // wx.navigateTo({
@@ -396,7 +396,7 @@ Page({
     const nickname = user.nickname || '用户';
     
     return {
-      title: `🎉 ${nickname}邀请你加入换换么！闲置物品交换，环保又省钱`,
+      title: `🎉 ${nickname}邀请您加入换换么！闲置物品交换，环保又省钱`,
       query: `inviterId=${userId}`
     };
   },

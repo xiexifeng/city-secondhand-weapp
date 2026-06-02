@@ -35,7 +35,7 @@
             </view>
 
             <view class="wish-tags">
-              <view wx:if="{{item.budget}}" class="tag tag-budget">预算: {{item.budget}}</view>
+              <view wx:if="{{item.budget}}" class="tag tag-budget">预算： {{item.budget}}</view>
               <view class="tag {{item.statusClass}}">{{item.statusLabel}}</view>
             </view>
 

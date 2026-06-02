@@ -67,7 +67,7 @@
       <view class="card-header">
         <view class="card-title">
           <text class="card-icon">❤️</text>
-          <text class="card-label">我的求换</text>
+          <text class="card-label">我的心愿</text>
         </view>
         <text class="card-count emerald">{{publishData.wishes.count}}</text>
       </view>

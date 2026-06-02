@@ -22,7 +22,7 @@ Component({
       { id: 2, title: '信息误导', description: '物品描述虚假或图片与实物不符' },
       { id: 3, title: '违禁物品', description: '发布法律法规禁止的物品' },
       { id: 4, title: '侵权行为', description: '侵犯他人知识产权或肖像权' },
-      { id: 5, title: '垃圾广告', description: '发布与二手交易无关的广告信息' },
+      { id: 5, title: '垃圾广告', description: '发布与二手交换无关的广告信息' },
       { id: 6, title: '其他原因', description: '其他违反平台规定的行为' }
     ],
     selectedReason: null,

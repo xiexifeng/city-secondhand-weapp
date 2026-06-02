@@ -141,7 +141,7 @@ Page({
       id: 1,
       latitude: item.location.latitude,
       longitude: item.location.longitude,
-      title: '交易地点',
+      title: '交换地点',
       width: 32,
       height: 32
     }];

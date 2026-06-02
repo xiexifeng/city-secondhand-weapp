@@ -20,7 +20,7 @@
     <!-- Bio -->
     <view class="form-group">
       <text class="form-label">个人简介</text>
-      <textarea class="form-textarea" value="{{profile.bio}}" bindinput="handleChange" data-field="bio" placeholder="介绍一下你自己吧" maxlength="100"></textarea>
+      <textarea class="form-textarea" value="{{profile.bio}}" bindinput="handleChange" data-field="bio" placeholder="简单介绍一下自己吧" maxlength="100"></textarea>
       <text class="char-count">{{profile.bio.length}}/100</text>
     </view>
 
@@ -63,7 +63,7 @@
     <!-- Tips -->
     <view class="tips-card">
       <text class="tips-icon">ℹ️</text>
-      <text class="tips-text">完整的个人信息可以帮助其他用户更好地了解你，提高交易成功率。</text>
+      <text class="tips-text">完整的个人信息可以帮助其他用户更好地了解您，提高交换成功率。</text>
     </view>
 
     <!-- Save Button -->

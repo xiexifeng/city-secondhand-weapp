@@ -13,7 +13,7 @@
         <input 
           class="search-input-inline" 
           type="text" 
-          placeholder="搜索物品..." 
+          placeholder="搜索闲置物品..." 
           placeholder-style="color: #94A3B8;"
           bindinput="onSearchInput"
           value="{{searchKeyword}}"
@@ -32,7 +32,7 @@
       <view class="login-waving-hand">👋</view>
       <view class="login-text-content">
         <text class="login-title-new">欢迎来到换换么</text>
-        <text class="login-desc-new">登录后可以发布物品、参与交易</text>
+        <text class="login-desc-new">登录后可以发布物品、参与交换</text>
       </view>
     </view>
     <view class="login-btn-mini" bindtap="navigateToLogin">立即登录</view>

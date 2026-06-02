@@ -20,7 +20,7 @@
     <view class="section">
       <text class="section-title">我们是谁</text>
       <text class="section-content">
-        换换么是一个专注于<text style="font-weight: bold;">同城物品交换信息发布</text>的纯信息服务平台。我们不介入交易、不处理支付、不提供即时通讯——我们只做好一件事：<text style="font-weight: bold;">让有交换意愿的人，找到彼此</text>。
+        换换么是一个专注于<text style="font-weight: bold;">同城物品交换信息发布</text>的纯信息服务平台。我们不介入交换、不处理支付、不提供即时通讯——我们只做好一件事：<text style="font-weight: bold;">让有交换意愿的人，找到彼此</text>。
       </text>
     </view>
 
@@ -75,7 +75,7 @@
       <view class="features-list">
         <view class="feature-item">
           <text class="feature-icon">✅</text>
-          <text class="feature-text">只做信息发布，不触碰交易资金</text>
+          <text class="feature-text">只做信息发布，不触碰交换资金</text>
         </view>
         <view class="feature-item">
           <text class="feature-icon">✅</text>

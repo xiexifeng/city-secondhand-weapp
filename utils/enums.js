@@ -15,7 +15,7 @@ export const ITEM_STATUS = {
 export const WISH_STATUS = {
   AUDITING: 'auditing',     // 审核中
   ACTIVE: 'active',         // 有效（审核通过，展示中）
-  INACTIVE: 'inactive',     // 无效（审核不通过）
+  INACTIVE: 'inactive',     // 无效（已拒绝）
   TIMEOUT: 'timeout',       // 失效（超时）
   ACHIEVED: 'achieved',     // 心愿达成
   CANCELLED: 'cancelled'    // 撤回心愿
@@ -50,7 +50,7 @@ export const TRANSFER_STATUS_LABELS = {
 export const REVIEW_STATUS_LABELS = {
   [ITEM_STATUS.AUDITING]: '待审核',
   [ITEM_STATUS.ACTIVE]: '已通过',
-  [ITEM_STATUS.INACTIVE]: '审核不通过'
+  [ITEM_STATUS.INACTIVE]: '已拒绝'
 };
 
 /**
@@ -59,7 +59,7 @@ export const REVIEW_STATUS_LABELS = {
 export const WISH_STATUS_LABELS = {
   [WISH_STATUS.AUDITING]: '待审核',
   [WISH_STATUS.ACTIVE]: '进行中',
-  [WISH_STATUS.INACTIVE]: '审核不通过',
+  [WISH_STATUS.INACTIVE]: '已拒绝',
   [WISH_STATUS.TIMEOUT]: '已失效',
   [WISH_STATUS.ACHIEVED]: '已达成',
   [WISH_STATUS.CANCELLED]: '已撤回'

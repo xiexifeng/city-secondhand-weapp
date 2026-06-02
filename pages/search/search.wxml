@@ -1,9 +1,9 @@
-<!--pages/$page/$page.wxml-->
+<!--pages/search/search.wxml-->
 <view class="container">
   <view class="page-header">
-    <text class="page-title">页面标题</text>
+    <text class="page-title">搜索</text>
   </view>
   <view class="page-content">
-    <text>页面内容</text>
+    <text>输入关键词搜索你想要的物品</text>
   </view>
 </view>

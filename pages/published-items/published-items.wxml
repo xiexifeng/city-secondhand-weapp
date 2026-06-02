@@ -4,7 +4,7 @@
   <!-- Safety Tip -->
   <view class="safety-tip">
     <view class="tip-icon">🔒</view>
-    <text class="tip-text">安全交易提示：请选择公共场所进行物品交接，保护个人财产安全</text>
+    <text class="tip-text">安全交换提示：请选择公共场所进行物品交接，保护个人财产安全</text>
   </view>
 
   <!-- Stats Cards -->
@@ -55,7 +55,7 @@
               </view>
             </view>
 
-            <view wx:if="{{item.reviewStatus === '审核不通过' && item.rejectionReason}}" class="rejection-reason">
+            <view wx:if="{{item.reviewStatus === '已拒绝' && item.rejectionReason}}" class="rejection-reason">
               <text class="reason-label">拒绝原因：{{item.rejectionReason}}</text>
             </view>
 
@@ -71,7 +71,7 @@
                 <text class="item-date">{{item.publishDate}}</text>
               </view>
               <view class="actions-right">
-                <!-- 审核不通过的物品操作 -->
+                <!-- 已拒绝的物品操作 -->
                 <view wx:if="{{item.status === 'inactive'}}" style="display: flex; flex-direction: row; gap: 12rpx; align-items: center;">
                   <view class="action-item delete" bindtap="handleDelete" data-id="{{item.id}}">
                     <text class="action-text">删除</text>

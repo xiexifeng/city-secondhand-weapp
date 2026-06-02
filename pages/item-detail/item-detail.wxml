@@ -104,7 +104,7 @@
       <text class="description-text">{{item.description}}</text>
     </view>
 
-    <!-- 卖家信息 -->
+    <!-- 发布者信息 -->
     <view class="seller-section">
       <view class="section-header">
         <text class="section-title">发布者信息</text>
@@ -121,7 +121,7 @@
           </view>
           <view class="seller-stats">
             <text>发布了 {{item.seller.items}} 件物品</text>
-            <text>已转让率: {{item.seller.transferRate}}%</text>
+            <text>已转让率： {{item.seller.transferRate}}%</text>
           </view>
         </view>
         <view class="seller-actions">
@@ -137,10 +137,10 @@
         <text class="safety-toggle">{{showSafetyDetails ? '▼' : '▶'}}</text>
       </view>
       <view wx:if="{{showSafetyDetails}}" class="safety-details">
-        <view class="safety-item">• 勿相信任何要求预付款的交易，包括定金、押金等</view>
-        <view class="safety-item">• 见面交易，当面验货，当面付款，不要远程交易</view>
+        <view class="safety-item">• 勿相信任何要求预付款的交换，包括定金、押金等</view>
+        <view class="safety-item">• 见面交换，当面验物，当面结算，不要远程交换</view>
         <view class="safety-item">• 如遇可疑情况，请立即举报，平台会进行处理</view>
-        <view class="safety-item">• 警惕虚假身份认证，核实卖家真实信息</view>
+        <view class="safety-item">• 警惕虚假身份认证，核实对方真实信息</view>
         <view class="safety-item">• 不要点击陌生链接，防止信息泄露</view>
       </view>
     </view>

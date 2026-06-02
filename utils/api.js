@@ -266,7 +266,7 @@ const reportAPI = {
   }
 }
 
-// 求换相关 API（我的求换）
+// 心愿相关 API（我的心愿）
 const wishAPI = {
   getMyWishes(params) {
     return app.request({

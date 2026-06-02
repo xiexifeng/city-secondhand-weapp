@@ -177,7 +177,7 @@ Page({
     let confirmContent = '确定要将物品状态更新为: ' + actualStatusLabel + ' 吗？';
     
     if (newTransferStatus === 'transfer_accepted') {
-      confirmContent = '设置为"已接受"表示您已与买家沟通清楚，即将进行交易。\n\n确定要将物品状态更新为"已接受"吗？';
+      confirmContent = '设置为"已接受"表示您已与对方沟通清楚，即将进行交换。\n\n确定要将物品状态更新为"已接受"吗？';
     }
     
     wx.showModal({

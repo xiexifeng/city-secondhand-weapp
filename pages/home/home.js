@@ -17,7 +17,7 @@ Page({
     loading: false,
     tradeTypes: [
       { value: 'all', label: '全部方式' },
-      { value: 'sell', label: '人民币出售' },
+      { value: 'sell', label: '出售' },
       { value: 'exchange', label: '以物换物' }
     ],
     sortOptions: [
@@ -117,7 +117,7 @@ Page({
         fail: (err) => {
           console.error('选择位置失败:', err.message);
           if (err.errMsg && err.errMsg.includes('cancel')) {
-            wx.showToast({ title: '已取消选择', icon: 'none' });
+            wx.showToast({ title: '已取消位置选择', icon: 'none' });
           }
         }
       });
@@ -237,7 +237,7 @@ Page({
     this.loadItems();
   },
 
-  // 交易方式改变
+  // 交换方式改变
   onTradeTypeChange(e) {
     this.setData({
       selectedTradeType: e.currentTarget.dataset.value,

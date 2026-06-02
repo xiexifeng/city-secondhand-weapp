@@ -44,7 +44,7 @@
       },
       {
         "pagePath": "pages/wish-wall/wish-wall",
-        "text": "求换墙",
+        "text": "心愿墙",
         "iconPath": "images/wish.png",
         "selectedIconPath": "images/wish-active.png"
       },

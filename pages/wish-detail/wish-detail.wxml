@@ -87,7 +87,7 @@
       </view>
       <view wx:if="{{showSafetyDetails}}" class="safety-details">
         <view class="safety-item">• 不要在聊天中透露个人隐私信息</view>
-        <view class="safety-item">• 建议在安全的地点进行交易</view>
+        <view class="safety-item">• 建议在安全的地点进行交换</view>
         <view class="safety-item">• 如遇诈骗，请立即举报</view>
         <view class="safety-item">• 警惕虚假身份认证，核实发布者真实信息</view>
         <view class="safety-item">• 不要点击陌生链接，防止信息泄露</view>

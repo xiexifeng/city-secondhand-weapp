@@ -129,7 +129,7 @@
   <view wx:if="{{currentStep === 4}}" class="step-content success-content">
     <view class="success-icon">✓</view>
     <text class="success-title">认证成功</text>
-    <text class="success-description">你的实名认证已完成，可以享受更多功能</text>
+    <text class="success-description">您的实名认证已完成，可以享受更多功能</text>
 
     <view class="success-info">
       <view class="info-item">

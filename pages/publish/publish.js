@@ -20,7 +20,7 @@ function getDefaultData() {
       category: '数码3C',
       wechat: wechat,
       phone: userPhone || '',
-      location: cachedLocationDetails.address || '请选择交易地点',
+      location: cachedLocationDetails.address || '请选择交换地点',
       latitude: cachedLocation.latitude || null,
       longitude: cachedLocation.longitude || null,
       wantItem: '',
@@ -424,13 +424,13 @@ Page({
 
   validateContact: function(formData) {
     if (formData.contactVisibility === 'both') {
-      if (!formData.wechat) { wx.showToast({ title: '请填写微信', icon: 'none' }); return false; }
-      if (!formData.phone) { wx.showToast({ title: '请填写电话', icon: 'none' }); return false; }
+      if (!formData.wechat) { wx.showToast({ title: '请填写微信号', icon: 'none' }); return false; }
+      if (!formData.phone) { wx.showToast({ title: '请填写手机号', icon: 'none' }); return false; }
     } else if (formData.contactVisibility === 'wechat' && !formData.wechat) {
-      wx.showToast({ title: '请填写微信', icon: 'none' });
+      wx.showToast({ title: '请填写微信号', icon: 'none' });
       return false;
     } else if (formData.contactVisibility === 'phone' && !formData.phone) {
-      wx.showToast({ title: '请填写电话', icon: 'none' });
+      wx.showToast({ title: '请填写手机号', icon: 'none' });
       return false;
     }
     return true;

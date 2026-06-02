@@ -148,7 +148,7 @@ Page({
       data: wechat,
       success: function() {
         wx.showToast({
-          title: '微信已复制',
+          title: '微信号已复制',
           icon: 'success',
           duration: 2000
         });

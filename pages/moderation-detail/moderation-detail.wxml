@@ -221,7 +221,7 @@
           <text class="reason-label">审核原因:</text>
           <text class="reason-value">{{detail.reason}}</text>
         </view>
-        <text class="status-time">审核时间: {{detail.reviewedAt}}</text>
+        <text class="status-time">审核时间：{{detail.reviewedAt}}</text>
       </view>
     </view>
 

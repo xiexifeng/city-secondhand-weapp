@@ -99,7 +99,7 @@ Page({
     const statusMap = {
       'auditing': '待审核',
       'active': '已通过',
-      'inactive': '审核不通过'
+      'inactive': '已拒绝'
     };
     return statusMap[status] || '待审核';
   },

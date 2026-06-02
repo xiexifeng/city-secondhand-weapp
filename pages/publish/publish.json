@@ -1,4 +1,5 @@
 {
+  "navigationBarTitleText": "发布",
   "usingComponents": {
     "image-upload": "../../components/image-upload/image-upload"
   }

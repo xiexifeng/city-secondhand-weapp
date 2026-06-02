@@ -5,7 +5,7 @@
     <view class="header-content">
       <view class="header-title-section">
         <text class="heart-icon">❤️</text>
-        <text class="header-title">求换墙</text>
+        <text class="header-title">心愿墙</text>
       </view>
       <view class="header-action" bindtap="navigateToPublish">
         <text class="publish-icon">+</text>
@@ -37,7 +37,7 @@
   <view wx:if="{{sortedWishes.length === 0}}" class="empty-state">
     <text class="empty-icon">📭</text>
     <text class="empty-title">暂无心愿</text>
-    <text class="empty-text">发布你的第一个心愿吧</text>
+    <text class="empty-text">发布您的第一个心愿吧</text>
   </view>
 
   <!-- Wishes List -->
@@ -106,9 +106,9 @@
   <!-- Tips -->
   <view class="tips-container">
     <view class="tips-content">
-      <text class="tips-title">💡 求换墙使用建议</text>
-      <text class="tips-item">• 清楚描述你想要的物品和预期价格</text>
-      <text class="tips-item">• 填写联系方式，便于卖家主动联系你</text>
+      <text class="tips-title">💡 心愿墙使用建议</text>
+      <text class="tips-item">• 清楚描述您想要的物品和预期价格</text>
+      <text class="tips-item">• 填写联系方式，便于有此物品的用户主动联系您</text>
       <text class="tips-item">• 30天未更新的心愿会自动下架</text>
     </view>
   </view>

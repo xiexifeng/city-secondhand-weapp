@@ -4,99 +4,99 @@ Page({
     followersList: [
       {
         id: 1,
-        name: '张三',
-        avatarText: '张',
+        name: '',
+        avatarText: '',
         level: 'active',
         levelIcon: '⭐',
-        status: '活跃用户',
+        status: '',
         isFollowing: true
       },
       {
         id: 2,
-        name: '李四',
-        avatarText: '李',
+        name: '',
+        avatarText: '',
         level: 'new',
         levelIcon: '🌱',
-        status: '新用户',
+        status: '',
         isFollowing: false
       },
       {
         id: 3,
-        name: '王五',
-        avatarText: '王',
+        name: '',
+        avatarText: '',
         level: 'vip',
         levelIcon: '👑',
-        status: 'VIP用户',
+        status: '',
         isFollowing: true
       },
       {
         id: 4,
-        name: '赵六',
-        avatarText: '赵',
+        name: '',
+        avatarText: '',
         level: 'active',
         levelIcon: '⭐',
-        status: '活跃用户',
+        status: '',
         isFollowing: false
       },
       {
         id: 5,
-        name: '孙七',
-        avatarText: '孙',
+        name: '',
+        avatarText: '',
         level: 'new',
         levelIcon: '🌱',
-        status: '新用户',
+        status: '',
         isFollowing: true
       },
       {
         id: 6,
-        name: '周八',
-        avatarText: '周',
+        name: '',
+        avatarText: '',
         level: 'active',
         levelIcon: '⭐',
-        status: '活跃用户',
+        status: '',
         isFollowing: false
       }
     ],
     followingList: [
       {
         id: 1,
-        name: '赵六',
-        avatarText: '赵',
+        name: '',
+        avatarText: '',
         level: 'active',
         levelIcon: '⭐',
-        status: '活跃用户'
+        status: ''
       },
       {
         id: 2,
-        name: '孙七',
-        avatarText: '孙',
+        name: '',
+        avatarText: '',
         level: 'new',
         levelIcon: '🌱',
-        status: '新用户'
+        status: ''
       },
       {
         id: 3,
-        name: '周八',
-        avatarText: '周',
+        name: '',
+        avatarText: '',
         level: 'active',
         levelIcon: '⭐',
-        status: '活跃用户'
+        status: ''
       },
       {
         id: 4,
-        name: '吴九',
-        avatarText: '吴',
+        name: '',
+        avatarText: '',
         level: 'vip',
         levelIcon: '👑',
-        status: 'VIP用户'
+        status: ''
       },
       {
         id: 5,
-        name: '郑十',
-        avatarText: '郑',
+        name: '',
+        avatarText: '',
         level: 'active',
         levelIcon: '⭐',
-        status: '活跃用户'
+        status: ''
       }
     ]
   },

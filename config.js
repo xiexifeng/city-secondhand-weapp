@@ -35,7 +35,7 @@ export const TAGS = [
   { name: '原装配件', selected: false },
   { name: '保修期内', selected: false },
   { name: '无划痕', selected: false },
-  { name: '当面交易', selected: false },
+  { name: '当面交换', selected: false },
   { name: '可小刀', selected: false },
   { name: '包邮', selected: false }
 ];

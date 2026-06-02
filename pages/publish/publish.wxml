@@ -10,8 +10,8 @@
       <view class="publish-option" bindtap="selectPublishType" data-type="sell">
         <view class="option-icon sell">💰</view>
         <view class="option-info">
-          <text class="option-title">人民币出售</text>
-          <text class="option-desc">出售物品，标注价格，等待买家联系</text>
+          <text class="option-title">出售</text>
+          <text class="option-desc">出售物品，标注价格，等待有意者联系</text>
         </view>
         <text class="option-arrow">›</text>
       </view>
@@ -21,17 +21,17 @@
         <view class="option-icon exchange">🔄</view>
         <view class="option-info">
           <text class="option-title">以物换物</text>
-          <text class="option-desc">发布你的物品，说明想要的东西，寻找交换机会</text>
+          <text class="option-desc">发布您的物品，说明想要的东西，寻找交换机会</text>
         </view>
         <text class="option-arrow">›</text>
       </view>
 
-      <!-- 求换墙 -->
+      <!-- 心愿墙 -->
       <view class="publish-option" bindtap="selectPublishType" data-type="wish">
         <view class="option-icon wish">❤️</view>
         <view class="option-info">
-          <text class="option-title">求换墙</text>
-          <text class="option-desc">发布你想要的物品，卖家看到后会主动联系你</text>
+          <text class="option-title">心愿墙</text>
+          <text class="option-desc">发布您想要的物品，有此物品的用户看到后会主动联系您</text>
         </view>
         <text class="option-arrow">›</text>
       </view>
@@ -53,7 +53,7 @@
           </text>
         </view>
 
-        <!-- 图片上传 (不显示在求换墙) -->
+        <!-- 图片上传 (不显示在心愿墙) -->
         <view wx:if="{{publishType !== 'wish'}}" class="form-section">
           <view class="section-header">
             <text class="section-title">上传图片</text>
@@ -147,7 +147,7 @@
           </view>
         </view>
 
-        <!-- 预期价格或交换条件 (仅求换墙) -->
+        <!-- 预期价格或交换条件 (仅心愿墙) -->
         <view wx:if="{{publishType === 'wish'}}" class="form-section">
           <view class="section-header">
             <text class="section-title">预期价格或交换条件</text>
@@ -167,7 +167,7 @@
           </view>
         </view>
 
-        <!-- Tags (不显示在求换墙) -->
+        <!-- Tags (不显示在心愿墙) -->
         <view wx:if="{{publishType !== 'wish'}}" class="form-section">
           <view class="section-header">
             <text class="section-title">标签</text>
@@ -199,7 +199,7 @@
           </picker>
         </view>
 
-        <!-- 物品成色 (不显示在求换墙) -->
+        <!-- 物品成色 (不显示在心愿墙) -->
         <view wx:if="{{publishType !== 'wish'}}" class="form-section">
           <view class="section-header">
             <text class="section-title">物品成色</text>
@@ -210,7 +210,7 @@
               <text class="picker-arrow">›</text>
             </view>
           </picker>
-          <text class="section-hint">帮助买家了解物品的使用状况</text>
+          <text class="section-hint">帮助对方了解物品的使用状况</text>
         </view>
 
         <!-- 位置选择 -->
@@ -225,7 +225,7 @@
             </view>
             <text class="location-arrow">›</text>
           </view>
-          <text class="section-hint">设置交易地点可以提高交易成功率</text>
+          <text class="section-hint">设置交换地点可以提高交换成功率</text>
         </view>
 
         <!-- 联系方式设置 (可折叠) -->
@@ -251,7 +251,7 @@
               </label>
             </view>
 
-            <text class="section-hint">选择买家可以看到的联系方式，保护您的隐私</text>
+            <text class="section-hint">选择对方可以看到的联系方式，保护您的隐私</text>
           </view>
         </view>
 
@@ -297,7 +297,7 @@
 
         <!-- 联系方式提示 -->
         <view class="form-section">
-          <text class="section-hint">完整的联系方式可以提高交易成功率</text>
+          <text class="section-hint">完整的联系方式可以提高交换成功率</text>
         </view>
 
 
@@ -311,7 +311,7 @@
           
           <!-- 发布按钮 -->
           <button class="btn-publish {{(!agreed || !canPublish || isSubmitting) ? 'btn-disabled' : ''}}" bindtap="handlePublish" disabled="{{!agreed || !canPublish || isSubmitting}}">
-            {{isSubmitting ? '发布中...' : (readCountdown > 0 ? '阅读中 ' + readCountdown + 's' : '发布')}}
+            {{isSubmitting ? '发布中...' : (readCountdown > 0 ? '剩余 ' + readCountdown + ' 秒' : '发布')}}
           </button>
         </view>
 
@@ -323,9 +323,9 @@
           </view>
           <view class="disclaimer-content">
             <text class="disclaimer-item">• 发布的物品信息必须真实有效</text>
-            <text class="disclaimer-item">• 禁止发布违法违规、虚假、骗诈内容</text>
+            <text class="disclaimer-item">• 禁止发布违法违规、虚假、欺诈内容</text>
             <text class="disclaimer-item">• 禁止发布违禁品、侵权商品</text>
-            <text class="disclaimer-item">• 平台不介入交易纠纷，请自行协商</text>
+            <text class="disclaimer-item">• 平台不介入交换纠纷，请自行协商</text>
           </view>
         </view>
 

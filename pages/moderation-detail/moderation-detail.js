@@ -171,7 +171,7 @@ Page({
     wx.openLocation({
       latitude: latitude,
       longitude: longitude,
-      name: '交易地点',
+      name: '交换地点',
       address: location.address,
       scale: 15
     });
