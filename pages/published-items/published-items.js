@@ -2,7 +2,7 @@
 const { formatDate } = require('../../utils/format');
 const { getReviewStatusLabel, getReviewStatusClass, getTransferStatusLabel, getTransferStatusClass } = require('../../utils/enums');
 const { TRANSFER_STATUS } = require('../../utils/enums');
-
+const app = getApp()
 Page({
   data: {
     items: [],
@@ -126,7 +126,8 @@ Page({
    * Navigate to publish
    */
   navigateToPublish: function() {
-    wx.navigateTo({
+    app.globalData.publishType = 'exchange';
+    wx.switchTab({
       url: '/pages/publish/publish'
     });
   },

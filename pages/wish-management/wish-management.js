@@ -1,6 +1,6 @@
 const { wishAPI } = require('../../utils/api');
 const { WISH_STATUS, WISH_STATUS_LABELS, getWishStatusClass } = require('../../utils/enums');
-
+const app = getApp()
 Page({
   data: {
     activeCount: 0,
@@ -287,7 +287,8 @@ Page({
    * Navigate to publish
    */
   navigateToPublish: function() {
-    wx.navigateTo({
+    app.globalData.publishType = 'wish';
+    wx.switchTab({
       url: '/pages/publish/publish'
     });
   },
