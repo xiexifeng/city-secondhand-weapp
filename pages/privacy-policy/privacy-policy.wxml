@@ -183,8 +183,7 @@
       <text class="section-title">9. 隐私保护承诺</text>
       <text class="section-content">
         - 平台仅收集<text style="font-weight: bold;">提供服务所必需的最少信息</text>
-        - 平台<text style="font-weight: bold;">不存储用户之间的私信聊天记录</text>
-        - 用户联系方式<text style="font-weight: bold;">仅对达成匹配意向的对方展示</text>（如平台提供此功能）
+        - 用户联系方式的展示<text style="font-weight: bold;">由用户自主决定</text>，平台不主动向第三方展示
         - 平台<text style="font-weight: bold;">不向第三方出售、提供用户个人信息</text>
       </text>
     </view>
