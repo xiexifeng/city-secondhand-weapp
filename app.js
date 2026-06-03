@@ -69,11 +69,7 @@ App({
               resolve(responseData)
             }
           } else if (res.statusCode === 401) {
-            this.globalData.token = null
-            this.globalData.userInfo = null
-            wx.removeStorageSync('token')
-            wx.removeStorageSync('userInfo')
-            wx.reLaunch({ url: '/pages/login/login' })
+            that.clearLoginInfo()
             reject(res.data)
           } else {
             reject(res.data)
@@ -190,6 +186,17 @@ App({
       longitude,
       locationDetails: locationDetails || null
     })
+  },
+
+  // 清除登录信息并跳转到登录页
+  clearLoginInfo() {
+    this.globalData.token = null
+    this.globalData.userInfo = null
+    this.globalData.userPhone = null
+    wx.removeStorageSync('token')
+    wx.removeStorageSync('userInfo')
+    wx.removeStorageSync('userPhone')
+    wx.reLaunch({ url: '/pages/login/login' })
   },
 
   // 清除定位缓存（同时清除 globalData 和 Storage）

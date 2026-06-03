@@ -155,16 +155,13 @@ Page({
               duration: 1500
             });
             const app = getApp();
-            app.globalData.token = null;
-            app.globalData.userInfo = null;
-            app.globalData.userPhone = null;
-            wx.removeStorageSync('token');
-            wx.removeStorageSync('userInfo');
-            wx.removeStorageSync('userPhone');
+            wx.showToast({
+              title: '登录已过期，请重新登录',
+              icon: 'none',
+              duration: 1500
+            });
             setTimeout(() => {
-              wx.reLaunch({
-                url: '/pages/login/login'
-              });
+              app.clearLoginInfo();
             }, 1500);
           }else{
             wx.showToast({
@@ -358,15 +355,7 @@ Page({
           const api = require('../../utils/api');
           const app = getApp();
           api.userAPI.logout().catch(() => {});
-          app.globalData.token = null;
-          app.globalData.userInfo = null;
-          app.globalData.userPhone = null;
-          wx.removeStorageSync('token');
-          wx.removeStorageSync('userInfo');
-          wx.removeStorageSync('userPhone');
-          wx.reLaunch({
-            url: '/pages/login/login'
-          });
+          app.clearLoginInfo();
         }
       }
     });

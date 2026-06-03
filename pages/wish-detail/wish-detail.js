@@ -10,7 +10,7 @@ Page({
     wishId: null,
     showReportModal: false,
     showSafetyDetails: false,
-    isLoggedIn: true,
+    isLoggedIn: false,
     markers: [],
     liked: false,
     collected: false,
@@ -22,7 +22,16 @@ Page({
   onLoad: function(options) {
     const wishId = options.id;
     this.setData({ wishId: wishId });
+    this.checkLoginStatus();
     this.getLocationAndLoadWishDetail(wishId);
+  },
+
+  /**
+   * Check login status
+   */
+  checkLoginStatus: function() {
+    const token = wx.getStorageSync('token');
+    this.setData({ isLoggedIn: !!token });
   },
 
   async getLocationAndLoadWishDetail(wishId) {
@@ -121,13 +130,8 @@ Page({
 
   handleShare: function() {
     wx.showShareMenu({
-      withShareTicket: false,
+      withShareTicket: true,
       menus: ['shareAppMessage', 'shareTimeline']
-    });
-    wx.showToast({
-      title: '请点击右上角进行分享',
-      icon: 'none',
-      duration: 1600
     });
   },
 
@@ -287,9 +291,21 @@ Page({
 
   onShareAppMessage: function() {
     const wish = this.data.wish || {};
+    const title = wish.title || '心愿推荐';
+    const budgetInfo = wish.budget ? `，预算${wish.budget}` : '';
     return {
-      title: wish.title ? `${wish.title} - 心愿详情` : '心愿详情',
+      title: `✨ ${title}${budgetInfo}！来换换么帮TA实现心愿吧`,
       path: `/pages/wish-detail/wish-detail?id=${wish.id || ''}`
+    };
+  },
+
+  onShareTimeline: function() {
+    const wish = this.data.wish || {};
+    const title = wish.title || '心愿推荐';
+    const budgetInfo = wish.budget ? `，预算${wish.budget}` : '';
+    return {
+      title: `✨ ${title}${budgetInfo}！换换么心愿墙，闲置交换环保又省钱`,
+      query: `id=${wish.id || ''}`
     };
   }
 });

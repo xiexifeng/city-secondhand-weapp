@@ -329,8 +329,29 @@ Page({
   // Share
   handleShare: function() {
     wx.showShareMenu({
-      withShareTicket: true
+      withShareTicket: true,
+      menus: ['shareAppMessage', 'shareTimeline']
     });
+  },
+
+  onShareAppMessage: function() {
+    const { item } = this.data;
+    const title = item.title || '好物推荐';
+    const priceInfo = item.method === 'sell' ? `仅售¥${item.price}` : '以物换物';
+    return {
+      title: `🎁 ${title}，${priceInfo}！快来看看换换么上的好物吧`,
+      path: `/pages/item-detail/item-detail?id=${item.id || ''}`
+    };
+  },
+
+  onShareTimeline: function() {
+    const { item } = this.data;
+    const title = item.title || '好物推荐';
+    const priceInfo = item.method === 'sell' ? `仅售¥${item.price}` : '以物换物';
+    return {
+      title: `🎁 ${title}，${priceInfo}！换换么闲置交换，环保又省钱`,
+      query: `id=${item.id || ''}`
+    };
   },
 
   // Back
