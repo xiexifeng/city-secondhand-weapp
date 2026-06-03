@@ -91,24 +91,14 @@ Page({
   },
 
   onLoad: function() {
-    const token = wx.getStorageSync('token');
-    if (!token) {
-      wx.reLaunch({
-        url: '/pages/login/login'
-      });
-      return;
-    }
+    const app = getApp();
+    if (!app.requireLogin()) return;
     this.initData();
   },
 
   onShow: function() {
-    const token = wx.getStorageSync('token');
-    if (!token) {
-      wx.reLaunch({
-        url: '/pages/login/login'
-      });
-      return;
-    }
+    const app = getApp();
+    if (!app.requireLogin()) return;
     this.initData();
   },
 
@@ -155,11 +145,6 @@ Page({
               duration: 1500
             });
             const app = getApp();
-            wx.showToast({
-              title: '登录已过期，请重新登录',
-              icon: 'none',
-              duration: 1500
-            });
             setTimeout(() => {
               app.clearLoginInfo();
             }, 1500);

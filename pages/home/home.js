@@ -54,17 +54,14 @@ Page({
    * Check login status
    */
   checkLoginStatus: function() {
-    const token = wx.getStorageSync('token');
-    this.setData({ isLoggedIn: !!token });
+    this.setData({ isLoggedIn: app.isLoggedIn() });
   },
 
   /**
    * Navigate to login
    */
   navigateToLogin: function() {
-    wx.navigateTo({
-      url: '/pages/login/login'
-    });
+    app.goToLogin();
   },
 
   onHide() {
@@ -280,10 +277,9 @@ Page({
   async checkAuditStatus() {
     console.log('=== checkAuditStatus start ===');
     
-    const token = wx.getStorageSync('token');
-    console.log('Token exists:', !!token);
+    console.log('Token exists:', app.isLoggedIn());
     
-    if (!token) {
+    if (!app.isLoggedIn()) {
       console.log('No token, setting showAuditIcon to false');
       this.setData({ showAuditIcon: false, auditCount: 0 });
       return;

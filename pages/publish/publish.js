@@ -62,11 +62,6 @@ Page({
   data: DEFAULT_DATA,
 
   onLoad: function(options) {
-    const token = wx.getStorageSync('token');
-    if (!token) {
-      wx.reLaunch({ url: '/pages/login/login' });
-      return;
-    }
     this.loadCachedLocation();
     this.checkEditMode();
   },
@@ -257,42 +252,6 @@ Page({
     this.setData({ publishType: null, tags: [] });
   },
 
-  handleUploadImage: function() {
-    const { images } = this.data;
-    if (images.length >= 9) {
-      wx.showToast({ title: '最多上传9张图片', icon: 'none' });
-      return;
-    }
-
-    wx.chooseImage({
-      count: 9 - images.length,
-      sizeType: ['compressed'],
-      sourceType: ['album', 'camera'],
-      success: (res) => {
-        this.uploadImages(res.tempFilePaths);
-      }
-    });
-  },
-
-  uploadImages: async function(tempFilePaths) {
-    const { images } = this.data;
-    const uploadedImages = [...images];
-
-    for (const tempFilePath of tempFilePaths) {
-      try {
-        wx.showLoading({ title: '上传中...', mask: true });
-        const uploadResult = await fileAPI.uploadImage(tempFilePath);
-        uploadedImages.push(uploadResult.data.fileUrl);
-        this.setData({ images: uploadedImages });
-      } catch (error) {
-        console.error('图片上传失败:', error);
-        wx.showToast({ title: '图片上传失败，请重试', icon: 'none' });
-      } finally {
-        wx.hideLoading();
-      }
-    }
-  },
-
   handleImageChange: function(e) {
     const { images } = e.detail;
     this.setData({ images });
@@ -396,6 +355,12 @@ Page({
   },
 
   handlePublish: async function() {
+    const app = getApp();
+    if (!app.isLoggedIn()) {
+      app.goToLogin();
+      return;
+    }
+
     const { agreed, formData, publishType, images, canPublish, editingId, isSubmitting } = this.data;
 
     if (isSubmitting) return;

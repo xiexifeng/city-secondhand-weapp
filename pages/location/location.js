@@ -18,13 +18,6 @@ Page({
   },
 
   onLoad: function(options) {
-    const token = wx.getStorageSync('token');
-    if (!token) {
-      wx.reLaunch({
-        url: '/pages/login/login'
-      });
-      return;
-    }
     this.loadCachedLocation();
   },
 

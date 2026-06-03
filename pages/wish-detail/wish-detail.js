@@ -30,8 +30,7 @@ Page({
    * Check login status
    */
   checkLoginStatus: function() {
-    const token = wx.getStorageSync('token');
-    this.setData({ isLoggedIn: !!token });
+    this.setData({ isLoggedIn: app.isLoggedIn() });
   },
 
   async getLocationAndLoadWishDetail(wishId) {
@@ -152,7 +151,7 @@ Page({
   handleRevealContact: function() {
     if (this.data.contactRevealed) return;
     if (!this.data.isLoggedIn) {
-      wx.navigateTo({ url: '/pages/login/login' });
+      app.goToLogin();
       return;
     }
     wx.showLoading({ title: '加载中...' });
@@ -213,8 +212,11 @@ Page({
     wx.showToast({
       title: '请先登录',
       icon: 'none',
-      duration: 2000
+      duration: 1500
     });
+    setTimeout(() => {
+      app.goToLogin();
+    }, 1500);
   },
 
   handleNavigate: function() {

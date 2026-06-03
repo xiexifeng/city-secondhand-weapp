@@ -377,7 +377,7 @@ const collectionAPI = {
 const fileAPI = {
   uploadImage(filePath) {
     return new Promise((resolve, reject) => {
-      const token = wx.getStorageSync('token')
+      const token = app.globalData.token
 
       wx.uploadFile({
         url: app.globalData.baseUrl + '/basic/oss/uploadFile',

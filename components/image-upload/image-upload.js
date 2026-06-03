@@ -29,6 +29,12 @@ Component({
      * 选择图片
      */
     handleAdd: function() {
+      const app = getApp();
+      if (!app.isLoggedIn()) {
+        app.goToLogin();
+        return;
+      }
+
       const { images, maxCount } = this.data;
       if (images.length >= maxCount) {
         wx.showToast({

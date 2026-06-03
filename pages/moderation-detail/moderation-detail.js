@@ -12,13 +12,8 @@ Page({
   },
 
   onLoad: function(options) {
-    const token = wx.getStorageSync('token');
-    if (!token) {
-      wx.reLaunch({
-        url: '/pages/login/login'
-      });
-      return;
-    }
+    const app = getApp();
+    if (!app.requireLogin()) return;
     const itemId = options.id;
     if (itemId) {
       this.loadDetail(itemId);

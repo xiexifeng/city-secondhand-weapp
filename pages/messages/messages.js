@@ -15,20 +15,14 @@ Page({
   },
 
   onLoad: function() {
-    const token = wx.getStorageSync('token');
-    if (!token) {
-      wx.reLaunch({ url: '/pages/login/login' });
-      return;
-    }
+    const app = getApp();
+    if (!app.requireLogin()) return;
     this.loadMessages();
   },
 
   onShow: function() {
-    const token = wx.getStorageSync('token');
-    if (!token) {
-      wx.reLaunch({ url: '/pages/login/login' });
-      return;
-    }
+    const app = getApp();
+    if (!app.requireLogin()) return;
     this.setData({ messages: [], filteredMessages: [], page: 1, hasMore: true });
     this.loadMessages(true);
   },

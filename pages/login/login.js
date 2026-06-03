@@ -6,6 +6,7 @@ Page({
     codeSent: false,
     codeCountdown: 60,
     isLoggingIn: false,
+    isWechatLoggingIn: false,
     showAgreementModal: false,
     agreementTitle: '',
     agreementContent: '',
@@ -31,8 +32,8 @@ Page({
   },
 
   checkLoginStatus: function() {
-    const token = wx.getStorageSync('token');
-    if (token) {
+    const app = getApp();
+    if (app.isLoggedIn()) {
       console.log('已登录，跳转到首页');
       wx.switchTab({
         url: '/pages/home/home'
@@ -43,6 +44,10 @@ Page({
   onGetPhoneNumber(e) {
     // Check agreement
     if (!this.checkAgreement()) {
+      return;
+    }
+
+    if (this.data.isWechatLoggingIn) {
       return;
     }
     
@@ -65,8 +70,11 @@ Page({
    * Get phone number from WeChat
    */
   getPhoneNumber: function(code, phoneDetail) {
-    const { inviterId } = this.data;
+    const { inviterId, isWechatLoggingIn } = this.data;
     
+    if (isWechatLoggingIn) return;
+    this.setData({ isWechatLoggingIn: true });
+
     wx.showLoading({
       title: '登录中...'
     });
@@ -77,16 +85,9 @@ Page({
     api.userAPI.wechatLogin(code, phoneDetail.encryptedData, phoneDetail.iv, inviterId)
       .then(res => {
         wx.hideLoading();
+        this.setData({ isWechatLoggingIn: false });
 
-        // Save token and user info
-        wx.setStorageSync('token', res.token);
-        wx.setStorageSync('userPhone', res.phone);
-        wx.setStorageSync('userInfo', res.userContext);
-        
-        // Update global data
-        app.globalData.token = res.token;
-        app.globalData.userInfo = res.userContext;
-        app.globalData.userPhone = res.phone;
+        app.saveLoginInfo(res.token, res.phone, res.userContext);
 
         // 清除临时保存的邀请者ID
         wx.removeStorageSync('inviterId');
@@ -98,13 +99,12 @@ Page({
         });
 
         setTimeout(() => {
-          wx.switchTab({
-            url: '/pages/home/home'
-          });
+          app.navigateAfterLogin();
         }, 1500);
       })
       .catch(err => {
         wx.hideLoading();
+        this.setData({ isWechatLoggingIn: false });
         wx.showToast({
           title: '登录失败',
           icon: 'none'
@@ -263,15 +263,7 @@ Page({
       .then(res => {
         this.setData({ isLoggingIn: false });
 
-        // Save token and user info
-        wx.setStorageSync('token', res.token);
-        wx.setStorageSync('userPhone', res.phone);
-        wx.setStorageSync('userInfo', res.userContext);
-        
-        // Update global data
-        app.globalData.token = res.token;
-        app.globalData.userInfo = res.userContext;
-        app.globalData.userPhone = res.phone;
+        app.saveLoginInfo(res.token, res.phone, res.userContext);
 
         // 清除临时保存的邀请者ID
         wx.removeStorageSync('inviterId');
@@ -283,9 +275,7 @@ Page({
         });
 
         setTimeout(() => {
-          wx.switchTab({
-            url: '/pages/home/home'
-          });
+          app.navigateAfterLogin();
         }, 1500);
       })
       .catch(err => {
@@ -342,8 +332,8 @@ Page({
    * Handle page unload (including back button)
    */
   onUnload: function() {
-    const token = wx.getStorageSync('token');
-    if (!token) {
+    const app = getApp();
+    if (!app.isLoggedIn()) {
       setTimeout(() => {
         wx.reLaunch({
           url: '/pages/home/home'

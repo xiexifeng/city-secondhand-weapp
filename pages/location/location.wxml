@@ -5,7 +5,7 @@
     <view class="header-left" bindtap="handleBack">
       <text>←</text>
     </view>
-    <view class="header-title">选择位置</view>
+    <!-- <view class="header-title">选择位置</view> -->
     <view class="header-right" bindtap="confirmLocation">
       <text class="confirm-btn">确认</text>
     </view>

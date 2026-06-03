@@ -120,17 +120,14 @@ Page({
    * Check login status
    */
   checkLoginStatus: function() {
-    const token = wx.getStorageSync('token');
-    this.setData({ isLoggedIn: !!token });
+    this.setData({ isLoggedIn: app.isLoggedIn() });
   },
 
   /**
    * Navigate to login
    */
   navigateToLogin: function() {
-    wx.navigateTo({
-      url: '/pages/login/login'
-    });
+    app.goToLogin();
   },
 
   /**
@@ -273,7 +270,7 @@ Page({
   handleRevealContact: function() {
     if (this.data.contactRevealed) return;
     if (!this.data.isLoggedIn) {
-      wx.navigateTo({ url: '/pages/login/login' });
+      app.goToLogin();
       return;
     }
     wx.showLoading({ title: '加载中...' });

@@ -18,24 +18,14 @@ Page({
   },
 
   onLoad: function() {
-    const token = wx.getStorageSync('token');
-    if (!token) {
-      wx.reLaunch({
-        url: '/pages/login/login'
-      });
-      return;
-    }
+    const app = getApp();
+    if (!app.requireLogin()) return;
     this.getMyItems();
   },
 
   onShow: function() {
-    const token = wx.getStorageSync('token');
-    if (!token) {
-      wx.reLaunch({
-        url: '/pages/login/login'
-      });
-      return;
-    }
+    const app = getApp();
+    if (!app.requireLogin()) return;
     this.setData({ pageNo: 1, hasMore: true, items: [] });
     this.getMyItems(true);
   },

@@ -9,7 +9,9 @@ App({
     editWishId: null,
     latitude: null,   // 全局纬度
     longitude: null,  // 全局经度
-    locationDetails: null  // 位置详情（省市区和地址）
+    locationDetails: null,  // 位置详情（省市区和地址）
+    _isClearingLogin: false,  // 防止并发清理登录态
+    _redirectPath: null  // 登录后重定向路径
   },
 
   onLaunch() {
@@ -69,7 +71,7 @@ App({
               resolve(responseData)
             }
           } else if (res.statusCode === 401) {
-            that.clearLoginInfo()
+            this.clearLoginInfo()
             reject(res.data)
           } else {
             reject(res.data)
@@ -190,13 +192,89 @@ App({
 
   // 清除登录信息并跳转到登录页
   clearLoginInfo() {
+    if (this.globalData._isClearingLogin) return
+    this.globalData._isClearingLogin = true
+
+    this._saveRedirectPath()
+
     this.globalData.token = null
     this.globalData.userInfo = null
     this.globalData.userPhone = null
     wx.removeStorageSync('token')
     wx.removeStorageSync('userInfo')
     wx.removeStorageSync('userPhone')
-    wx.reLaunch({ url: '/pages/login/login' })
+    wx.reLaunch({
+      url: '/pages/login/login',
+      complete: () => {
+        this.globalData._isClearingLogin = false
+      }
+    })
+  },
+
+  // 判断是否已登录
+  isLoggedIn() {
+    return !!this.globalData.token
+  },
+
+  // 要求登录，未登录则跳转登录页，返回是否已登录
+  requireLogin() {
+    if (!this.globalData.token) {
+      this._saveRedirectPath()
+      wx.reLaunch({ url: '/pages/login/login' })
+      return false
+    }
+    return true
+  },
+
+  // 跳转登录页（用于软检查页面，保存重定向路径后跳转）
+  goToLogin() {
+    this._saveRedirectPath()
+    wx.navigateTo({ url: '/pages/login/login' })
+  },
+
+  // 保存登录信息（登录成功后调用）
+  saveLoginInfo(token, phone, userInfo) {
+    this.globalData.token = token
+    this.globalData.userInfo = userInfo
+    this.globalData.userPhone = phone
+    wx.setStorageSync('token', token)
+    wx.setStorageSync('userPhone', phone)
+    wx.setStorageSync('userInfo', userInfo)
+  },
+
+  // 保存当前页面路径用于登录后重定向
+  _saveRedirectPath() {
+    const pages = getCurrentPages()
+    if (pages.length === 0) return
+    const current = pages[pages.length - 1]
+    const path = '/' + current.route
+    // 排除登录页本身
+    if (path === '/pages/login/login') return
+    const options = current.options || {}
+    const query = Object.keys(options)
+      .map(key => `${key}=${encodeURIComponent(options[key])}`)
+      .join('&')
+    this.globalData._redirectPath = query ? `${path}?${query}` : path
+  },
+
+  // 登录成功后跳转：有重定向路径则跳回，否则跳首页
+  navigateAfterLogin() {
+    const redirectPath = this.globalData._redirectPath
+    this.globalData._redirectPath = null
+
+    if (redirectPath) {
+      const tabBarPages = ['pages/home/home', 'pages/wish-wall/wish-wall', 'pages/publish/publish', 'pages/messages/messages', 'pages/profile/profile']
+      const isTabBar = tabBarPages.some(p => redirectPath.startsWith('/' + p))
+
+      if (isTabBar) {
+        wx.switchTab({ url: redirectPath.split('?')[0] })
+      } else {
+        // 通过 goToLogin(navigateTo) 进入的，登录页在页面栈顶部，reLaunch回原页面
+        wx.reLaunch({ url: redirectPath })
+      }
+    } else {
+      wx.switchTab({ url: '/pages/home/home' })
+    }
   },
 
   // 清除定位缓存（同时清除 globalData 和 Storage）
