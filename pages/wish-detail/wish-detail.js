@@ -1,5 +1,6 @@
 // pages/wish-detail/wish-detail.js
 const { wishWallAPI } = require('../../utils/api.js')
+const { itemAPI } = require('../../utils/api.js')
 const { formatRelativeTime, formatDistance } = require('../../utils/format.js')
 const app = getApp()
 
@@ -14,7 +15,8 @@ Page({
     liked: false,
     collected: false,
     latitude: null,
-    longitude: null
+    longitude: null,
+    contactRevealed: false
   },
 
   onLoad: function(options) {
@@ -141,6 +143,35 @@ Page({
     this.setData({
       showSafetyDetails: !this.data.showSafetyDetails
     });
+  },
+
+  handleRevealContact: function() {
+    if (this.data.contactRevealed) return;
+    if (!this.data.isLoggedIn) {
+      wx.navigateTo({ url: '/pages/login/login' });
+      return;
+    }
+    wx.showLoading({ title: '加载中...' });
+    itemAPI.viewContact(this.data.wishId, 'WISH')
+      .then(res => {
+        wx.hideLoading();
+        this.setData({
+          'wish.contact.wechat': res.wechat || '',
+          'wish.contact.phone': res.phone || '',
+          contactRevealed: true
+        });
+        if(res.code){
+          if (res.code === '000101') {
+            wx.showToast({ title: '今日查看次数已达上限', icon: 'none' });
+          } else {
+            wx.showToast({ title: '获取联系方式失败', icon: 'none' });
+          }
+        }
+      })
+      .catch(err => {
+        wx.hideLoading();
+        wx.showToast({ title: '获取联系方式失败', icon: 'none' });
+      });
   },
 
   handleContactWechat: function() {

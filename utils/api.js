@@ -69,6 +69,13 @@ const itemAPI = {
     })
   },
 
+  viewContact(targetId, targetType) {
+    return app.request({
+      url: `/client/square/view-contact/${targetId}?targetType=${targetType || 'ITEM'}`,
+      method: 'POST'
+    })
+  },
+
   publishItem(data) {
     return app.request({
       url: '/client/item/publish',

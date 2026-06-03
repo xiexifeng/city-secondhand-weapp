@@ -149,8 +149,8 @@
     <view class="contact-section">
       <text class="section-title">联系方式</text>
       
-      <!-- 登录状态 -->
-      <view wx:if="{{isLoggedIn}}">
+      <!-- 已展开完整联系方式 -->
+      <view wx:if="{{contactRevealed}}">
         <view wx:if="{{item.contact.wechat}}" class="contact-item" bindtap="handleContactWechat">
           <view class="contact-icon">💬</view>
           <view class="contact-info">
@@ -168,26 +168,25 @@
           <view class="contact-action">拨打</view>
         </view>
       </view>
-      
+
+      <!-- 未展开：脱敏展示 + 点击查看 -->
       <view wx:else>
-        <view wx:if="{{item.contact.wechat}}" class="contact-item" bindtap="navigateToLogin">
+        <view wx:if="{{item.contact.wechat}}" class="contact-item contact-item-masked">
           <view class="contact-icon">💬</view>
           <view class="contact-info">
             <text class="contact-label">微信</text>
-            <text class="contact-value">{{item.contact.wechat}}</text>
+            <text class="contact-value masked">{{item.contact.wechat}}</text>
           </view>
-          <view class="contact-action">登录查看</view>
         </view>
-        <view wx:if="{{item.contact.phone}}" class="contact-item" bindtap="navigateToLogin">
+        <view wx:if="{{item.contact.phone}}" class="contact-item contact-item-masked">
           <view class="contact-icon">☎️</view>
           <view class="contact-info">
             <text class="contact-label">电话</text>
-            <text class="contact-value">{{item.contact.phone}}</text>
+            <text class="contact-value masked">{{item.contact.phone}}</text>
           </view>
-          <view class="contact-action">登录查看</view>
         </view>
-        <view class="login-prompt" bindtap="navigateToLogin">
-          <view class="login-prompt-text">🔐 登录后查看完整联系方式</view>
+        <view class="reveal-contact-btn" bindtap="handleRevealContact">
+          <text class="reveal-contact-text">🔐 点击查看完整联系方式</text>
         </view>
       </view>
     </view>

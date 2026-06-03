@@ -506,23 +506,31 @@ page {
   font-weight: 600;
 }
 
-.login-prompt {
+.contact-item-masked {
+  opacity: 0.7;
+}
+
+.contact-value.masked {
+  letter-spacing: 2rpx;
+}
+
+.reveal-contact-btn {
   margin-top: 12rpx;
   padding: 16rpx;
-  background-color: #f3f4f6;
+  background: linear-gradient(135deg, #ecfdf5, #d1fae5);
+  border: 1rpx solid #a7f3d0;
   border-radius: 8rpx;
   text-align: center;
-  cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
 }
 
-.login-prompt:hover {
-  background-color: #e5e7eb;
+.reveal-contact-btn:active {
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
 }
 
-.login-prompt-text {
+.reveal-contact-text {
   font-size: 24rpx;
-  color: #10b981;
+  color: #059669;
   font-weight: 600;
 }
 

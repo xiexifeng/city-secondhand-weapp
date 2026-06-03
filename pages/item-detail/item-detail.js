@@ -13,7 +13,8 @@ Page({
     showSafetyDetails: true,
     copied: false,
     showReportModal: false,
-    loading: true
+    loading: true,
+    contactRevealed: false
   },
 
   onLoad: function(options) {
@@ -257,6 +258,40 @@ Page({
   // Safety details toggle
   handleToggleSafetyDetails: function() {
     this.setData({ showSafetyDetails: !this.data.showSafetyDetails });
+  },
+
+  handleRevealContact: function() {
+    if (this.data.contactRevealed) return;
+    if (!this.data.isLoggedIn) {
+      wx.navigateTo({ url: '/pages/login/login' });
+      return;
+    }
+    wx.showLoading({ title: '加载中...' });
+    itemAPI.viewContact(this.data.itemId, 'ITEM')
+      .then(res => {
+        wx.hideLoading();
+        this.setData({
+          'item.contact.wechat': res.wechat || '',
+          'item.contact.phone': res.phone || '',
+          contactRevealed: true
+        });
+        if(res.code){
+          if (res.code === '000101') {
+            wx.showToast({ title: '今日查看次数已达上限', icon: 'none' });
+          } else {
+            wx.showToast({ title: '获取联系方式失败', icon: 'none' });
+          }
+        }
+        
+      })
+      .catch(err => {
+        wx.hideLoading();
+        if (err && err.errCode === '000101') {
+          wx.showToast({ title: '今日查看次数已达上限', icon: 'none' });
+        } else {
+          wx.showToast({ title: '获取联系方式失败', icon: 'none' });
+        }
+      });
   },
 
   // Contact methods
