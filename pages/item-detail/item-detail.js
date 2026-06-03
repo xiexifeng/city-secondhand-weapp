@@ -177,6 +177,16 @@ Page({
     this.setData({ currentImageIndex: index });
   },
 
+  // Preview image fullscreen
+  handlePreviewImage: function() {
+    const { item, currentImageIndex } = this.data;
+    if (!item.images || item.images.length === 0) return;
+    wx.previewImage({
+      current: item.images[currentImageIndex],
+      urls: item.images
+    });
+  },
+
   // Like (interested)
   handleLike: function() {
     const { liked, itemId, isLoggedIn } = this.data;
