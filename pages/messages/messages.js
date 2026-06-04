@@ -1,5 +1,5 @@
 const { messageAPI, reportAPI } = require('../../utils/api');
-const { formatRelativeTime } = require('../../utils/helpers.js');
+const { formatRelativeTime } = require('../../utils/format.js');
 
 Page({
   data: {
@@ -51,7 +51,7 @@ Page({
       const newMessages = res.map(msg => ({
         ...msg,
         read: msg.status === 2,
-        createdAt: msg.createTime,
+        createdAt: this.formatDate(msg.createTime),
         type: msg.notificationType ? (String(msg.notificationType).toUpperCase() === 'REPORT' ? 'report' : 
               String(msg.notificationType).toUpperCase() === 'AUDIT' ? 'alert' :
               String(msg.notificationType).toUpperCase() === 'TRADE' ? 'activity' :
