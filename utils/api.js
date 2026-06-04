@@ -127,6 +127,13 @@ const itemAPI = {
       url: `/client/item/urgent/${itemId}?urgent=${urgent}`,
       method: 'POST'
     })
+  },
+
+  getMyItemStats() {
+    return app.request({
+      url: '/client/item/stats',
+      method: 'POST'
+    })
   }
 }
 
@@ -323,6 +330,13 @@ const wishAPI = {
   updateWishStatus(wishId, status) {
     return app.request({
       url: `/client/wish/status/${wishId}?status=${status}`,
+      method: 'POST'
+    })
+  },
+
+  getMyWishStats() {
+    return app.request({
+      url: '/client/wish/stats',
       method: 'POST'
     })
   }

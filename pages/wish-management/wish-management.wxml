@@ -4,17 +4,21 @@
 
   <!-- Stats Cards -->
   <view class="stats-section">
-    <view class="stat-card">
-      <text class="stat-value">{{activeCount}}</text>
-      <text class="stat-label">活跃心愿</text>
+    <view class="stat-card {{activeFilter === '' ? 'active' : ''}}" bindtap="handleFilterTap" data-filter="">
+      <text class="stat-value">{{stats.totalCount}}</text>
+      <text class="stat-label">总发布</text>
     </view>
-    <view class="stat-card">
-      <text class="stat-value">{{totalInterests}}</text>
-      <text class="stat-label">总感兴趣</text>
+    <view class="stat-card {{activeFilter === 'auditing' ? 'active' : ''}}" bindtap="handleFilterTap" data-filter="auditing">
+      <text class="stat-value">{{stats.auditing}}</text>
+      <text class="stat-label">待审核</text>
     </view>
-    <view class="stat-card">
-      <text class="stat-value">{{totalViews}}</text>
-      <text class="stat-label">总浏览</text>
+    <view class="stat-card {{activeFilter === 'active' ? 'active' : ''}}" bindtap="handleFilterTap" data-filter="active">
+      <text class="stat-value">{{stats.active}}</text>
+      <text class="stat-label">进行中</text>
+    </view>
+    <view class="stat-card {{activeFilter === 'achieved' ? 'active' : ''}}" bindtap="handleFilterTap" data-filter="achieved">
+      <text class="stat-value">{{stats.achieved}}</text>
+      <text class="stat-label">已达成</text>
     </view>
   </view>
 

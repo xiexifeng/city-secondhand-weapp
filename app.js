@@ -5,13 +5,15 @@ App({
     token: null,
     userPhone: null,
     baseUrl: 'http://127.0.0.1/tradex', // xtrade后端地址
+    
     editItemId: null,
     editWishId: null,
     latitude: null,   // 全局纬度
     longitude: null,  // 全局经度
     locationDetails: null,  // 位置详情（省市区和地址）
     _isClearingLogin: false,  // 防止并发清理登录态
-    _redirectPath: null  // 登录后重定向路径
+    _redirectPath: null,  // 登录后重定向路径
+    _isNavigatingToLogin: false  // 防止重复跳转登录页
   },
 
   onLaunch() {
@@ -195,7 +197,7 @@ App({
     if (this.globalData._isClearingLogin) return
     this.globalData._isClearingLogin = true
 
-    this._saveRedirectPath()
+    this.globalData._isNavigatingToLogin = true
 
     this.globalData.token = null
     this.globalData.userInfo = null
@@ -203,10 +205,11 @@ App({
     wx.removeStorageSync('token')
     wx.removeStorageSync('userInfo')
     wx.removeStorageSync('userPhone')
-    wx.reLaunch({
+    wx.navigateTo({
       url: '/pages/login/login',
       complete: () => {
         this.globalData._isClearingLogin = false
+        this.globalData._isNavigatingToLogin = false
       }
     })
   },
@@ -218,18 +221,34 @@ App({
 
   // 要求登录，未登录则跳转登录页，返回是否已登录
   requireLogin() {
-    if (!this.globalData.token) {
-      this._saveRedirectPath()
-      wx.reLaunch({ url: '/pages/login/login' })
-      return false
-    }
-    return true
+    if (this.isLoggedIn()) return true
+    if (this.globalData._isNavigatingToLogin) return false
+    this.globalData._isNavigatingToLogin = true
+    this._saveRedirectPath()
+    setTimeout(() => {
+      wx.navigateTo({
+        url: '/pages/login/login',
+        complete: () => {
+          this.globalData._isNavigatingToLogin = false
+        }
+      })
+    }, 100)
+    return false
   },
 
   // 跳转登录页（用于软检查页面，保存重定向路径后跳转）
   goToLogin() {
+    if (this.globalData._isNavigatingToLogin) return
+    this.globalData._isNavigatingToLogin = true
     this._saveRedirectPath()
-    wx.navigateTo({ url: '/pages/login/login' })
+    setTimeout(() => {
+      wx.navigateTo({
+        url: '/pages/login/login',
+        complete: () => {
+          this.globalData._isNavigatingToLogin = false
+        }
+      })
+    }, 100)
   },
 
   // 保存登录信息（登录成功后调用）
@@ -237,6 +256,7 @@ App({
     this.globalData.token = token
     this.globalData.userInfo = userInfo
     this.globalData.userPhone = phone
+    this.globalData._isNavigatingToLogin = false
     wx.setStorageSync('token', token)
     wx.setStorageSync('userPhone', phone)
     wx.setStorageSync('userInfo', userInfo)

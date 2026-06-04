@@ -3,11 +3,14 @@ const { WISH_STATUS, WISH_STATUS_LABELS, getWishStatusClass } = require('../../u
 const app = getApp()
 Page({
   data: {
-    activeCount: 0,
-    totalInterests: 0,
-    totalViews: 0,
-    activeWishes: [],
-    archivedWishes: [],
+    stats: {
+      totalCount: 0,
+      auditing: 0,
+      active: 0,
+      achieved: 0,
+      cancelled: 0
+    },
+    activeFilter: '',
     activeMenu: null,
     wishes: [],
     pageNo: 1,
@@ -19,7 +22,27 @@ Page({
   onLoad: function() {
     const app = getApp();
     if (!app.requireLogin()) return;
-    this.loadWishes();
+    this.loadWishStats();
+    this.loadWishes(true);
+  },
+
+  /**
+   * 点击统计卡片过滤
+   */
+  handleFilterTap: function(e) {
+    const filter = e.currentTarget.dataset.filter;
+    const currentFilter = this.data.activeFilter;
+    
+    // 再次点击同一过滤条件则取消过滤
+    const newFilter = currentFilter === filter ? '' : filter;
+    
+    this.setData({ 
+      activeFilter: newFilter, 
+      pageNo: 1, 
+      hasMore: true, 
+      wishes: [] 
+    });
+    this.loadWishes(true);
   },
 
   loadWishes: async function(isRefresh = false) {
@@ -28,10 +51,17 @@ Page({
     this.setData({ isLoading: true });
     
     try {
-      const result = await wishAPI.getMyWishes({ 
+      const params = { 
         pageNo: isRefresh ? 1 : this.data.pageNo, 
         pageSize: this.data.pageSize 
-      });
+      };
+      
+      // 根据过滤条件设置status参数
+      if (this.data.activeFilter) {
+        params.status = this.data.activeFilter;
+      }
+      
+      const result = await wishAPI.getMyWishes(params);
       
       if (result) {
         const wishes = result.map(wish => {
@@ -63,12 +93,10 @@ Page({
           wishes: newWishes,
           hasMore: wishes.length >= this.data.pageSize
         });
-        this.computeStats();
       } else {
         if (isRefresh) {
           this.setData({ wishes: [], hasMore: true });
         }
-        this.computeStats();
       }
     } catch (error) {
       console.error('加载心愿列表失败:', error);
@@ -90,39 +118,28 @@ Page({
     return `${year}-${month}-${day}`;
   },
 
-  getReviewStatus: function(status) {
-    const statusMap = {
-      'auditing': '待审核',
-      'active': '已通过',
-      'inactive': '已拒绝'
-    };
-    return statusMap[status] || '待审核';
-  },
-
   /**
-   * Compute stats and set data
+   * 加载心愿统计数据
    */
-  computeStats: function() {
-    const { wishes } = this.data;
-    
-    const activeCount = wishes.filter(w => w.isActive).length;
-    const totalInterests = wishes.reduce((sum, w) => sum + w.interests, 0);
-    const totalViews = wishes.reduce((sum, w) => sum + w.views, 0);
-    const activeWishes = wishes.filter(w => w.isActive);
-    const archivedWishes = wishes.filter(w => !w.isActive);
-    
-    this.setData({
-      activeCount,
-      totalInterests,
-      totalViews,
-      activeWishes,
-      archivedWishes
-    });
+  loadWishStats: function() {
+    wishAPI.getMyWishStats()
+      .then(res => {
+        if (res) {
+          this.setData({
+            stats: {
+              totalCount: res.totalCount || 0,
+              auditing: res.auditing || 0,
+              active: res.active || 0,
+              achieved: res.achieved || 0,
+              cancelled: res.cancelled || 0
+            }
+          });
+        }
+      })
+      .catch(err => {
+        console.log('获取心愿统计失败:', err);
+      });
   },
-
-
-
-
 
   /**
    * Handle edit
@@ -137,8 +154,6 @@ Page({
       url: '/pages/publish/publish'
     });
   },
-
-
 
   /**
    * Handle withdraw wish (撤回心愿)
@@ -157,6 +172,7 @@ Page({
             const result = await wishAPI.updateWishStatus(id, WISH_STATUS.CANCELLED);
             if (result && result.success) {
               this.setData({ pageNo: 1, hasMore: true, wishes: [] });
+              this.loadWishStats();
               await this.loadWishes(true);
               wx.showToast({
                 title: '心愿已撤回',
@@ -199,6 +215,7 @@ Page({
             const result = await wishAPI.updateWishStatus(id, WISH_STATUS.ACHIEVED);
             if (result && result.success) {
               this.setData({ pageNo: 1, hasMore: true, wishes: [] });
+              this.loadWishStats();
               await this.loadWishes(true);
               wx.showToast({
                 title: '心愿已达成',
@@ -242,7 +259,7 @@ Page({
               this.setData({
                 wishes: updatedWishes
               });
-              this.computeStats();
+              this.loadWishStats();
               wx.showToast({
                 title: '心愿已删除',
                 icon: 'success'
@@ -268,7 +285,9 @@ Page({
   },
 
   onShow: function() {
-    this.loadWishes();
+    this.loadWishStats();
+    this.setData({ pageNo: 1, hasMore: true, wishes: [] });
+    this.loadWishes(true);
   },
 
   /**
@@ -297,7 +316,10 @@ Page({
       hasMore: true,
       wishes: []
     });
+    this.loadWishStats();
     this.loadWishes(true).then(() => {
+      wx.stopPullDownRefresh();
+    }).catch(() => {
       wx.stopPullDownRefresh();
     });
   },

@@ -6,11 +6,13 @@ const app = getApp()
 Page({
   data: {
     items: [],
-    statusCounts: {
+    stats: {
+      totalCount: 0,
       transferring: 0,
-      transfer_accepted: 0,
+      transferAccepted: 0,
       transferred: 0
     },
+    activeFilter: '',
     pageNo: 1,
     pageSize: 10,
     hasMore: true,
@@ -20,16 +22,37 @@ Page({
   onLoad: function() {
     const app = getApp();
     if (!app.requireLogin()) return;
-    this.getMyItems();
+    this.loadItemStats();
+    this.getMyItems(true);
   },
 
   onShow: function() {
     const app = getApp();
     if (!app.requireLogin()) return;
+    this.loadItemStats();
     this.setData({ pageNo: 1, hasMore: true, items: [] });
     this.getMyItems(true);
   },
   
+  /**
+   * 点击统计卡片过滤
+   */
+  handleFilterTap: function(e) {
+    const filter = e.currentTarget.dataset.filter;
+    const currentFilter = this.data.activeFilter;
+    
+    // 再次点击同一过滤条件则取消过滤
+    const newFilter = currentFilter === filter ? '' : filter;
+    
+    this.setData({ 
+      activeFilter: newFilter, 
+      pageNo: 1, 
+      hasMore: true, 
+      items: [] 
+    });
+    this.getMyItems(true);
+  },
+
   /**
    * 获取我的物品列表
    */
@@ -39,10 +62,17 @@ Page({
     this.setData({ isLoading: true });
     
     const api = require('../../utils/api');
-    api.itemAPI.getMyItems({
+    const params = {
       pageNo: isRefresh ? 1 : this.data.pageNo,
       pageSize: this.data.pageSize
-    })
+    };
+    
+    // 根据过滤条件设置status参数
+    if (this.data.activeFilter) {
+      params.status = this.data.activeFilter;
+    }
+    
+    api.itemAPI.getMyItems(params)
       .then(res => {
         // 检查后端返回的响应格式
         if (res) {
@@ -85,12 +115,10 @@ Page({
             items: newItems,
             hasMore: items.length >= this.data.pageSize
           });
-          this.calculateStatusCounts();
         } else {
           if (isRefresh) {
             this.setData({ items: [], hasMore: true });
           }
-          this.calculateStatusCounts();
         }
       })
       .catch(err => {
@@ -102,16 +130,26 @@ Page({
   },
 
   /**
-   * Calculate status counts
+   * 加载物品统计数据
    */
-  calculateStatusCounts: function() {
-    const items = this.data.items;
-    const statusCounts = {
-      transferring: items.filter(item => item.transferStatus === TRANSFER_STATUS.TRANSFERRING).length,
-      transfer_accepted: items.filter(item => item.transferStatus === TRANSFER_STATUS.TRANSFER_ACCEPTED).length,
-      transferred: items.filter(item => item.transferStatus === TRANSFER_STATUS.TRANSFERRED).length
-    };
-    this.setData({ statusCounts });
+  loadItemStats: function() {
+    const api = require('../../utils/api');
+    api.itemAPI.getMyItemStats()
+      .then(res => {
+        if (res) {
+          this.setData({
+            stats: {
+              totalCount: res.totalCount || 0,
+              transferring: res.transferring || 0,
+              transferAccepted: res.transferAccepted || 0,
+              transferred: res.transferred || 0
+            }
+          });
+        }
+      })
+      .catch(err => {
+        console.log('获取物品统计失败:', err);
+      });
   },
 
   /**
@@ -213,7 +251,7 @@ Page({
                   items: updatedItems
                 });
                 
-                this.calculateStatusCounts();
+                this.loadItemStats();
                 
                 wx.showToast({
                   title: actualStatusLabel,
@@ -403,7 +441,7 @@ Page({
               if (res && res.success) {
                 const items = this.data.items.filter(item => item.id !== id);
                 this.setData({ items });
-                this.calculateStatusCounts();
+                this.loadItemStats();
                 wx.showToast({
                   title: '物品已删除',
                   icon: 'success'
@@ -437,7 +475,10 @@ Page({
       hasMore: true,
       items: []
     });
+    this.loadItemStats();
     this.getMyItems(true).then(() => {
+      wx.stopPullDownRefresh();
+    }).catch(() => {
       wx.stopPullDownRefresh();
     });
   },

@@ -9,20 +9,20 @@
 
   <!-- Stats Cards -->
   <view class="stats-section">
-    <view class="stat-card">
-      <text class="stat-value">{{items.length}}</text>
+    <view class="stat-card {{activeFilter === '' ? 'active' : ''}}" bindtap="handleFilterTap" data-filter="">
+      <text class="stat-value">{{stats.totalCount}}</text>
       <text class="stat-label">总发布</text>
     </view>
-    <view class="stat-card">
-      <text class="stat-value">{{statusCounts.transferring}}</text>
+    <view class="stat-card {{activeFilter === 'transferring' ? 'active' : ''}}" bindtap="handleFilterTap" data-filter="transferring">
+      <text class="stat-value">{{stats.transferring}}</text>
       <text class="stat-label">发布中</text>
     </view>
-    <view class="stat-card">
-      <text class="stat-value">{{statusCounts.transfer_accepted}}</text>
-      <text class="stat-label">已达成</text>
+    <view class="stat-card {{activeFilter === 'transfer_accepted' ? 'active' : ''}}" bindtap="handleFilterTap" data-filter="transfer_accepted">
+      <text class="stat-value">{{stats.transferAccepted}}</text>
+      <text class="stat-label">已接受</text>
     </view>
-    <view class="stat-card">
-      <text class="stat-value">{{statusCounts.transferred}}</text>
+    <view class="stat-card {{activeFilter === 'transferred' ? 'active' : ''}}" bindtap="handleFilterTap" data-filter="transferred">
+      <text class="stat-value">{{stats.transferred}}</text>
       <text class="stat-label">已转让</text>
     </view>
   </view>

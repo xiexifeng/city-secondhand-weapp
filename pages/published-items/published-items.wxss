@@ -78,6 +78,17 @@
   display: flex;
   flex-direction: column;
   gap: 4rpx;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.stat-card.active {
+  background-color: #eff6ff;
+  border-color: #0ea5e9;
+}
+
+.stat-card.active .stat-value {
+  color: #0284c7;
 }
 
 .stat-value {
