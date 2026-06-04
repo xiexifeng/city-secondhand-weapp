@@ -1,7 +1,6 @@
 // 导入工具
-const { formatDate } = require('../../utils/format');
+const { formatRelativeTime } = require('../../utils/format');
 const { getReviewStatusLabel, getReviewStatusClass, getTransferStatusLabel, getTransferStatusClass } = require('../../utils/enums');
-const { TRANSFER_STATUS } = require('../../utils/enums');
 const app = getApp()
 Page({
   data: {
@@ -103,7 +102,7 @@ Page({
               views: item.views || 0,
               likes: item.likes || 0,
               favorites: item.favorites || 0,
-              publishDate: item.createTime ? formatDate(item.createTime) : formatDate(Date.now()),
+              publishDate: formatRelativeTime(item.createTime),
               transactionType: item.tradeType,             
               location: location,
               urgent: item.urgent || false

@@ -96,6 +96,24 @@ export function formatDistance(distance) {
 }
 
 /**
+ * 解析位置信息
+ * @param {string} location - JSON格式的位置字符串
+ * @returns {object} 格式化后JSON对象
+ */
+export function parseLocation(location) {
+  if (!location) return '';
+
+  let locationInfo = {};
+  try {
+    locationInfo = JSON.parse(location);
+  } catch (e) {
+    console.log('Raw location:', location);
+    console.error('Error parsing location:', e);
+  }
+  return locationInfo;
+}
+
+/**
  * 格式化相对时间
  * @param {number|string} timestamp - 时间戳
  * @returns {string} 相对时间字符串

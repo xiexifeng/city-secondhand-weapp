@@ -1,6 +1,5 @@
 const { auditAPI } = require('../../utils/api');
 const format = require('../../utils/format.js');
-const { parseLocation } = require('../../utils/helpers.js');
 
 Page({
   data: {
@@ -38,7 +37,7 @@ Page({
         res.submittedAt = format.formatRelativeTime(res.submittedAt);
         res.reviewedAt = format.formatRelativeTime(res.reviewedAt);
         res.exchangeMethod = this.formatExchangeMethod(res.exchangeMethod);
-        res.location = parseLocation(res.location);
+        res.location = format.parseLocation(res.location);
         res.publisher = res.publisher || {};
         res.contact = res.contact || {};
         res.images = res.images || [];
