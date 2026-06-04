@@ -13,24 +13,20 @@ Page({
     isLoading: false
   },
   
-  // 标题图标映射（根据title确定图标）
-  titleIconMap: {
-    '邀请用户注册': '👥',
-    '发布物品': '📦',
-    '发布心愿': '⭐',
-    '物品已转让': '✅',
-    '心愿已达成': '🎯',
-    '审核物品': '🔍',
-    '审核心愿': '🔍',
-    '审核举报': '🚨',
-    '浏览物品': '👀',
-    '浏览心愿': '👀',
-    '每日签到': '📅',
-    '获得感兴趣': '❤️',
-    '兑换优惠券': '🎫',
-    '发布心愿': '🔄',
-    '完成周任务': '🏆',
-    '完成交换': '💱'
+  // 交易类型图标映射（根据transactionType即points_rule.code确定图标）
+  typeIconMap: {
+    'INVITE_REGISTER': '👥',
+    'PUBLISH_ITEM': '📦',
+    'PUBLISH_WISH': '⭐',
+    'ITEM_SOLD': '✅',
+    'WISH_COMPLETED': '🎯',
+    'AUDIT_ITEM': '🔍',
+    'AUDIT_WISH': '🔍',
+    'AUDIT_REPORT': '🚨',
+    'VIEW_ITEM': '👀',
+    'VIEW_WISH': '👀',
+    'REWARD_INCOME': '🎁',
+    'REWARD_OUTCOME': '📤'
   },
 
   onLoad: function() {
@@ -175,7 +171,7 @@ Page({
         return list.map(item => {
             return {
                 ...item,
-                icon: this.titleIconMap[item.title] || '📋',
+                icon: this.typeIconMap[item.transactionType] || '📋',
                 time: this.formatDateTime(item.transactionTime)
             };
         });

@@ -254,6 +254,13 @@ page {
   margin-bottom: 4rpx;
 }
 
+.history-desc {
+  display: block;
+  font-size: 22rpx;
+  color: #6b7280;
+  margin-bottom: 4rpx;
+}
+
 .history-time {
   display: block;
   font-size: 20rpx;
