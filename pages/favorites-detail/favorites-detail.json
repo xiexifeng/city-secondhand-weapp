@@ -1,4 +1,6 @@
 {
   "navigationBarTitleText": "收藏明细",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#f3f4f6",
   "usingComponents": {}
 }

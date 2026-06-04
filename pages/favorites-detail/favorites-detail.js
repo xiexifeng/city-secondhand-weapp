@@ -22,6 +22,9 @@ Page({
   onShow: function() {
     const app = getApp()
     if (!app.requireLogin()) return
+  },
+
+  onPullDownRefresh: function() {
     this.setData({
       itemsList: [],
       wishesList: [],
@@ -30,14 +33,26 @@ Page({
       itemsHasMore: true,
       wishesHasMore: true
     })
-    this.loadItemsCollection()
+    if (this.data.activeTab === 'items') {
+      this.loadItemsCollection().then(() => {
+        wx.stopPullDownRefresh()
+      }).catch(() => {
+        wx.stopPullDownRefresh()
+      })
+    } else {
+      this.loadWishesCollection().then(() => {
+        wx.stopPullDownRefresh()
+      }).catch(() => {
+        wx.stopPullDownRefresh()
+      })
+    }
   },
 
   loadItemsCollection: function() {
-    if (this.data.loading || !this.data.itemsHasMore) return
+    if (this.data.loading || !this.data.itemsHasMore) return Promise.resolve()
     
     this.setData({ loading: true })
-    collectionAPI.listMyItemCollection({
+    return collectionAPI.listMyItemCollection({
       pageNo: this.data.itemsPageNo,
       pageSize: 10
     }).then(res => {
@@ -48,6 +63,7 @@ Page({
       const itemsList = this.data.itemsPageNo === 1 ? newItems : [...this.data.itemsList, ...newItems]
       this.setData({
         itemsList: itemsList,
+        itemsPageNo: this.data.itemsPageNo + 1,
         itemsHasMore: newItems.length >= 10,
         loading: false
       })
@@ -58,10 +74,10 @@ Page({
   },
 
   loadWishesCollection: function() {
-    if (this.data.loading || !this.data.wishesHasMore) return
+    if (this.data.loading || !this.data.wishesHasMore) return Promise.resolve()
     
     this.setData({ loading: true })
-    collectionAPI.listMyWishCollection({
+    return collectionAPI.listMyWishCollection({
       pageNo: this.data.wishesPageNo,
       pageSize: 10
     }).then(res => {
@@ -72,6 +88,7 @@ Page({
       const wishesList = this.data.wishesPageNo === 1 ? newWishes : [...this.data.wishesList, ...newWishes]
       this.setData({
         wishesList: wishesList,
+        wishesPageNo: this.data.wishesPageNo + 1,
         wishesHasMore: newWishes.length >= 10,
         loading: false
       })
@@ -133,12 +150,11 @@ Page({
   },
 
   onReachBottom: function() {
+    if (this.data.loading) return
     if (this.data.activeTab === 'items') {
-      this.data.itemsPageNo++
-      this.loadItemsCollection()
+      if (this.data.itemsHasMore) this.loadItemsCollection()
     } else {
-      this.data.wishesPageNo++
-      this.loadWishesCollection()
+      if (this.data.wishesHasMore) this.loadWishesCollection()
     }
   }
 })

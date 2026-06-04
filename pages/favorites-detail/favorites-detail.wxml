@@ -12,7 +12,19 @@
 
   <!-- Items Favorites -->
   <view wx:if="{{activeTab === 'items'}}" class="favorites-section">
-    <view class="favorites-list">
+    <!-- 加载中 -->
+    <view wx:if="{{loading && itemsList.length === 0}}" class="loading-state">
+      <view class="loading-spinner"></view>
+      <text>加载中...</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:elif="{{!loading && itemsList.length === 0}}" class="empty-state">
+      <text class="empty-icon">📭</text>
+      <text class="empty-text">暂无物品收藏</text>
+    </view>
+
+    <view wx:else class="favorites-list">
       <block wx:for="{{itemsList}}" wx:key="id">
         <view class="item-card" bindtap="navigateToItemDetail" data-id="{{item.id}}">
           <view class="item-view">
@@ -48,11 +60,32 @@
         </view>
       </block>
     </view>
+
+    <!-- 加载更多 -->
+    <view wx:if="{{!loading && itemsList.length > 0}}" class="load-more">
+      <view wx:if="{{itemsHasMore}}" class="loading-more">
+        <view class="spinner"></view>
+        <text>加载中...</text>
+      </view>
+      <view wx:else class="no-more">已到底部</view>
+    </view>
   </view>
 
   <!-- Wishes Favorites -->
   <view wx:if="{{activeTab === 'wishes'}}" class="favorites-section">
-    <view class="favorites-list">
+    <!-- 加载中 -->
+    <view wx:if="{{loading && wishesList.length === 0}}" class="loading-state">
+      <view class="loading-spinner"></view>
+      <text>加载中...</text>
+    </view>
+
+    <!-- 空状态 -->
+    <view wx:elif="{{!loading && wishesList.length === 0}}" class="empty-state">
+      <text class="empty-icon">📭</text>
+      <text class="empty-text">暂无心愿收藏</text>
+    </view>
+
+    <view wx:else class="favorites-list">
       <block wx:for="{{wishesList}}" wx:key="id">
         <view class="wish-card" bindtap="navigateToWishDetail" data-id="{{item.id}}">
           <view class="wish-view">
@@ -80,6 +113,15 @@
           </view>
         </view>
       </block>
+    </view>
+
+    <!-- 加载更多 -->
+    <view wx:if="{{!loading && wishesList.length > 0}}" class="load-more">
+      <view wx:if="{{wishesHasMore}}" class="loading-more">
+        <view class="spinner"></view>
+        <text>加载中...</text>
+      </view>
+      <view wx:else class="no-more">已到底部</view>
     </view>
   </view>
 </view>
