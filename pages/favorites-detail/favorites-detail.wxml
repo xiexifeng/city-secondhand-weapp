@@ -3,10 +3,10 @@
   <!-- Tab Bar -->
   <view class="tab-bar">
     <view class="tab-item {{activeTab === 'items' ? 'active' : ''}}" bindtap="switchTab" data-tab="items">
-      <text class="tab-text">物品收藏 ({{itemsList.length}})</text>
+      <text class="tab-text">物品收藏</text>
     </view>
     <view class="tab-item {{activeTab === 'wishes' ? 'active' : ''}}" bindtap="switchTab" data-tab="wishes">
-      <text class="tab-text">心愿收藏 ({{wishesList.length}})</text>
+      <text class="tab-text">心愿收藏</text>
     </view>
   </view>
 
