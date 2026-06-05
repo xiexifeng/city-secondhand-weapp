@@ -53,7 +53,7 @@
         <!-- 图片上传 (不显示在心愿墙) -->
         <view wx:if="{{publishType !== 'wish'}}" class="form-section">
           <view class="section-header">
-            <text class="section-title">上传图片</text>
+            <text class="section-title">物品图片</text>
             <text class="required">*</text>
           </view>
           
@@ -69,7 +69,7 @@
         <!-- 标题 -->
         <view class="form-section">
           <view class="section-header">
-            <text class="section-title">标题</text>
+            <text class="section-title">物品名称</text>
             <text class="required">*</text>
           </view>
           <view class="input-with-counter">
@@ -322,6 +322,7 @@
             <text class="disclaimer-item">• 发布的物品信息必须真实有效</text>
             <text class="disclaimer-item">• 禁止发布违法违规、虚假、欺诈内容</text>
             <text class="disclaimer-item">• 禁止发布违禁品、侵权商品</text>
+            <text class="disclaimer-item">• 交换请选择公共场所，注意人身财产安全</text>
             <text class="disclaimer-item">• 平台不介入交换纠纷，请自行协商</text>
           </view>
         </view>

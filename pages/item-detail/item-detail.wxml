@@ -54,7 +54,7 @@
       </view>
 
       <view class="tags-row">
-        <view wx:if="{{item.method === 'sell'}}" class="tag tag-sell">人民币出售</view>
+        <view wx:if="{{item.method === 'sell'}}" class="tag tag-sell">出售</view>
         <view wx:if="{{item.method === 'exchange'}}" class="tag tag-exchange">以物换物</view>
       </view>
 

@@ -9,7 +9,7 @@ Page({
     wish: null,
     wishId: null,
     showReportModal: false,
-    showSafetyDetails: false,
+    showSafetyDetails: true,
     isLoggedIn: false,
     markers: [],
     liked: false,

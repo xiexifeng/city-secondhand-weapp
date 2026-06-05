@@ -280,7 +280,7 @@ page {
   font-size: 28rpx;
   color: #1f2937;
   box-sizing: border-box;
-  min-height: 56rpx;
+  min-height: 80rpx;
   line-height: 1.8;
 }
 
