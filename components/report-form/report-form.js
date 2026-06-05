@@ -1,4 +1,4 @@
-const { reportAPI, fileAPI } = require('../../utils/api');
+const { reportAPI } = require('../../utils/api');
 
 Component({
   properties: {
@@ -28,7 +28,17 @@ Component({
     selectedReason: null,
     reportDescription: '',
     uploadedEvidence: [],
-    uploadingImages: false
+    uploadingImages: false,
+    isLoggedIn: false
+  },
+
+  observers: {
+    'visible': function(visible) {
+      if (visible) {
+        const app = getApp();
+        this.setData({ isLoggedIn: app.isLoggedIn() });
+      }
+    }
   },
 
   methods: {
@@ -59,58 +69,8 @@ Component({
       this.setData({ reportDescription: e.detail.value });
     },
 
-    uploadEvidence: function() {
-      const that = this;
-      const { uploadedEvidence } = that.data;
-      
-      if (uploadedEvidence.length >= 5) {
-        wx.showToast({ title: '最多上传5张图片', icon: 'none' });
-        return;
-      }
-
-      wx.chooseImage({
-        count: 5 - uploadedEvidence.length,
-        sizeType: ['compressed'],
-        sourceType: ['album', 'camera'],
-        success: function(res) {
-          that.uploadImages(res.tempFilePaths);
-        }
-      });
-    },
-
-    uploadImages: async function(tempFilePaths) {
-      const { uploadedEvidence } = this.data;
-      const newEvidence = [...uploadedEvidence];
-
-      for (const tempFilePath of tempFilePaths) {
-        try {
-          wx.showLoading({ title: '上传中...', mask: true });
-          const uploadResult = await fileAPI.uploadImage(tempFilePath);
-          newEvidence.push(uploadResult.data.fileUrl);
-          this.setData({ uploadedEvidence: newEvidence });
-        } catch (error) {
-          console.error('图片上传失败:', error);
-          wx.showToast({ title: '图片上传失败，请重试', icon: 'none' });
-        } finally {
-          wx.hideLoading();
-        }
-      }
-    },
-
-    previewImage: function(e) {
-      const index = e.currentTarget.dataset.index;
-      const { uploadedEvidence } = this.data;
-      wx.previewImage({
-        current: uploadedEvidence[index],
-        urls: uploadedEvidence
-      });
-    },
-
-    removeImage: function(e) {
-      const index = e.currentTarget.dataset.index;
-      const { uploadedEvidence } = this.data;
-      uploadedEvidence.splice(index, 1);
-      this.setData({ uploadedEvidence });
+    handleEvidenceChange: function(e) {
+      this.setData({ uploadedEvidence: e.detail.images });
     },
 
     submitReport: function() {
@@ -157,7 +117,7 @@ Component({
           wx.hideLoading();
           console.error('提交举报失败:', err);
           wx.showToast({
-            title: '举报失败',
+            title: '举报失败，请稍后重试',
             icon: 'none'
           });
         });

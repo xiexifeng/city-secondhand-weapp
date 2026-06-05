@@ -40,7 +40,7 @@
           <text class="message-time">{{item.createdAt}}</text>
         </view>
 
-        <view class="message-delete" bindtap="deleteMessage" data-id="{{item.id}}" catch:tap>
+        <view class="message-delete" catchtap="deleteMessage" data-id="{{item.id}}">
           <text>🗑️</text>
         </view>
       </view>
@@ -60,7 +60,7 @@
   </view>
 
   <view wx:if="{{selectedReport}}" class="modal-overlay" bindtap="closeReportModal">
-    <view class="modal-content" catch:tap>
+    <view class="modal-content" catchtap="preventTouchMove">
       <view class="modal-header">
         <text class="modal-title">{{selectedReport.typeText}}详情</text>
         <view class="modal-close" bindtap="closeReportModal">✕</view>
@@ -69,7 +69,12 @@
       <scroll-view class="modal-body" scroll-y>
         <view class="modal-section">
           <text class="section-label">被举报对象</text>
-          <text class="section-value">{{selectedReport.targetName}}</text>
+          <view class="section-value-row">
+            <text class="section-value">{{selectedReport.targetName}}</text>
+            <view wx:if="{{selectedReport.relatedId}}" class="view-detail-btn" bindtap="handleViewReportTarget" data-id="{{selectedReport.relatedId}}" data-type="{{selectedReport.type}}">
+              <text>查看详情 ›</text>
+            </view>
+          </view>
         </view>
 
         <view class="modal-section">
@@ -85,7 +90,9 @@
         <view wx:if="{{selectedReport.evidence && selectedReport.evidence.length > 0}}" class="modal-section">
           <text class="section-label">证据</text>
           <view class="evidence-grid">
-            <image wx:for="{{selectedReport.evidence}}" wx:key="index" src="{{item}}" class="evidence-image" mode="aspectFill" />
+            <view wx:for="{{selectedReport.evidence}}" wx:key="index" class="evidence-item" bindtap="previewEvidenceImage" data-index="{{index}}">
+              <image src="{{item}}" class="evidence-image" mode="aspectFill" />
+            </view>
           </view>
         </view>
 
@@ -105,10 +112,10 @@
           />
 
           <view class="review-buttons">
-            <button class="review-btn handled" bindtap="handleReviewReport" data-status="举报有效">
+            <button class="review-btn valid" bindtap="handleReviewReport" data-status="2">
               ✓ 举报有效
             </button>
-            <button class="review-btn invalid" bindtap="handleReviewReport" data-status="举报无效">
+            <button class="review-btn invalid" bindtap="handleReviewReport" data-status="3">
               ✕ 举报无效
             </button>
           </view>

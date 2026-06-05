@@ -14,15 +14,22 @@ Page({
     loading: false
   },
 
+  _skipRefresh: false,
+
   onLoad: function() {
     const app = getApp();
     if (!app.requireLogin()) return;
-    this.loadMessages();
   },
 
   onShow: function() {
     const app = getApp();
     if (!app.requireLogin()) return;
+    
+    if (this._skipRefresh) {
+      this._skipRefresh = false;
+      return;
+    }
+    
     this.setData({ messages: [], filteredMessages: [], page: 1, hasMore: true });
     this.loadMessages(true);
   },
@@ -187,34 +194,29 @@ Page({
     this.setData({ selectedReport: null, reviewNote: '' });
   },
 
+  preventTouchMove: function() {
+    return;
+  },
+
   updateReviewNote: function(e) {
     this.setData({ reviewNote: e.detail.value });
   },
 
   handleReviewReport: function(e) {
-    const statusText = e.currentTarget.dataset.status;
+    const status = Number(e.currentTarget.dataset.status);
     const { selectedReport, reviewNote } = this.data;
 
     if (!selectedReport) return;
-
-    const status = statusText === '举报有效' ? 2 : 3;
 
     wx.showLoading({ title: '处理中...' });
     reportAPI.handleReport(selectedReport.id, status, reviewNote).then(res => {
       wx.hideLoading();
       if (res && res.success) {
+        const newStatus = status === 2 ? 'valid' : 'ignored';
         this.setData({
-          selectedReport: { ...selectedReport, status: statusText, reviewerNote: reviewNote },
+          selectedReport: { ...selectedReport, status: newStatus, statusText: this.getStatusText(newStatus), statusClass: this.getStatusClass(newStatus), reviewerNote: reviewNote },
           reviewNote: ''
         });
-
-        const updatedMessages = this.data.messages.map(m => {
-          if (m.type === 'report' && m.relatedId === selectedReport.id) {
-            return { ...m, report: { ...selectedReport, status: statusText } };
-          }
-          return m;
-        });
-        this.setData({ messages: updatedMessages, filteredMessages: updatedMessages });
 
         wx.showToast({ title: '处理成功', icon: 'success', duration: 1500 });
       }
@@ -258,5 +260,28 @@ Page({
 
   handleBack: function() {
     wx.navigateBack();
+  },
+
+  handleViewReportTarget: function(e) {
+    const { id, type } = e.currentTarget.dataset;
+    if (!id) return;
+
+    if (type === 'item') {
+      wx.navigateTo({ url: `/pages/item-detail/item-detail?id=${id}` });
+    } else if (type === 'wish') {
+      wx.navigateTo({ url: `/pages/wish-detail/wish-detail?id=${id}` });
+    }
+  },
+
+  previewEvidenceImage: function(e) {
+    const index = e.currentTarget.dataset.index;
+    const evidence = this.data.selectedReport.evidence;
+    if (!evidence || evidence.length === 0) return;
+    
+    this._skipRefresh = true;
+    wx.previewImage({
+      current: evidence[index],
+      urls: evidence
+    });
   }
 });

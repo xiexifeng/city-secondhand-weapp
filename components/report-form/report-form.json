@@ -1,4 +1,6 @@
 {
   "component": true,
-  "usingComponents": {}
+  "usingComponents": {
+    "image-upload": "/components/image-upload/image-upload"
+  }
 }

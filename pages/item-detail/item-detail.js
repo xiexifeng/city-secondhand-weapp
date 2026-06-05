@@ -46,6 +46,17 @@ Page({
     itemAPI.getItemDetail(itemId, latitude, longitude)
       .then(res => {
         const data = res;
+        if(res && !res.id){
+          wx.showToast({
+            title: '物品不存在',
+            icon: 'error',
+            duration: 2000
+          });
+          setTimeout(() => {
+            wx.navigateBack();
+          }, 2000);
+          return;
+        }
         const item = that.transformItemData(data);
         that.setData({ 
           item, 
