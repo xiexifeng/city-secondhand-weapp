@@ -332,13 +332,6 @@ Page({
    * Handle page unload (including back button)
    */
   onUnload: function() {
-    const app = getApp();
-    if (!app.isLoggedIn()) {
-      setTimeout(() => {
-        wx.reLaunch({
-          url: '/pages/home/home'
-        });
-      }, 0);
-    }
+    // 用户点返回时，wx.navigateTo 会自然回到上一页，无需额外处理
   }
 });
