@@ -42,7 +42,7 @@ Page({
    */
   reverseGeocode: function(latitude, longitude) {
     wx.request({
-      url: `https://apis.map.qq.com/ws/geocoder/v1/?location=${latitude},${longitude}&key=${TENCENT_MAP_KEY}&get_poi=1&poi_options=policy=1;radius=2000;page_size=50;page_index=1`,
+      url: `https://apis.map.qq.com/ws/geocoder/v1/?location=${latitude},${longitude}&key=${TENCENT_MAP_KEY}&get_poi=1&poi_options=policy=1;radius=2000;page_size=10;page_index=1`,
       success: (res) => {
         if (res.data.status === 0 && res.data.result) {
           const address = res.data.result;
@@ -69,10 +69,20 @@ Page({
           });
         } else {
           console.error('逆地理编码返回数据异常:', res.data);
+          wx.showModal({
+            title: '位置服务异常',
+            content: '获取位置信息失败，请检查网络或在小程序后台配置 apis.map.qq.com 为合法域名' + res.data,
+            showCancel: false
+          });
         }
       },
       fail: (err) => {
         console.error('逆地理编码失败:', err);
+        wx.showModal({
+          title: '网络请求失败',
+          content: '无法连接位置服务，请检查网络。如为真机非调试模式，请确认小程序后台已配置 apis.map.qq.com 为合法域名\n' + JSON.stringify(err),
+          showCancel: false
+        });
       }
     });
   },

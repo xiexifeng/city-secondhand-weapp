@@ -328,6 +328,13 @@ Page({
   },
 
   /**
+   * Skip login and go back to home
+   */
+  skipLogin: function() {
+    wx.switchTab({ url: '/pages/home/home' });
+  },
+
+  /**
    * Handle page unload (including back button)
    */
   onUnload: function() {

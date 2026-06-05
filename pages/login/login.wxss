@@ -477,6 +477,18 @@ view.login-option {
   margin-top: 20rpx;
 }
 
+.skip-login {
+  margin-top: 16rpx;
+  padding: 12rpx 0;
+}
+
+.skip-login-text {
+  font-size: 24rpx;
+  color: #9ca3af;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
 .agreement-checkbox {
   display: flex;
   align-items: center;
