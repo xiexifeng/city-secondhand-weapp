@@ -100,7 +100,7 @@ Page({
         }
       },
       fail: () => {
-        console.log('逆地理编码失败');
+        // 逆地理编码失败
       }
     });
   },
@@ -386,7 +386,6 @@ Page({
       };
 
       const result = await this.submitData(publishType, editingId, formData, images, locationData);
-      console.log(result)
       if (result && result.id) {
         this.handlePublishSuccess(editingId);
       } else {

@@ -111,8 +111,6 @@ Page({
   handleMessageClick: function(e) {
     const { id, relatedId, originalType, type } = e.currentTarget.dataset;
 
-    console.log('handleMessageClick:', { id, relatedId, originalType, type });
-
     messageAPI.readMessage(id).then(() => {
       this.markAsRead(id);
     }).catch(err => {
@@ -120,10 +118,8 @@ Page({
     });
 
     if (originalType && String(originalType).toUpperCase() === 'REPORT' && relatedId) {
-      console.log('加载举报详情:', relatedId);
       this.loadReportDetail(relatedId);
     } else if (type === 'report' && relatedId) {
-      console.log('通过type检测加载举报详情:', relatedId);
       this.loadReportDetail(relatedId);
     }
   },
@@ -132,14 +128,12 @@ Page({
     wx.showLoading({ title: '加载中...' });
     reportAPI.getReportDetail(reportId).then(res => {
       wx.hideLoading();
-      console.log('举报详情返回:', res);
       if (res) {
         const report = res;
         report.statusText = this.getStatusText(report.status);
         report.statusClass = this.getStatusClass(report.status);
         report.typeText = this.getReportTypeText(report.type);
         this.setData({ selectedReport: report });
-        console.log('已设置selectedReport:', this.data.selectedReport);
       } else {
         wx.showToast({ title: '获取详情失败', icon: 'none' });
       }

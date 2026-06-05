@@ -130,7 +130,7 @@ Page({
         }
       })
       .catch(err => {
-        console.log('获取心愿统计失败:', err);
+        console.error('获取心愿统计失败:', err);
       });
   },
 
@@ -139,10 +139,8 @@ Page({
    */
   handleEdit: function(e) {
     const id = e.currentTarget.dataset.id;
-    console.log('handleEdit clicked, id:', id);
     const app = getApp();
     app.globalData.editWishId = id;
-    console.log('editWishId set to:', app.globalData.editWishId);
     wx.switchTab({
       url: '/pages/publish/publish'
     });

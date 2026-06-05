@@ -35,7 +35,7 @@ Page({
         return;
       }
     } catch (e) {
-      console.log('无缓存位置');
+      // 无缓存位置
     }
     this.fetchItemDetail(itemId, null, null);
   },
@@ -64,7 +64,6 @@ Page({
           liked: data.isLiked || false,
           collected: data.isCollected || false
         });
-        console.log(item)
         that.updateMapMarkers();
       })
       .catch(err => {

@@ -401,12 +401,8 @@ Page({
       title: `🎉 ${nickname}邀请你加入换换么！`,
       desc: '闲置物品交换，环保又省钱',
       path: `/pages/login/login?inviterId=${userId}`,
-      success: (res) => {
-        console.log('分享成功', res);
-      },
-      fail: (err) => {
-        console.log('分享失败', err);
-      }
+      success: (res) => {},
+      fail: (err) => {}
     };
   },
 
@@ -444,7 +440,7 @@ Page({
         }
       },
       fail: (err) => {
-        console.log('取消分享', err);
+        // 取消分享
       }
     });
   },

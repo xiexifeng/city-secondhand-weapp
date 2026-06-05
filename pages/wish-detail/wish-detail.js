@@ -40,7 +40,7 @@ Page({
         this.setData({ latitude: cachedLocation.latitude, longitude: cachedLocation.longitude });
       }
     } catch (e) {
-      console.log('无缓存位置');
+      // 无缓存位置
     }
     this.loadWishDetail(wishId);
   },
@@ -199,12 +199,8 @@ Page({
     
     wx.makePhoneCall({
       phoneNumber: phone,
-      success: function() {
-        console.log('拨打成功');
-      },
-      fail: function() {
-        console.log('拨打失败');
-      }
+      success: function() {},
+      fail: function() {}
     });
   },
 

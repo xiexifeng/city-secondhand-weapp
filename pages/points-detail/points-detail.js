@@ -123,18 +123,14 @@ Page({
       pageNo: pageNo,
       pageSize: pageSize
     };
-    console.log('请求参数:', requestData);
-    
     api.userAPI.listPointsTransaction(requestData)
       .then(res => {
-        console.log('接口返回:', res);
         if (!loadMore) {
           wx.hideLoading();
         }
         
         // 处理数据：添加图标和格式化时间
         const newList = this.processTransactionList(res || []);
-        console.log('处理后的数据:', newList);
         
         // 判断是否还有更多数据
         const hasMore = newList.length === pageSize;
@@ -148,7 +144,7 @@ Page({
         });
       })
       .catch(err => {
-        console.log('接口错误:', err);
+        console.error('获取积分记录失败:', err);
         if (!loadMore) {
           wx.hideLoading();
         }

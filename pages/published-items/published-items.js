@@ -121,7 +121,7 @@ Page({
         }
       })
       .catch(err => {
-        console.log('获取物品列表失败:', err);
+        wx.showToast({ title: '加载失败', icon: 'none' });
       })
       .finally(() => {
         this.setData({ isLoading: false });
@@ -147,7 +147,7 @@ Page({
         }
       })
       .catch(err => {
-        console.log('获取物品统计失败:', err);
+        // 获取物品统计失败
       });
   },
 
@@ -175,18 +175,11 @@ Page({
    */
   handleEdit: function(e) {
     const id = e.currentTarget.dataset.id;
-    console.log('Edit button clicked, item id:', id);
     this.setData({ activeMenu: null });
     // 存储编辑ID到全局数据
     getApp().globalData.editItemId = id;
     wx.switchTab({
-      url: '/pages/publish/publish',
-      success: function(res) {
-        console.log('Switch tab success:', res);
-      },
-      fail: function(res) {
-        console.log('Switch tab fail:', res);
-      }
+      url: '/pages/publish/publish'
     });
   },
 
@@ -270,7 +263,7 @@ Page({
                 title: '更新失败',
                 icon: 'none'
               });
-              console.log('更新状态失败:', err);
+              console.error('更新状态失败:', err);
             });
         }
       }
@@ -329,7 +322,7 @@ Page({
                 title: '操作失败',
                 icon: 'none'
               });
-              console.log('加急操作失败:', err);
+              console.error('加急操作失败:', err);
             });
         }
       }
@@ -411,7 +404,7 @@ Page({
         }
       },
       fail: () => {
-        console.log('取消操作');
+        // 取消操作
       }
     });
   },
@@ -458,7 +451,7 @@ Page({
                 title: '删除失败',
                 icon: 'none'
               });
-              console.log('删除物品失败:', err);
+              console.error('删除物品失败:', err);
             });
         }
       }

@@ -34,7 +34,6 @@ Page({
   checkLoginStatus: function() {
     const app = getApp();
     if (app.isLoggedIn()) {
-      console.log('已登录，跳转到首页');
       wx.switchTab({
         url: '/pages/home/home'
       });

@@ -38,7 +38,7 @@ Page({
         this.setData({ latitude: cachedLocation.latitude, longitude: cachedLocation.longitude });
       }
     } catch (e) {
-      console.log('无缓存位置');
+      // 无缓存位置
     }
     this.loadWishes();
   },

@@ -107,7 +107,6 @@ export function parseLocation(location) {
   try {
     locationInfo = JSON.parse(location);
   } catch (e) {
-    console.log('Raw location:', location);
     console.error('Error parsing location:', e);
   }
   return locationInfo;

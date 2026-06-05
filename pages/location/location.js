@@ -55,8 +55,6 @@ Page({
           // 获取周边 POI，最多显示 10 个
           const pois = address.pois || [];
           const limitedPOIs = pois.slice(0, 10);
-          console.log('周边 POI 数量:', pois.length);
-          console.log('显示的 POI 数量:', limitedPOIs.length);
           
           // 更新位置详情
           this.setData({

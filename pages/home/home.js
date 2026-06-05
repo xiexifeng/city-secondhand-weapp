@@ -87,7 +87,7 @@ Page({
         return;
       }
     } catch (e) {
-      console.log('无缓存位置')
+      // 无缓存位置
     }
     
     this.setData({ locationLoaded: false });
@@ -275,52 +275,30 @@ Page({
    * Check audit status - call backend API to get auditor info
    */
   async checkAuditStatus() {
-    console.log('=== checkAuditStatus start ===');
-    
-    console.log('Token exists:', app.isLoggedIn());
-    
     if (!app.isLoggedIn()) {
-      console.log('No token, setting showAuditIcon to false');
       this.setData({ showAuditIcon: false, auditCount: 0 });
       return;
     }
     
     try {
-      console.log('Calling auditAPI.getAuditorInfo()');
       const auditorInfo = await auditAPI.getAuditorInfo();
-      console.log('Auditor info received:', auditorInfo);
-      console.log('Auditor info type:', typeof auditorInfo);
       
       if (!auditorInfo) {
-        console.log('auditorInfo is null/undefined');
         this.setData({ showAuditIcon: false, auditCount: 0 });
         return;
       }
       
-      console.log('isAuditor field:', auditorInfo.isAuditor);
-      console.log('isAuditor type:', typeof auditorInfo.isAuditor);
-      console.log('pendingCount field:', auditorInfo.pendingCount);
-      console.log('pendingCount type:', typeof auditorInfo.pendingCount);
-      
       const isAuditor = auditorInfo.isAuditor === true || auditorInfo.isAuditor === 'true';
       const pendingCount = parseInt(auditorInfo.pendingCount) || 0;
-      
-      console.log('Parsed - isAuditor:', isAuditor, 'pendingCount:', pendingCount);
       
       this.setData({
         showAuditIcon: isAuditor,
         auditCount: pendingCount
       });
-      
-      console.log('Data set successfully');
-      console.log('Current data:', this.data);
     } catch (error) {
       console.error('获取审核员信息失败:', error);
-      console.error('Error stack:', error.stack);
       this.setData({ showAuditIcon: false, auditCount: 0 });
     }
-    
-    console.log('=== checkAuditStatus end ===');
   },
 
   // 导航到审核页面
